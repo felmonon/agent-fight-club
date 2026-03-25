@@ -83,15 +83,7 @@ jobs:
           if [ -n "${GEMINI_OAUTH_CREDS_JSON_B64:-}" ]; then
             mkdir -p "$HOME/.gemini"
             printf '%s' "$GEMINI_OAUTH_CREDS_JSON_B64" | base64 --decode > "$HOME/.gemini/oauth_creds.json"
-            cat > "$HOME/.gemini/settings.json" <<'EOF'
-            {
-              "security": {
-                "auth": {
-                  "selectedType": "oauth-personal"
-                }
-              }
-            }
-            EOF
+            printf '{\n  "security": {\n    "auth": {\n      "selectedType": "oauth-personal"\n    }\n  }\n}\n' > "$HOME/.gemini/settings.json"
             if [ ! -f "$HOME/.gemini/projects.json" ]; then
               printf '{\n  "projects": {}\n}\n' > "$HOME/.gemini/projects.json"
             fi
