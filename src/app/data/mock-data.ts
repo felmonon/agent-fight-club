@@ -45,7 +45,7 @@ export interface Fight {
   winner: string;
   taskType: string;
   repository: string;
-  status: "scheduled" | "live" | "completed";
+  status: "scheduled" | "completed";
   timestamp: string;
   rounds: number;
   scoreA: number;
@@ -361,7 +361,7 @@ function buildTask(task: ArenaTaskCard): Task {
 export const tasks: Task[] = liveDataset.tasks.map(buildTask);
 const displayTaskMap = new Map(tasks.map((task) => [task.id, task] as const));
 
-const completedFights = computedFights
+export const completedFights: Fight[] = computedFights
   .map(buildCompletedFight)
   .sort((left, right) => right.timestamp.localeCompare(left.timestamp));
 
@@ -434,20 +434,6 @@ export const agents: Agent[] = baseAgents.map((agent) => {
   };
 });
 
-function buildLiveFight(source: Fight): Fight {
-  return {
-    ...source,
-    id: `${source.id}-live`,
-    status: "live",
-    winner: "",
-    timestamp: liveDataset.generatedAt,
-    scoreA: 0,
-    scoreB: 0,
-    budgetUsedA: roundTo(source.budgetUsedA * 0.72, 2),
-    budgetUsedB: roundTo(source.budgetUsedB * 0.68, 2)
-  };
-}
-
 function buildScheduledFight(): Fight {
   const [champion, contender, backup] = agents;
   const featuredTask = [...tasks].sort((left, right) => left.completionRate - right.completionRate)[0];
@@ -473,13 +459,12 @@ function buildScheduledFight(): Fight {
   };
 }
 
-const liveFight = completedFights[0] ? buildLiveFight(completedFights[0]) : undefined;
-const scheduledFight = buildScheduledFight();
+export const latestCompletedFight = completedFights[0];
+export const scheduledFights: Fight[] = [buildScheduledFight()];
 
 export const fights: Fight[] = [
-  ...(liveFight ? [liveFight] : []),
   ...completedFights,
-  scheduledFight
+  ...scheduledFights
 ];
 
 const computedFightMap = new Map(computedFights.map((fight) => [fight.id, fight] as const));
@@ -546,21 +531,6 @@ function buildFightInsight(fight: Fight): FightInsight | undefined {
         tokenEstimateK: 0,
         workspaceNotes: []
       }
-    };
-  }
-
-  if (fight.status === "live") {
-    return {
-      fight,
-      task,
-      judgesMemo: "Live card in progress. Final judges memo unlocks once the bout closes and the replay is published.",
-      keyMoments: [
-        "Both corners are still inside the scoring window.",
-        "Telemetry updates are live, but the final ruling is intentionally hidden.",
-        "Full replay evidence will publish when the bout is complete."
-      ],
-      blue: buildCornerInsight(computedFight, "blue"),
-      red: buildCornerInsight(computedFight, "red")
     };
   }
 

@@ -14,7 +14,7 @@ export function CornerEvidence({
   const transcriptEntries = corner.transcript.slice(0, 5);
 
   return (
-    <article className="border border-afc-steel-dark bg-afc-charcoal p-5">
+    <article className="h-full border border-afc-steel-dark bg-afc-charcoal p-5">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4">
         <div>
           <div className="text-[10px] text-afc-steel-light uppercase tracking-wider font-bold">

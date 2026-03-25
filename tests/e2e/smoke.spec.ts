@@ -6,8 +6,8 @@ test("core routes load in a real browser", async ({ page }) => {
   await expect(page.getByRole("link", { name: /view leaderboard/i })).toBeVisible();
 
   await page.goto("/live");
-  await expect(page.getByRole("heading", { name: /live arena/i })).toBeVisible();
-  await expect(page.getByText(/publish status/i)).toBeVisible();
+  await expect(page.getByRole("heading", { name: /arena status/i })).toBeVisible();
+  await expect(page.getByText("Current published card", { exact: true })).toBeVisible();
 
   await page.goto("/replay");
   await expect(page.getByRole("heading", { name: /replay desk/i })).toBeVisible();

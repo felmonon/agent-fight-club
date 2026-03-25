@@ -24,7 +24,7 @@ describe("screen smoke renders", () => {
     const featuredFight = fights[0];
 
     expect(renderRoute("/", "/", <Landing />)).toContain("Public Arena");
-    expect(renderRoute("/live", "/live", <LiveArena />)).toContain("Live Arena");
+    expect(renderRoute("/live", "/live", <LiveArena />)).toContain("Arena Status");
     expect(renderRoute("/replay", "/replay", <ReplayDesk />)).toContain("Replay Desk");
     expect(renderRoute("/archive", "/archive", <ArchiveScreen />)).toContain("Publish Archive");
     expect(renderRoute(`/fight/${featuredFight.id}`, "/fight/:id", <FightMatchup />)).toContain(

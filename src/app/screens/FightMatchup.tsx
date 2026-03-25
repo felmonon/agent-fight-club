@@ -4,13 +4,11 @@ import { motion } from 'motion/react';
 import { fights, agents, getFightInsight } from '../data/mock-data';
 import { ScoreBadge, TagBadge } from '../components/Badges';
 import { CornerEvidence } from '../components/CornerEvidence';
-import { useLiveSimulation } from '../hooks/useLiveSimulation';
 
 export default function FightMatchup() {
   const { id } = useParams();
   const fight = fights.find((entry) => entry.id === id);
   const insight = fight ? getFightInsight(fight.id) : undefined;
-  const { events } = useLiveSimulation(fight?.status === 'live');
 
   if (!fight) {
     return (
@@ -29,29 +27,30 @@ export default function FightMatchup() {
   const agentA = agents.find((entry) => entry.modelName === fight.agentA);
   const agentB = agents.find((entry) => entry.modelName === fight.agentB);
   const isCompleted = fight.status === 'completed';
-  const isLive = fight.status === 'live';
+  const isScheduled = fight.status === 'scheduled';
   const winnerIsBlue = isCompleted && fight.winner === fight.agentA;
 
   return (
     <div className="min-h-screen bg-afc-black">
       <motion.section
-        className={`border-b border-afc-steel-dark ${isLive ? 'bg-afc-red glow-red' : 'bg-afc-orange'}`}
+        className={`border-b border-afc-steel-dark ${isCompleted ? 'bg-afc-charcoal' : 'bg-afc-charcoal-light'}`}
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <div className="max-w-[1600px] mx-auto px-4 py-4 md:px-8">
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between text-afc-black">
+        <div className="afc-page-frame py-5">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between text-foreground">
             <div className="flex items-center gap-3">
-              {isLive && <div className="w-3 h-3 bg-afc-black animate-pulse" />}
+              <div className={`w-3 h-3 ${isCompleted ? 'bg-afc-lime' : 'bg-afc-yellow'}`} />
               <Swords className="w-6 h-6" />
               <span className="text-lg md:text-xl font-bold uppercase tracking-wider">
-                {isCompleted ? 'Fight Complete' : isLive ? 'Live Now' : 'Scheduled'}
+                {isCompleted ? 'Published Replay' : 'Scheduled Bout'}
               </span>
             </div>
-            <div className="flex flex-col gap-1 text-xs md:text-sm font-bold uppercase tracking-wider lg:flex-row lg:items-center lg:gap-4">
+            <div className="flex flex-col gap-1 text-xs md:text-sm font-bold uppercase tracking-wider lg:items-end">
               <div>Task: {fight.taskType.replaceAll('_', ' ')}</div>
-              <div className="hidden lg:block">•</div>
-              <div>{new Date(fight.timestamp).toLocaleString()}</div>
+              <div className="text-afc-steel-light">
+                {isCompleted ? 'Published from latest card' : 'Queued for next publish'} · {new Date(fight.timestamp).toLocaleString()}
+              </div>
             </div>
           </div>
         </div>
@@ -266,38 +265,24 @@ export default function FightMatchup() {
           <div className="grid grid-cols-1 xl:grid-cols-[1.25fr_1fr] gap-6">
             <div className="border border-afc-steel-dark bg-afc-black p-6">
               <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-3 font-bold">
-                {isLive ? 'Live Judges Feed' : 'Judges Memo'}
+                {isCompleted ? 'Judges Memo' : 'Fight Preview'}
               </div>
-              {isLive ? (
-                <div className="space-y-2 text-sm font-mono">
-                  {events.map((event) => (
-                    <div key={`${event.timestamp}-${event.message}`} className="flex items-start gap-3">
-                      <span className="text-afc-steel-light">{event.timestamp}</span>
-                      <span
-                        className={
-                          event.type === 'success'
-                            ? 'text-afc-lime'
-                            : event.type === 'warning'
-                            ? 'text-afc-yellow'
-                            : event.type === 'error'
-                            ? 'text-afc-red'
-                            : 'text-foreground'
-                        }
-                      >
-                        {event.message}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-afc-steel-light leading-relaxed">{insight?.judgesMemo}</p>
-              )}
+              <p className="text-afc-steel-light leading-relaxed">
+                {insight?.judgesMemo ??
+                  (isCompleted
+                    ? 'Judges memo was not captured for this fight.'
+                    : 'This bout is queued. Judges memo, transcript snippets, and replay evidence will publish after the next card resolves.')}
+              </p>
 
               <div className="pt-6 mt-6 border-t border-afc-grid">
                 <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-3 font-bold">Key Moments</div>
                 <div className="space-y-3">
-                  {(insight?.keyMoments ?? []).map((moment, index) => (
-                    <div key={moment} className="flex items-start gap-3">
+                  {(insight?.keyMoments ?? [
+                    'Same repo, same budget, same tools.',
+                    'Replay evidence attaches after the publish completes.',
+                    'Leaderboard impact settles when the card is finalized.',
+                  ]).map((moment, index) => (
+                    <div key={`${moment}-${index}`} className="flex items-start gap-3">
                       <div className={`mt-2 h-1.5 w-1.5 flex-shrink-0 ${index === 0 ? 'bg-afc-lime' : index === 1 ? 'bg-afc-yellow' : 'bg-afc-orange'}`} />
                       <span className="text-sm text-afc-steel-light">{moment}</span>
                     </div>
@@ -416,24 +401,21 @@ export default function FightMatchup() {
                 Open Replay Desk
               </Link>
             </>
-          ) : isLive ? (
-            <>
-              <h3 className="text-2xl font-bold uppercase tracking-tight mb-6">
-                <span className="text-afc-red">Battle in Progress</span>
-              </h3>
-              <Link
-                to="/live"
-                className="inline-flex min-h-12 items-center gap-2 px-8 py-4 bg-afc-red text-white font-bold uppercase tracking-wider hover:bg-afc-red/90 transition-colors animate-pulse"
-              >
-                Watch Live
-              </Link>
-            </>
           ) : (
             <>
               <h3 className="text-2xl font-bold uppercase tracking-tight mb-6">
                 Fight <span className="text-afc-orange">Scheduled</span>
               </h3>
-              <div className="text-afc-steel-light">Check back at {new Date(fight.timestamp).toLocaleString()}</div>
+              <p className="text-afc-steel-light mb-6">
+                Preview is available now. Replay evidence will appear after the scheduled bout publishes at {new Date(fight.timestamp).toLocaleString()}.
+              </p>
+              <Link
+                to="/live"
+                className="inline-flex min-h-12 items-center gap-2 px-8 py-4 bg-afc-orange text-afc-black font-bold uppercase tracking-wider hover:bg-afc-orange/90 transition-colors"
+              >
+                <Zap className="w-5 h-5" />
+                View Arena Status
+              </Link>
             </>
           )}
         </div>

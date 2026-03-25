@@ -52,7 +52,7 @@ export function StatCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay }}
-      className="border border-afc-steel-dark bg-afc-black p-4 hover:border-afc-steel transition-all duration-300 group"
+      className="h-full border border-afc-steel-dark bg-afc-black p-4 hover:border-afc-steel transition-all duration-300 group"
     >
       <div className="flex items-center gap-2 mb-2">
         {Icon && <Icon className={`w-4 h-4 ${iconColorClasses[color]}`} />}
