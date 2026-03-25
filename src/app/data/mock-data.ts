@@ -98,6 +98,46 @@ export interface SeasonStats {
   };
 }
 
+export interface AgentHistoryPoint {
+  date: string;
+  elo: number;
+  rank: number;
+  winRate: number;
+  wins: number;
+  losses: number;
+}
+
+export interface FightInsight {
+  fight: Fight;
+  task?: Task;
+  judgesMemo: string;
+  keyMoments: string[];
+  finish?: string;
+  margin?: number;
+  blue: {
+    promptStyle: string;
+    diffSummary: string;
+    notableMove: string;
+    metrics: ScoreBreakdown;
+    changedFiles: string[];
+    changedLineCount: number;
+    provider: string;
+    tokenEstimateK: number;
+    workspaceNotes: string[];
+  };
+  red: {
+    promptStyle: string;
+    diffSummary: string;
+    notableMove: string;
+    metrics: ScoreBreakdown;
+    changedFiles: string[];
+    changedLineCount: number;
+    provider: string;
+    tokenEstimateK: number;
+    workspaceNotes: string[];
+  };
+}
+
 const liveDataset = liveArenaData as LiveArenaDataset;
 const computedFights = liveDataset.fights.map(computeFight);
 const seasonSummary = buildSeasonSummaryFromData(liveDataset);
@@ -146,6 +186,10 @@ const failureModesByCategory: Record<string, string[]> = {
   Security: ["Auth bypass", "Token leakage", "Session invalidation bugs"],
   Performance: ["False speedups", "State corruption", "Benchmark overfitting"]
 };
+
+function expectedScore(eloA: number, eloB: number): number {
+  return 1 / (1 + 10 ** ((eloB - eloA) / 400));
+}
 
 function tierForRank(rank: number): Agent["tier"] {
   if (rank === 1) return "S";
@@ -279,6 +323,7 @@ function buildTask(task: ArenaTaskCard): Task {
 }
 
 export const tasks: Task[] = liveDataset.tasks.map(buildTask);
+const displayTaskMap = new Map(tasks.map((task) => [task.id, task] as const));
 
 const completedFights = computedFights
   .map(buildCompletedFight)
@@ -400,6 +445,184 @@ export const fights: Fight[] = [
   ...completedFights,
   scheduledFight
 ];
+
+const computedFightMap = new Map(computedFights.map((fight) => [fight.id, fight] as const));
+const taskByTypeMap = new Map(tasks.map((task) => [task.name, task] as const));
+
+function buildCornerInsight(fight: ComputedFightReplay, corner: "blue" | "red"): FightInsight["blue"] {
+  const capture = fight[corner].capture;
+
+  return {
+    promptStyle: fight[corner].promptStyle,
+    diffSummary: fight[corner].diffSummary,
+    notableMove: fight[corner].notableMove,
+    metrics: fight[corner].metrics,
+    changedFiles: capture?.changedFiles ?? [],
+    changedLineCount: capture?.changedLineCount ?? 0,
+    provider: capture?.provider ?? "scripted",
+    tokenEstimateK: capture?.tokenEstimateK ?? 0,
+    workspaceNotes: capture?.workspaceNotes ?? []
+  };
+}
+
+function buildFightInsight(fight: Fight): FightInsight | undefined {
+  const sourceFightId = fight.id.endsWith("-live") ? fight.id.slice(0, -5) : fight.id;
+  const computedFight = computedFightMap.get(sourceFightId);
+  const rawTask = computedFight ? seasonSummary.taskMap.get(computedFight.taskId) : undefined;
+  const task = rawTask ? displayTaskMap.get(rawTask.id) : taskByTypeMap.get(fight.taskType);
+
+  if (!computedFight) {
+    return {
+      fight,
+      task,
+      judgesMemo: "Main-event preview is locked in. Replay evidence will publish once the bout closes.",
+      keyMoments: [
+        "Same repo, same budget, same tool belt.",
+        "Both corners enter under the standard AFC scoring contract.",
+        "Final replay evidence will publish after the fight resolves."
+      ],
+      blue: {
+        promptStyle: "Awaiting fight kickoff.",
+        diffSummary: "No diff yet.",
+        notableMove: "Warm-up in progress.",
+        metrics: { correctness: 0, diffQuality: 0, runtime: 0, cost: 0, resilience: 0, penalties: 0 },
+        changedFiles: [],
+        changedLineCount: 0,
+        provider: "scheduled",
+        tokenEstimateK: 0,
+        workspaceNotes: []
+      },
+      red: {
+        promptStyle: "Awaiting fight kickoff.",
+        diffSummary: "No diff yet.",
+        notableMove: "Warm-up in progress.",
+        metrics: { correctness: 0, diffQuality: 0, runtime: 0, cost: 0, resilience: 0, penalties: 0 },
+        changedFiles: [],
+        changedLineCount: 0,
+        provider: "scheduled",
+        tokenEstimateK: 0,
+        workspaceNotes: []
+      }
+    };
+  }
+
+  if (fight.status === "live") {
+    return {
+      fight,
+      task,
+      judgesMemo: "Live card in progress. Final judges memo unlocks once the bout closes and the replay is published.",
+      keyMoments: [
+        "Both corners are still inside the scoring window.",
+        "Telemetry updates are live, but the final ruling is intentionally hidden.",
+        "Full replay evidence will publish when the bout is complete."
+      ],
+      blue: buildCornerInsight(computedFight, "blue"),
+      red: buildCornerInsight(computedFight, "red")
+    };
+  }
+
+  return {
+    fight,
+    task,
+    judgesMemo: computedFight.judgesMemo,
+    keyMoments: computedFight.keyMoments,
+    finish: computedFight.finish,
+    margin: computedFight.margin,
+    blue: buildCornerInsight(computedFight, "blue"),
+    red: buildCornerInsight(computedFight, "red")
+  };
+}
+
+export function getFightInsight(fightId: string): FightInsight | undefined {
+  const fight = fights.find((entry) => entry.id === fightId);
+  return fight ? buildFightInsight(fight) : undefined;
+}
+
+function fightCornerForAgent(fight: ComputedFightReplay, agentId: string): "blue" | "red" | undefined {
+  if (fight.blue.agentId === agentId) {
+    return "blue";
+  }
+  if (fight.red.agentId === agentId) {
+    return "red";
+  }
+  return undefined;
+}
+
+export function getAgentComputedFights(agentId: string): ComputedFightReplay[] {
+  return computedFights.filter((fight) => fightCornerForAgent(fight, agentId));
+}
+
+function buildAgentHistoryMap(): Map<string, AgentHistoryPoint[]> {
+  const tracker = new Map(
+    liveDataset.agents.map((agent) => [
+      agent.id,
+      {
+        elo: 1500,
+        wins: 0,
+        losses: 0,
+        history: [] as AgentHistoryPoint[]
+      }
+    ])
+  );
+
+  const chronologicalFights = [...computedFights].sort((left, right) =>
+    `${left.date}-${left.id}`.localeCompare(`${right.date}-${right.id}`)
+  );
+
+  for (const fight of chronologicalFights) {
+    const blue = tracker.get(fight.blue.agentId)!;
+    const red = tracker.get(fight.red.agentId)!;
+    const blueExpected = expectedScore(blue.elo, red.elo);
+    const redExpected = expectedScore(red.elo, blue.elo);
+    const blueWon = fight.winnerId === fight.blue.agentId;
+    const blueActual = blueWon ? 1 : 0;
+    const redActual = 1 - blueActual;
+    const kFactor = fight.titleFight ? 32 : 24;
+
+    blue.elo += kFactor * (blueActual - blueExpected);
+    red.elo += kFactor * (redActual - redExpected);
+    blue.wins += blueWon ? 1 : 0;
+    blue.losses += blueWon ? 0 : 1;
+    red.wins += blueWon ? 0 : 1;
+    red.losses += blueWon ? 1 : 0;
+
+    const rankings = Array.from(tracker.entries())
+      .sort((left, right) => right[1].elo - left[1].elo || right[1].wins - left[1].wins)
+      .map(([agentId], index) => [agentId, index + 1] as const);
+    const rankMap = new Map(rankings);
+    const formattedDate = new Date(`${fight.date}T18:00:00Z`).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric"
+    });
+
+    blue.history.push({
+      date: formattedDate,
+      elo: Number(blue.elo.toFixed(0)),
+      rank: rankMap.get(fight.blue.agentId) ?? liveDataset.agents.length,
+      winRate: Number(((blue.wins / (blue.wins + blue.losses)) * 100).toFixed(1)),
+      wins: blue.wins,
+      losses: blue.losses
+    });
+    red.history.push({
+      date: formattedDate,
+      elo: Number(red.elo.toFixed(0)),
+      rank: rankMap.get(fight.red.agentId) ?? liveDataset.agents.length,
+      winRate: Number(((red.wins / (red.wins + red.losses)) * 100).toFixed(1)),
+      wins: red.wins,
+      losses: red.losses
+    });
+  }
+
+  return new Map(
+    Array.from(tracker.entries()).map(([agentId, value]) => [agentId, value.history] as const)
+  );
+}
+
+const agentHistoryMap = buildAgentHistoryMap();
+
+export function getAgentHistory(agentId: string): AgentHistoryPoint[] {
+  return agentHistoryMap.get(agentId) ?? [];
+}
 
 function biggestUpsetStats(): SeasonStats["biggestUpset"] {
   const indexedAgents = new Map(agents.map((agent) => [agent.modelName, agent]));

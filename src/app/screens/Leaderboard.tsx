@@ -1,6 +1,5 @@
-import { Trophy, Filter, ArrowUpDown } from 'lucide-react';
+import { Trophy } from 'lucide-react';
 import { motion } from 'motion/react';
-import { useState } from 'react';
 import { agents, seasonStats } from '../data/mock-data';
 import { LeaderboardRow, LeaderboardHeader } from '../components/LeaderboardRow';
 import { TagBadge } from '../components/Badges';
@@ -32,9 +31,9 @@ export default function Leaderboard() {
     <div className="min-h-screen bg-afc-black">
       {/* Header */}
       <section className="border-b border-afc-steel-dark bg-afc-charcoal">
-        <div className="max-w-[1600px] mx-auto px-8 py-12">
+        <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">
           <motion.div 
-            className="flex items-center justify-between mb-8"
+            className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-8"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
           >
@@ -56,7 +55,7 @@ export default function Leaderboard() {
           </motion.div>
           
           {/* Quick Stats */}
-          <div className="grid grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
             <StatCard
               label="Champion"
               value={agents[0].modelName}
@@ -101,34 +100,36 @@ export default function Leaderboard() {
       {/* Leaderboard Table */}
       <section>
         <div className="max-w-[1600px] mx-auto">
-          <LeaderboardHeader sortKey={sortKey} sortDirection={sortDirection} onSort={toggleSort} />
-          
-          <div className="bg-afc-black">
-            {sortedItems.length > 0 ? (
-              sortedItems.map((agent, idx) => (
-                <motion.div
-                  key={agent.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.03 }}
-                >
-                  <LeaderboardRow agent={agent} />
-                </motion.div>
-              ))
-            ) : (
-              <div className="px-8 py-24 text-center">
-                <div className="text-afc-steel-light text-lg mb-2">No agents found</div>
-                <div className="text-afc-steel-light text-sm">Try adjusting your filters</div>
-              </div>
-            )}
+          <div className="overflow-x-auto">
+            <LeaderboardHeader sortKey={sortKey} sortDirection={sortDirection} onSort={toggleSort} />
+            
+            <div className="bg-afc-black">
+              {sortedItems.length > 0 ? (
+                sortedItems.map((agent, idx) => (
+                  <motion.div
+                    key={agent.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.03 }}
+                  >
+                    <LeaderboardRow agent={agent} />
+                  </motion.div>
+                ))
+              ) : (
+                <div className="px-8 py-24 text-center">
+                  <div className="text-afc-steel-light text-lg mb-2">No agents found</div>
+                  <div className="text-afc-steel-light text-sm">Try adjusting your filters</div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </section>
       
       {/* Legend */}
       <section className="border-t border-afc-steel-dark bg-afc-charcoal">
-        <div className="max-w-[1600px] mx-auto px-8 py-8">
-          <div className="flex items-start gap-12">
+        <div className="max-w-[1600px] mx-auto px-4 py-8 md:px-8">
+          <div className="grid gap-8 lg:grid-cols-3">
             <div>
               <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-3 font-bold">
                 Badge Legend
@@ -155,7 +156,7 @@ export default function Leaderboard() {
             
             <div>
               <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-3 font-bold">
-                Season 3 Info
+                Season Info
               </div>
               <div className="text-xs text-afc-steel-light space-y-1">
                 <div>

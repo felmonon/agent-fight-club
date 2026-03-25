@@ -2,7 +2,7 @@ import { Activity, Clock, DollarSign, Zap, AlertTriangle } from 'lucide-react';
 import { motion } from 'motion/react';
 import { fights } from '../data/mock-data';
 import { FightCard } from '../components/FightCard';
-import { StatChip, TagBadge } from '../components/Badges';
+import { TagBadge } from '../components/Badges';
 import { StatCard } from '../components/StatCard';
 import { useLiveSimulation } from '../hooks/useLiveSimulation';
 
@@ -30,8 +30,8 @@ export default function LiveArena() {
     <div className="min-h-screen bg-afc-black">
       {/* Header */}
       <section className="border-b border-afc-steel-dark bg-afc-charcoal">
-        <div className="max-w-[1600px] mx-auto px-8 py-8">
-          <div className="flex items-center justify-between">
+        <div className="max-w-[1600px] mx-auto px-4 py-8 md:px-8">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <motion.div 
               className="flex items-center gap-4"
               initial={{ opacity: 0, x: -20 }}
@@ -56,8 +56,8 @@ export default function LiveArena() {
       
       {/* Mission Control Panel */}
       <section className="border-b border-afc-steel-dark bg-afc-black">
-        <div className="max-w-[1600px] mx-auto px-8 py-8">
-          <div className="grid grid-cols-5 gap-4 mb-8">
+        <div className="max-w-[1600px] mx-auto px-4 py-8 md:px-8">
+          <div className="grid grid-cols-2 xl:grid-cols-5 gap-4 mb-8">
             <StatCard
               label="Active Agents"
               value={liveTelemetry.activeAgents}
@@ -102,13 +102,13 @@ export default function LiveArena() {
       {/* Live Fights */}
       {liveFights.length > 0 && (
         <section className="border-b border-afc-steel-dark">
-          <div className="max-w-[1600px] mx-auto px-8 py-12">
+          <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">
             <div className="flex items-center gap-3 mb-8">
               <div className="w-3 h-3 bg-afc-red animate-pulse" />
               <h2 className="text-2xl font-bold uppercase tracking-tight">Active Bouts</h2>
             </div>
             
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
               {liveFights.map((fight, idx) => (
                 <motion.div 
                   key={fight.id} 
@@ -195,13 +195,13 @@ export default function LiveArena() {
       {/* Scheduled Fights */}
       {scheduledFights.length > 0 && (
         <section className="bg-afc-charcoal">
-          <div className="max-w-[1600px] mx-auto px-8 py-12">
+          <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">
             <div className="flex items-center gap-3 mb-8">
               <Clock className="w-6 h-6 text-afc-steel" />
               <h2 className="text-2xl font-bold uppercase tracking-tight">Upcoming</h2>
             </div>
             
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {scheduledFights.map((fight) => (
                 <FightCard key={fight.id} fight={fight} variant="compact" />
               ))}
@@ -213,7 +213,7 @@ export default function LiveArena() {
       {/* No Live Fights State */}
       {liveFights.length === 0 && (
         <section className="py-24">
-          <div className="max-w-[1600px] mx-auto px-8 text-center">
+          <div className="max-w-[1600px] mx-auto px-4 text-center md:px-8">
             <Activity className="w-16 h-16 text-afc-steel-dark mx-auto mb-6" />
             <h2 className="text-2xl font-bold uppercase tracking-tight mb-4 text-afc-steel">
               No Active Fights

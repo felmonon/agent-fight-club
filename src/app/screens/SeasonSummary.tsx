@@ -1,4 +1,4 @@
-import { FileText, TrendingUp, Trophy, DollarSign, AlertCircle, Zap } from 'lucide-react';
+import { FileText, TrendingUp, Trophy, AlertCircle, Zap } from 'lucide-react';
 import { motion } from 'motion/react';
 import { seasonStats, agents } from '../data/mock-data';
 import { TagBadge, TrendBadge } from '../components/Badges';
@@ -7,15 +7,34 @@ import { StatCard } from '../components/StatCard';
 export default function SeasonSummary() {
   const champion = agents[0];
   const topEfficient = agents.reduce((min, agent) => agent.avgCost < min.avgCost ? agent : min);
-  const topRiser = agents.reduce((max, agent) => agent.rankChange > max.rankChange ? agent : max);
+  const handleExportReport = () => {
+    const report = [
+      `Agent Fight Club Season ${seasonStats.season} Report`,
+      '',
+      `Champion: ${champion.modelName}`,
+      `Record: ${champion.wins}-${champion.losses}`,
+      `ELO: ${champion.elo}`,
+      `Most efficient: ${topEfficient.modelName} at $${topEfficient.avgCost} / ${topEfficient.avgRuntime}s`,
+      `Biggest upset: ${seasonStats.biggestUpset.winner} over ${seasonStats.biggestUpset.loser} on ${seasonStats.biggestUpset.task}`,
+      `Controversial decision: ${seasonStats.controversialDecision.agentA} vs ${seasonStats.controversialDecision.agentB}`,
+      `Notes: ${seasonStats.controversialDecision.dispute}`
+    ].join('\n');
+    const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = `agent-fight-club-season-${seasonStats.season}-report.txt`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  };
   
   return (
     <div className="min-h-screen bg-afc-black">
       {/* Header */}
       <section className="border-b border-afc-steel-dark bg-afc-charcoal">
-        <div className="max-w-[1600px] mx-auto px-8 py-12">
+        <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">
           <motion.div 
-            className="flex items-center justify-between mb-8"
+            className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-8"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
           >
@@ -30,16 +49,17 @@ export default function SeasonSummary() {
             </div>
             
             <motion.button 
+              onClick={handleExportReport}
               className="px-6 py-3 bg-afc-orange text-afc-black font-bold uppercase tracking-wider hover:bg-afc-orange/90 transition-colors"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Export Report
+              Download Report
             </motion.button>
           </motion.div>
           
           {/* Season Overview */}
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
             <StatCard
               label="Season Start"
               value={new Date(seasonStats.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
@@ -69,7 +89,7 @@ export default function SeasonSummary() {
       
       {/* Season Champion */}
       <section className="border-b border-afc-steel-dark bg-gradient-to-b from-afc-black to-afc-charcoal">
-        <div className="max-w-[1600px] mx-auto px-8 py-16">
+        <div className="max-w-[1600px] mx-auto px-4 py-16 md:px-8">
           <motion.div 
             className="flex items-center gap-3 mb-8"
             initial={{ opacity: 0, x: -20 }}
@@ -80,17 +100,17 @@ export default function SeasonSummary() {
           </motion.div>
           
           <motion.div 
-            className="border border-afc-orange shadow-[0_0_40px_rgba(255,107,0,0.2)] bg-afc-charcoal p-12 glow-orange-strong"
+            className="border border-afc-orange shadow-[0_0_40px_rgba(255,107,0,0.2)] bg-afc-charcoal p-6 md:p-12 glow-orange-strong"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <div className="grid grid-cols-[1fr_2fr] gap-12">
+            <div className="grid grid-cols-1 xl:grid-cols-[1fr_2fr] gap-12">
               <div>
                 <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-2">
                   Rank #1
                 </div>
-                <h3 className="text-5xl font-bold uppercase tracking-tight mb-4 text-afc-orange">
+                <h3 className="text-4xl md:text-5xl font-bold uppercase tracking-tight mb-4 text-afc-orange">
                   {champion.modelName}
                 </h3>
                 <div className="text-sm text-afc-steel-light font-mono mb-4">{champion.provider}</div>
@@ -161,13 +181,13 @@ export default function SeasonSummary() {
       
       {/* Key Season Narratives */}
       <section className="border-b border-afc-steel-dark bg-afc-black">
-        <div className="max-w-[1600px] mx-auto px-8 py-12">
+        <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">
           <div className="flex items-center gap-3 mb-8">
             <TrendingUp className="w-6 h-6 text-afc-orange" />
             <h2 className="text-2xl font-bold uppercase tracking-tight">Season Narratives</h2>
           </div>
           
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
             {/* Biggest Upset */}
             <div className="border border-afc-red bg-afc-red/5 p-6">
               <div className="flex items-center justify-between mb-4">
@@ -301,13 +321,13 @@ export default function SeasonSummary() {
       
       {/* Season Rankings Trend */}
       <section className="border-b border-afc-steel-dark bg-afc-charcoal">
-        <div className="max-w-[1600px] mx-auto px-8 py-12">
+        <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">
           <div className="flex items-center gap-3 mb-8">
             <TrendingUp className="w-6 h-6 text-afc-orange" />
             <h2 className="text-2xl font-bold uppercase tracking-tight">Top Movers</h2>
           </div>
           
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {agents
               .filter(a => a.rankChange !== 0)
               .sort((a, b) => Math.abs(b.rankChange) - Math.abs(a.rankChange))
@@ -334,7 +354,7 @@ export default function SeasonSummary() {
       
       {/* Looking Ahead */}
       <section className="bg-afc-black">
-        <div className="max-w-[1600px] mx-auto px-8 py-16">
+        <div className="max-w-[1600px] mx-auto px-4 py-16 md:px-8">
           <div className="text-center max-w-3xl mx-auto">
             <h2 className="text-3xl font-bold uppercase tracking-tight mb-6">
               Season {seasonStats.season + 1} <span className="text-afc-orange">Approaches</span>
@@ -344,7 +364,7 @@ export default function SeasonSummary() {
               refined scoring systems, and even more brutal task gauntlets. Will {champion.modelName} defend 
               the title, or will a new champion emerge?
             </p>
-            <div className="flex items-center justify-center gap-4">
+            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <div className="px-6 py-3 border border-afc-orange text-center">
                 <div className="text-xs text-afc-steel-light uppercase tracking-wider mb-1">Season Ends</div>
                 <div className="text-lg font-bold text-afc-orange">

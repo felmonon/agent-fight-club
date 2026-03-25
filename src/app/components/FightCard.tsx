@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Swords, Clock, DollarSign, Zap } from 'lucide-react';
+import { Swords } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Fight } from '../data/mock-data';
 import { ScoreBadge, StatChip } from './Badges';
@@ -33,16 +33,16 @@ export function FightCard({ fight, variant = 'default' }: FightCardProps) {
           to={`/fight/${fight.id}`}
           className="block border border-afc-steel-dark bg-afc-charcoal hover:border-afc-orange transition-all duration-300 p-4 hover-lift"
         >
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center justify-between gap-3 mb-2">
             <span className={`text-xs uppercase tracking-wider font-bold ${statusColor}`}>
               {fight.status}
             </span>
-            <span className="text-[10px] text-afc-steel-light uppercase">{fight.taskType.replace('_', ' ')}</span>
+            <span className="text-[10px] text-afc-steel-light uppercase text-right">{fight.taskType.replace('_', ' ')}</span>
           </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-bold">{fight.agentA}</span>
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-sm font-bold min-w-0 truncate">{fight.agentA}</span>
             <Swords className="w-4 h-4 text-afc-orange" />
-            <span className="text-sm font-bold">{fight.agentB}</span>
+            <span className="text-sm font-bold min-w-0 truncate text-right">{fight.agentB}</span>
           </div>
         </Link>
       </motion.div>
@@ -61,31 +61,31 @@ export function FightCard({ fight, variant = 'default' }: FightCardProps) {
         className={`
           block border bg-afc-charcoal hover:border-afc-orange transition-all duration-300 group
           ${isFeatured 
-            ? 'border-afc-orange glow-orange-strong p-8' 
-            : 'border-afc-steel-dark p-6 hover:glow-orange'
+            ? 'border-afc-orange glow-orange-strong p-5 md:p-8' 
+            : 'border-afc-steel-dark p-5 md:p-6 hover:glow-orange'
           }
           ${isLive ? 'glow-red' : ''}
         `}
       >
         {/* Status Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col gap-4 mb-6 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <div className={`w-2 h-2 ${isLive ? 'bg-afc-red animate-pulse' : isCompleted ? 'bg-afc-lime' : 'bg-afc-steel'}`} />
             <span className={`text-xs uppercase tracking-widest font-bold ${statusColor}`}>
               {fight.status}
             </span>
           </div>
-          <div className="text-right">
+          <div className="text-left sm:text-right">
             <div className="text-[10px] text-afc-steel-light uppercase tracking-wider">Task</div>
             <div className="text-sm font-bold text-afc-orange">{fight.taskType.replace('_', ' ')}</div>
           </div>
         </div>
         
         {/* Fighter Comparison */}
-        <div className="grid grid-cols-[1fr_auto_1fr] gap-6 items-center mb-6">
+        <div className="grid grid-cols-[1fr_auto_1fr] gap-3 md:gap-6 items-center mb-6">
           {/* Fighter A */}
           <div className="text-right">
-            <div className={`text-2xl font-bold uppercase tracking-tight mb-2 ${isCompleted && fight.winner === fight.agentA ? 'text-afc-lime' : 'text-foreground'}`}>
+            <div className={`text-lg md:text-2xl font-bold uppercase tracking-tight mb-2 break-words ${isCompleted && fight.winner === fight.agentA ? 'text-afc-lime' : 'text-foreground'}`}>
               {fight.agentA}
             </div>
             {isCompleted && (
@@ -103,7 +103,7 @@ export function FightCard({ fight, variant = 'default' }: FightCardProps) {
           
           {/* Fighter B */}
           <div className="text-left">
-            <div className={`text-2xl font-bold uppercase tracking-tight mb-2 ${isCompleted && fight.winner === fight.agentB ? 'text-afc-lime' : 'text-foreground'}`}>
+            <div className={`text-lg md:text-2xl font-bold uppercase tracking-tight mb-2 break-words ${isCompleted && fight.winner === fight.agentB ? 'text-afc-lime' : 'text-foreground'}`}>
               {fight.agentB}
             </div>
             {isCompleted && (
@@ -116,7 +116,7 @@ export function FightCard({ fight, variant = 'default' }: FightCardProps) {
         
         {/* Stats Grid */}
         {isCompleted && (
-          <div className="grid grid-cols-4 gap-3 pt-4 border-t border-afc-grid">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-4 border-t border-afc-grid">
             <StatChip 
               label="Budget A" 
               value={`$${fight.budgetUsedA}`}

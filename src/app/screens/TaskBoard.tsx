@@ -1,4 +1,4 @@
-import { Target, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
+import { Target, AlertTriangle, XCircle } from 'lucide-react';
 import { motion } from 'motion/react';
 import { tasks } from '../data/mock-data';
 import { TagBadge } from '../components/Badges';
@@ -40,9 +40,9 @@ export default function TaskBoard() {
     <div className="min-h-screen bg-afc-black">
       {/* Header */}
       <section className="border-b border-afc-steel-dark bg-afc-charcoal">
-        <div className="max-w-[1600px] mx-auto px-8 py-12">
+        <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">
           <motion.div 
-            className="flex items-center justify-between mb-8"
+            className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-8"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
           >
@@ -58,7 +58,7 @@ export default function TaskBoard() {
           </motion.div>
           
           {/* Summary Stats */}
-          <div className="grid grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
             <StatCard
               label="Total Tasks"
               value={tasks.length}
@@ -100,8 +100,8 @@ export default function TaskBoard() {
       
       {/* Task Cards */}
       <section className="bg-afc-black">
-        <div className="max-w-[1600px] mx-auto px-8 py-12">
-          <div className="grid grid-cols-2 gap-6">
+        <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
             {filteredItems.map((task) => (
               <div
                 key={task.id}
@@ -111,7 +111,7 @@ export default function TaskBoard() {
                 <div className="p-6 border-b border-afc-grid">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
+                      <div className="flex flex-wrap items-center gap-3 mb-2">
                         <h3 className="text-xl font-bold uppercase tracking-tight">
                           {task.name.replace('_', ' ')}
                         </h3>
@@ -143,7 +143,7 @@ export default function TaskBoard() {
                   <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-3 font-bold">
                     Constraints
                   </div>
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div className="bg-afc-black p-3">
                       <div className="text-[9px] text-afc-steel-light uppercase tracking-wider mb-1">Budget</div>
                       <div className="text-lg font-bold text-afc-yellow">${task.constraints.budget}</div>
@@ -190,7 +190,7 @@ export default function TaskBoard() {
                   <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-3 font-bold">
                     Historical Performance
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <div className="text-xs text-afc-steel-light mb-1">Completion Rate</div>
                       <div className="h-2 bg-afc-black mb-2">

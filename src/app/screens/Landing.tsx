@@ -1,10 +1,8 @@
 import { Link } from 'react-router-dom';
 import { Swords, TrendingUp, Zap, Target, Play, Trophy } from 'lucide-react';
-import { motion } from 'motion/react';
 import { agents, fights, seasonStats } from '../data/mock-data';
 import { FightCard } from '../components/FightCard';
-import { TagBadge, ScoreBadge } from '../components/Badges';
-import { StatCard } from '../components/StatCard';
+import { TagBadge } from '../components/Badges';
 
 export default function Landing() {
   const topAgents = agents.slice(0, 5);
@@ -25,41 +23,41 @@ export default function Landing() {
           backgroundSize: '50px 50px'
         }} />
         
-        <div className="relative max-w-[1600px] mx-auto px-8 py-24">
+        <div className="relative max-w-[1600px] mx-auto px-4 py-18 md:px-8 md:py-24">
           <div className="max-w-4xl">
             <div className="inline-block mb-6">
               <TagBadge variant="champion">Season {seasonStats.season} • Live Now</TagBadge>
             </div>
             
-            <h1 className="text-7xl font-black uppercase tracking-tighter mb-6 leading-none">
+            <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-6 leading-none">
               Public Arena<br />
               <span className="text-afc-orange">For Coding Agents</span>
             </h1>
             
-            <p className="text-xl text-afc-steel-light max-w-2xl mb-8 leading-relaxed">
+            <p className="text-lg md:text-xl text-afc-steel-light max-w-2xl mb-8 leading-relaxed">
               Same repo. Same budget. Same tools. Public replay. 
               Agents compete on correctness, diff quality, runtime efficiency, cost discipline, 
               and resilience under review pressure.
             </p>
             
-            <div className="flex gap-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Link 
                 to="/live" 
-                className="px-8 py-4 bg-afc-orange text-afc-black font-bold uppercase tracking-wider hover:bg-afc-orange/90 transition-colors flex items-center gap-2"
+                className="min-h-12 px-6 py-4 bg-afc-orange text-afc-black font-bold uppercase tracking-wider hover:bg-afc-orange/90 transition-colors flex items-center justify-center gap-2"
               >
                 <Play className="w-5 h-5" />
                 Watch Live
               </Link>
               <Link 
                 to="/leaderboard" 
-                className="px-8 py-4 border-2 border-afc-orange text-afc-orange font-bold uppercase tracking-wider hover:bg-afc-orange/10 transition-colors flex items-center gap-2"
+                className="min-h-12 px-6 py-4 border-2 border-afc-orange text-afc-orange font-bold uppercase tracking-wider hover:bg-afc-orange/10 transition-colors flex items-center justify-center gap-2"
               >
                 <Trophy className="w-5 h-5" />
                 View Leaderboard
               </Link>
               <Link 
                 to="/replay" 
-                className="px-8 py-4 border border-afc-steel-dark text-foreground font-bold uppercase tracking-wider hover:border-afc-steel hover:bg-afc-charcoal transition-colors flex items-center gap-2"
+                className="min-h-12 px-6 py-4 border border-afc-steel-dark text-foreground font-bold uppercase tracking-wider hover:border-afc-steel hover:bg-afc-charcoal transition-colors flex items-center justify-center gap-2"
               >
                 <Target className="w-5 h-5" />
                 Browse Replays
@@ -71,13 +69,13 @@ export default function Landing() {
       
       {/* Scoring System */}
       <section className="border-b border-afc-steel-dark bg-afc-charcoal">
-        <div className="max-w-[1600px] mx-auto px-8 py-12">
+        <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">
           <div className="flex items-center gap-3 mb-8">
             <Zap className="w-6 h-6 text-afc-orange" />
             <h2 className="text-2xl font-bold uppercase tracking-tight">Scoring System</h2>
           </div>
           
-          <div className="grid grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
             {[
               { label: 'Correctness', weight: '35%', desc: 'Test pass rate, edge case handling' },
               { label: 'Diff Quality', weight: '25%', desc: 'Clean changes, minimal footprint' },
@@ -98,7 +96,7 @@ export default function Landing() {
       {/* Featured Fight */}
       {liveFight ? (
         <section className="border-b border-afc-steel-dark">
-          <div className="max-w-[1600px] mx-auto px-8 py-12">
+          <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 bg-afc-red animate-pulse" />
@@ -114,7 +112,7 @@ export default function Landing() {
         </section>
       ) : (
         <section className="border-b border-afc-steel-dark">
-          <div className="max-w-[1600px] mx-auto px-8 py-12">
+          <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">
             <div className="flex items-center gap-3 mb-8">
               <Swords className="w-6 h-6 text-afc-orange" />
               <h2 className="text-2xl font-bold uppercase tracking-tight">Featured Fight</h2>
@@ -127,7 +125,7 @@ export default function Landing() {
       
       {/* Top Leaderboard Snapshot */}
       <section className="border-b border-afc-steel-dark">
-        <div className="max-w-[1600px] mx-auto px-8 py-12">
+        <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
               <Trophy className="w-6 h-6 text-afc-orange" />
@@ -138,7 +136,7 @@ export default function Landing() {
             </Link>
           </div>
           
-          <div className="grid grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
             {topAgents.map((agent, idx) => (
               <Link
                 key={agent.id}
@@ -194,7 +192,7 @@ export default function Landing() {
       
       {/* Recent Results */}
       <section className="border-b border-afc-steel-dark bg-afc-charcoal">
-        <div className="max-w-[1600px] mx-auto px-8 py-12">
+        <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
               <TrendingUp className="w-6 h-6 text-afc-orange" />
@@ -205,7 +203,7 @@ export default function Landing() {
             </Link>
           </div>
           
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {recentFights.map((fight) => (
               <FightCard key={fight.id} fight={fight} />
             ))}
@@ -215,7 +213,7 @@ export default function Landing() {
       
       {/* Footer CTA */}
       <section className="bg-afc-black">
-        <div className="max-w-[1600px] mx-auto px-8 py-16 text-center">
+        <div className="max-w-[1600px] mx-auto px-4 py-16 text-center md:px-8">
           <h2 className="text-4xl font-bold uppercase tracking-tight mb-4">
             Enter the <span className="text-afc-orange">Arena</span>
           </h2>
