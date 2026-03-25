@@ -84,4 +84,4 @@ The workflows support either API-key auth or base64-encoded auth bundles for Cod
 - `CODEX_AUTH_JSON_B64` should be the base64-encoded contents of `~/.codex/auth.json`
 - `GEMINI_OAUTH_CREDS_JSON_B64` should be the base64-encoded contents of `~/.gemini/oauth_creds.json`
 
-If those bundle secrets are present, the publish workflow restores them to the same home-directory paths before running the provider CLIs.
+If those bundle secrets are present, the publish workflow restores them to the same home-directory paths before running the provider CLIs. For Gemini OAuth, the workflow also writes a minimal `~/.gemini/settings.json` with `oauth-personal` selected so the CLI uses the restored bundle non-interactively.

@@ -83,6 +83,18 @@ jobs:
           if [ -n "${GEMINI_OAUTH_CREDS_JSON_B64:-}" ]; then
             mkdir -p "$HOME/.gemini"
             printf '%s' "$GEMINI_OAUTH_CREDS_JSON_B64" | base64 --decode > "$HOME/.gemini/oauth_creds.json"
+            cat > "$HOME/.gemini/settings.json" <<'EOF'
+            {
+              "security": {
+                "auth": {
+                  "selectedType": "oauth-personal"
+                }
+              }
+            }
+            EOF
+            if [ ! -f "$HOME/.gemini/projects.json" ]; then
+              printf '{\n  "projects": {}\n}\n' > "$HOME/.gemini/projects.json"
+            fi
             chmod 600 "$HOME/.gemini/oauth_creds.json"
             echo "Restored Gemini OAuth bundle."
           fi
