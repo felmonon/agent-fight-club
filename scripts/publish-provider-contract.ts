@@ -7,7 +7,7 @@ export interface ProviderContract {
   provider: ProviderKey;
   binary: string;
   ciInstallCommand: string;
-  requiredSecrets: string[];
+  requiredSecretAlternatives: string[][];
   optionalEnv: string[];
 }
 
@@ -22,7 +22,7 @@ const PROVIDER_CONTRACTS: Record<ProviderKey, ProviderContract> = {
     provider: "codex",
     binary: "codex",
     ciInstallCommand: "npm install -g @openai/codex",
-    requiredSecrets: ["OPENAI_API_KEY"],
+    requiredSecretAlternatives: [["OPENAI_API_KEY"], ["CODEX_AUTH_JSON_B64"]],
     optionalEnv: [
       "AFC_CODEX_MODEL",
       "AFC_CODEX_TIMEOUT_MS",
@@ -35,7 +35,7 @@ const PROVIDER_CONTRACTS: Record<ProviderKey, ProviderContract> = {
     provider: "claude",
     binary: "claude",
     ciInstallCommand: "npm install -g @anthropic-ai/claude-code",
-    requiredSecrets: ["ANTHROPIC_API_KEY"],
+    requiredSecretAlternatives: [["ANTHROPIC_API_KEY"]],
     optionalEnv: [
       "AFC_CLAUDE_MODEL",
       "AFC_CLAUDE_TIMEOUT_MS",
@@ -48,7 +48,7 @@ const PROVIDER_CONTRACTS: Record<ProviderKey, ProviderContract> = {
     provider: "gemini",
     binary: "gemini",
     ciInstallCommand: "npm install -g @google/gemini-cli",
-    requiredSecrets: ["GEMINI_API_KEY"],
+    requiredSecretAlternatives: [["GEMINI_API_KEY"], ["GEMINI_OAUTH_CREDS_JSON_B64"]],
     optionalEnv: [
       "AFC_GEMINI_MODEL",
       "AFC_GEMINI_TIMEOUT_MS",
@@ -98,8 +98,15 @@ export function getMissingSecretsForPreset(
 ): string[] {
   const contract = getPublishPresetContract(presetKey);
   return contract.providers
-    .flatMap((provider) => provider.requiredSecrets)
-    .filter((secretName) => !env[secretName]);
+    .filter(
+      (provider) =>
+        !provider.requiredSecretAlternatives.some((alternative) =>
+          alternative.every((secretName) => Boolean(env[secretName]))
+        )
+    )
+    .map((provider) =>
+      provider.requiredSecretAlternatives.map((alternative) => alternative.join(" + ")).join(" or ")
+    );
 }
 
 function printUsage() {
@@ -124,7 +131,11 @@ function formatContract(contract: PublishPresetContract) {
   for (const provider of contract.providers) {
     lines.push(`- ${provider.provider}: ${provider.binary}`);
     lines.push(`  install: ${provider.ciInstallCommand}`);
-    lines.push(`  required secrets: ${provider.requiredSecrets.join(", ")}`);
+    lines.push(
+      `  required secrets: ${provider.requiredSecretAlternatives
+        .map((group) => group.join(" + "))
+        .join(" OR ")}`
+    );
   }
   return lines.join("\n");
 }

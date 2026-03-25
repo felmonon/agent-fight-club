@@ -39,11 +39,11 @@ node --experimental-strip-types scripts/publish-provider-contract.ts multiverse 
 Preset to provider mapping:
 
 - `scripted`: no external provider secrets required
-- `codex`: `OPENAI_API_KEY`
+- `codex`: `OPENAI_API_KEY` or `CODEX_AUTH_JSON_B64`
 - `claude`: `ANTHROPIC_API_KEY`
-- `gemini`: `GEMINI_API_KEY`
-- `versus`: `OPENAI_API_KEY`, `GEMINI_API_KEY`
-- `multiverse`: `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`
+- `gemini`: `GEMINI_API_KEY` or `GEMINI_OAUTH_CREDS_JSON_B64`
+- `versus`: `OPENAI_API_KEY` or `CODEX_AUTH_JSON_B64`, plus `GEMINI_API_KEY` or `GEMINI_OAUTH_CREDS_JSON_B64`
+- `multiverse`: `OPENAI_API_KEY` or `CODEX_AUTH_JSON_B64`, `ANTHROPIC_API_KEY`, and `GEMINI_API_KEY` or `GEMINI_OAUTH_CREDS_JSON_B64`
 
 Optional GitHub repository variables for model and timeout control:
 
@@ -68,7 +68,7 @@ Why:
 
 Suggested workflow order:
 
-1. Add `OPENAI_API_KEY` and `GEMINI_API_KEY`.
+1. Add either `OPENAI_API_KEY` or `CODEX_AUTH_JSON_B64`, and either `GEMINI_API_KEY` or `GEMINI_OAUTH_CREDS_JSON_B64`.
 2. Set optional model vars if you want to pin models.
 3. Run `Publish Live Arena` manually with preset `versus`.
 4. Check the committed artifacts under `public/reports/archive/`.
@@ -76,10 +76,12 @@ Suggested workflow order:
 
 ## Notes About CI Auth
 
-The workflows are designed for headless CI, so they assume API-key based auth for real-provider runs.
+The workflows support either API-key auth or base64-encoded auth bundles for Codex and Gemini.
 
 - Codex CLI is installed in CI via `npm install -g @openai/codex`
 - Claude Code is installed in CI via `npm install -g @anthropic-ai/claude-code`
 - Gemini CLI is installed in CI via `npm install -g @google/gemini-cli`
+- `CODEX_AUTH_JSON_B64` should be the base64-encoded contents of `~/.codex/auth.json`
+- `GEMINI_OAUTH_CREDS_JSON_B64` should be the base64-encoded contents of `~/.gemini/oauth_creds.json`
 
-If you prefer provider-specific OAuth or org-managed auth flows locally, that is fine for local runs, but the GitHub workflow expects secrets it can use non-interactively.
+If those bundle secrets are present, the publish workflow restores them to the same home-directory paths before running the provider CLIs.

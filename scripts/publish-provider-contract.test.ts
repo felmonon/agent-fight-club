@@ -16,7 +16,15 @@ describe("publish provider contract", () => {
     const contract = getPublishPresetContract("versus");
 
     expect(contract.providers.map((provider) => provider.provider)).toEqual(["codex", "gemini"]);
-    expect(getMissingSecretsForPreset("versus", { OPENAI_API_KEY: "x" })).toEqual(["GEMINI_API_KEY"]);
+    expect(getMissingSecretsForPreset("versus", { OPENAI_API_KEY: "x" })).toEqual([
+      "GEMINI_API_KEY or GEMINI_OAUTH_CREDS_JSON_B64"
+    ]);
+    expect(
+      getMissingSecretsForPreset("versus", {
+        CODEX_AUTH_JSON_B64: "x",
+        GEMINI_OAUTH_CREDS_JSON_B64: "y"
+      })
+    ).toEqual([]);
   });
 
   it("maps multiverse to all provider secrets", () => {
@@ -25,6 +33,6 @@ describe("publish provider contract", () => {
       ANTHROPIC_API_KEY: "y"
     });
 
-    expect(missing).toEqual(["GEMINI_API_KEY"]);
+    expect(missing).toEqual(["GEMINI_API_KEY or GEMINI_OAUTH_CREDS_JSON_B64"]);
   });
 });

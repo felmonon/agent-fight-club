@@ -42,7 +42,9 @@ jobs:
       AFC_GEMINI_MODEL: ${{ vars.AFC_GEMINI_MODEL }}
       AFC_GEMINI_TIMEOUT_MS: ${{ vars.AFC_GEMINI_TIMEOUT_MS }}
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      CODEX_AUTH_JSON_B64: ${{ secrets.CODEX_AUTH_JSON_B64 }}
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GEMINI_OAUTH_CREDS_JSON_B64: ${{ secrets.GEMINI_OAUTH_CREDS_JSON_B64 }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
     steps:
@@ -65,6 +67,25 @@ jobs:
 
       - name: Validate provider secrets
         run: node --experimental-strip-types scripts/publish-provider-contract.ts "$AFC_PUBLISH_PRESET" --check-secrets
+
+      - name: Materialize provider auth bundles
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ -n "${CODEX_AUTH_JSON_B64:-}" ]; then
+            mkdir -p "$HOME/.codex"
+            printf '%s' "$CODEX_AUTH_JSON_B64" | base64 --decode > "$HOME/.codex/auth.json"
+            chmod 600 "$HOME/.codex/auth.json"
+            echo "Restored Codex auth bundle."
+          fi
+
+          if [ -n "${GEMINI_OAUTH_CREDS_JSON_B64:-}" ]; then
+            mkdir -p "$HOME/.gemini"
+            printf '%s' "$GEMINI_OAUTH_CREDS_JSON_B64" | base64 --decode > "$HOME/.gemini/oauth_creds.json"
+            chmod 600 "$HOME/.gemini/oauth_creds.json"
+            echo "Restored Gemini OAuth bundle."
+          fi
 
       - name: Install Codex CLI
         if: contains(fromJSON('["codex","versus","multiverse"]'), env.AFC_PUBLISH_PRESET)
