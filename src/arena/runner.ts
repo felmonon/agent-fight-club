@@ -1,0 +1,305 @@
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
+import { performance } from "node:perf_hooks";
+import { liveAgents } from "./agents.ts";
+import { liveTasks } from "./tasks.ts";
+import type {
+  ArenaAgentAdapter,
+  ArenaAgentExecution,
+  ArenaCornerResult,
+  ArenaDiffStats,
+  ArenaFightPlan,
+  ArenaRunResult,
+  ArenaTaskDefinition
+} from "./types.ts";
+import type { FightReplay, ScoreBreakdown } from "../lib/types.ts";
+import { computeFight } from "../lib/tournament.ts";
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
+}
+
+function round(value: number): number {
+  return Math.round(value);
+}
+
+async function materializeTask(task: ArenaTaskDefinition, workspaceDir: string): Promise<Map<string, string>> {
+  const snapshot = new Map<string, string>();
+
+  for (const file of task.files) {
+    const targetPath = path.join(workspaceDir, file.path);
+    await writeFile(targetPath, file.content, "utf8");
+    snapshot.set(file.path, file.content);
+  }
+
+  return snapshot;
+}
+
+async function computeDiffStats(
+  workspaceDir: string,
+  snapshot: Map<string, string>
+): Promise<ArenaDiffStats> {
+  const changedFiles: string[] = [];
+  let changedLineCount = 0;
+
+  for (const [relativePath, original] of snapshot.entries()) {
+    const current = await readFile(path.join(workspaceDir, relativePath), "utf8");
+    if (current === original) {
+      continue;
+    }
+
+    changedFiles.push(relativePath);
+    const originalLines = original.split("\n");
+    const currentLines = current.split("\n");
+    changedLineCount += Math.max(originalLines.length, currentLines.length);
+  }
+
+  return {
+    changedFiles,
+    changedLineCount
+  };
+}
+
+function deriveMetrics(
+  execution: ArenaAgentExecution,
+  evaluation: Awaited<ReturnType<ArenaTaskDefinition["evaluate"]>>,
+  diffStats: ArenaDiffStats,
+  durationMs: number
+): ScoreBreakdown {
+  const correctness = round((evaluation.passedChecks / evaluation.totalChecks) * 100);
+  const penalties = execution.warnings.length + evaluation.reviewFlags.length;
+  const diffPenalty =
+    Math.max(0, diffStats.changedFiles.length - 1) * 8 +
+    Math.max(0, diffStats.changedLineCount - 18) * 0.8 +
+    evaluation.reviewFlags.length * 8 +
+    execution.warnings.length * 5;
+  const diffQuality = clamp(round(98 - diffPenalty), 35, 98);
+  const runtime = clamp(round(evaluation.performanceScore - durationMs / 18), 35, 99);
+  const cost = clamp(
+    round(98 - execution.tokenEstimateK * 0.52 - diffStats.changedFiles.length * 3),
+    28,
+    98
+  );
+  const resilience = clamp(
+    round(95 - evaluation.reviewFlags.length * 13 - execution.warnings.length * 7 + (correctness === 100 ? 3 : 0)),
+    20,
+    99
+  );
+
+  return {
+    correctness,
+    diffQuality,
+    runtime,
+    cost,
+    resilience,
+    penalties
+  };
+}
+
+function deriveKeyMoments(
+  blue: ArenaCornerResult,
+  red: ArenaCornerResult,
+  winnerName: string,
+  loserName: string
+): string[] {
+  const moments = [
+    `${winnerName} landed ${
+      blue.metrics.correctness === red.metrics.correctness
+        ? "the cleaner review line"
+        : blue.metrics.correctness > red.metrics.correctness
+          ? "the cleaner correctness line"
+          : "the better pressure answer"
+    }.`,
+    `${loserName} ${
+      red.evaluation.reviewFlags.length > 0 || blue.evaluation.reviewFlags.length > 0
+        ? "picked up avoidable review heat."
+        : "kept the fight close on execution."
+    }`,
+    blue.evaluation.notes[0] ?? red.evaluation.notes[0] ?? "The fixture exposed real code-path tradeoffs."
+  ];
+
+  return moments;
+}
+
+function deriveJudgesMemo(
+  fight: ReturnType<typeof computeFight>,
+  blueAgent: ArenaAgentAdapter,
+  redAgent: ArenaAgentAdapter,
+  blue: ArenaCornerResult,
+  red: ArenaCornerResult
+): string {
+  const winner = fight.winnerId === fight.blue.agentId ? blueAgent.profile.name : redAgent.profile.name;
+  const loser = fight.loserId === fight.blue.agentId ? blueAgent.profile.name : redAgent.profile.name;
+  const winnerCorner = fight.winnerId === fight.blue.agentId ? blue : red;
+  const loserCorner = fight.winnerId === fight.blue.agentId ? red : blue;
+
+  if (winnerCorner.metrics.diffQuality > loserCorner.metrics.diffQuality + 8) {
+    return `${winner} beat ${loser} by surviving the repo with a cleaner patch shape and fewer review liabilities.`;
+  }
+  if (winnerCorner.metrics.runtime > loserCorner.metrics.runtime + 8) {
+    return `${winner} beat ${loser} by solving the task while owning the speed column.`;
+  }
+  if (winnerCorner.metrics.correctness > loserCorner.metrics.correctness) {
+    return `${winner} beat ${loser} because the fix actually closed more of the real problem surface.`;
+  }
+  return `${winner} edged ${loser} by stacking small advantages across correctness, restraint, and review safety.`;
+}
+
+async function runCorner(agent: ArenaAgentAdapter, task: ArenaTaskDefinition): Promise<ArenaCornerResult> {
+  const workspaceDir = await mkdtemp(path.join(os.tmpdir(), `afc-${task.card.id}-${agent.profile.id}-`));
+
+  try {
+    const snapshot = await materializeTask(task, workspaceDir);
+    const startedAt = performance.now();
+    const execution = await agent.run({ task, workspaceDir });
+    const durationMs = performance.now() - startedAt;
+    const evaluation = await task.evaluate(workspaceDir);
+    const diffStats = await computeDiffStats(workspaceDir, snapshot);
+
+    return {
+      ...execution,
+      durationMs,
+      evaluation,
+      diffStats,
+      metrics: deriveMetrics(execution, evaluation, diffStats, durationMs)
+    };
+  } finally {
+    await rm(workspaceDir, { recursive: true, force: true });
+  }
+}
+
+const fightPlan: ArenaFightPlan[] = [
+  {
+    id: "live-001",
+    date: "2026-03-24",
+    venue: "Fixture Hall",
+    division: "Hotfix Eliminator",
+    taskId: "checkout-guard",
+    blueAgentId: "ghostwire",
+    redAgentId: "ironclad"
+  },
+  {
+    id: "live-002",
+    date: "2026-03-24",
+    venue: "Profiler Cage",
+    division: "Performance Feature Fight",
+    taskId: "dedupe-dojo",
+    blueAgentId: "blackboxer",
+    redAgentId: "cinder"
+  },
+  {
+    id: "live-003",
+    date: "2026-03-24",
+    venue: "Seal Room",
+    division: "Security Main Card",
+    taskId: "session-shield",
+    blueAgentId: "ghostwire",
+    redAgentId: "blackboxer"
+  },
+  {
+    id: "live-004",
+    date: "2026-03-24",
+    venue: "Seal Room",
+    division: "Security Eliminator",
+    taskId: "session-shield",
+    blueAgentId: "ironclad",
+    redAgentId: "cinder"
+  },
+  {
+    id: "live-005",
+    date: "2026-03-24",
+    venue: "Profiler Cage",
+    division: "Title Eliminator",
+    taskId: "dedupe-dojo",
+    blueAgentId: "ghostwire",
+    redAgentId: "cinder"
+  },
+  {
+    id: "live-006",
+    date: "2026-03-24",
+    venue: "World Engine",
+    division: "World Title",
+    taskId: "checkout-guard",
+    blueAgentId: "ghostwire",
+    redAgentId: "ironclad",
+    titleFight: true
+  }
+];
+
+function requireAgent(id: string): ArenaAgentAdapter {
+  const agent = liveAgents.find((candidate) => candidate.profile.id === id);
+  if (!agent) {
+    throw new Error(`Unknown live agent: ${id}`);
+  }
+  return agent;
+}
+
+function requireTask(id: string): ArenaTaskDefinition {
+  const task = liveTasks.find((candidate) => candidate.card.id === id);
+  if (!task) {
+    throw new Error(`Unknown live task: ${id}`);
+  }
+  return task;
+}
+
+export async function runLiveArenaSeason(): Promise<ArenaRunResult> {
+  const fights: FightReplay[] = [];
+
+  for (const plan of fightPlan) {
+    const blueAgent = requireAgent(plan.blueAgentId);
+    const redAgent = requireAgent(plan.redAgentId);
+    const task = requireTask(plan.taskId);
+    const [blue, red] = await Promise.all([runCorner(blueAgent, task), runCorner(redAgent, task)]);
+
+    const baseFight: FightReplay = {
+      id: plan.id,
+      date: plan.date,
+      venue: plan.venue,
+      division: plan.division,
+      taskId: task.card.id,
+      headline: `${blueAgent.profile.name} vs ${redAgent.profile.name}`,
+      judgesMemo: "",
+      keyMoments: [],
+      budgetMinutes: task.budgetMinutes,
+      tokenBudgetK: task.tokenBudgetK,
+      titleFight: plan.titleFight,
+      blue: {
+        agentId: blueAgent.profile.id,
+        promptStyle: blue.promptStyle,
+        diffSummary: blue.diffSummary,
+        notableMove: blue.notableMove,
+        metrics: blue.metrics
+      },
+      red: {
+        agentId: redAgent.profile.id,
+        promptStyle: red.promptStyle,
+        diffSummary: red.diffSummary,
+        notableMove: red.notableMove,
+        metrics: red.metrics
+      }
+    };
+
+    const computedFight = computeFight(baseFight);
+    const winnerName = computedFight.winnerId === blueAgent.profile.id ? blueAgent.profile.name : redAgent.profile.name;
+    const loserName = computedFight.loserId === blueAgent.profile.id ? blueAgent.profile.name : redAgent.profile.name;
+
+    fights.push({
+      ...baseFight,
+      judgesMemo: deriveJudgesMemo(computedFight, blueAgent, redAgent, blue, red),
+      keyMoments: deriveKeyMoments(blue, red, winnerName, loserName)
+    });
+  }
+
+  return {
+    generatedAt: new Date().toISOString(),
+    source: "live-arena-runner",
+    notes: [
+      "Each corner ran against a real fixture workspace in a fresh temp directory.",
+      "Current live season uses built-in scripted agents; the adapter interface is ready for real model runners."
+    ],
+    agents: liveAgents.map((agent) => agent.profile),
+    tasks: liveTasks.map((task) => task.card),
+    fights
+  };
+}

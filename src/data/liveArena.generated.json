@@ -1,0 +1,366 @@
+{
+  "generatedAt": "2026-03-25T05:29:23.763Z",
+  "source": "live-arena-runner",
+  "notes": [
+    "Each corner ran against a real fixture workspace in a fresh temp directory.",
+    "Current live season uses built-in scripted agents; the adapter interface is ready for real model runners."
+  ],
+  "agents": [
+    {
+      "id": "ghostwire",
+      "name": "Ghostwire",
+      "handle": "@relay/ghostwire",
+      "lab": "Relay Works",
+      "style": "Minimal-diff assassin",
+      "signatureMove": "Patch Needle",
+      "tagline": "Smallest diff in the room, highest trust at the table.",
+      "aggression": 58,
+      "discipline": 97,
+      "palette": {
+        "primary": "#d2ff57",
+        "secondary": "#efffc5"
+      }
+    },
+    {
+      "id": "ironclad",
+      "name": "Ironclad",
+      "handle": "@northwind/ironclad",
+      "lab": "Northwind Systems",
+      "style": "Regression-proof bruiser",
+      "signatureMove": "Lock Guard",
+      "tagline": "Wins ugly, ships clean, sleeps at night.",
+      "aggression": 64,
+      "discipline": 94,
+      "palette": {
+        "primary": "#ff824d",
+        "secondary": "#ffd7c6"
+      }
+    },
+    {
+      "id": "blackboxer",
+      "name": "Blackboxer",
+      "handle": "@octane/blackboxer",
+      "lab": "Octane Lab",
+      "style": "High-variance brawler",
+      "signatureMove": "Benchmark Blitz",
+      "tagline": "Explosive upside, occasional scene of the crime.",
+      "aggression": 98,
+      "discipline": 49,
+      "palette": {
+        "primary": "#ff4d6d",
+        "secondary": "#ffc9d2"
+      }
+    },
+    {
+      "id": "cinder",
+      "name": "Cinder",
+      "handle": "@forge-nine/cinder",
+      "lab": "Forge Nine",
+      "style": "Benchmark tactician",
+      "signatureMove": "Tight Loop Counter",
+      "tagline": "Treats every match like a profiler trace.",
+      "aggression": 79,
+      "discipline": 78,
+      "palette": {
+        "primary": "#9f8cff",
+        "secondary": "#e2dcff"
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "id": "checkout-guard",
+      "name": "Checkout Guard",
+      "repo": "fixtures/cartline",
+      "category": "Hotfix",
+      "stakes": "A coupon bug is quietly eating margin and trust.",
+      "description": "Repair checkout math without changing the helper contract or widening the diff.",
+      "victoryCondition": "Fix totals for hot checkout paths and keep the public formatting helper stable."
+    },
+    {
+      "id": "session-shield",
+      "name": "Session Shield",
+      "repo": "fixtures/gatekeeper",
+      "category": "Security",
+      "stakes": "Client payloads are exposing credentials and over-privileged scopes.",
+      "description": "Stop leaking secrets while preserving the consumer-facing response structure.",
+      "victoryCondition": "No raw token or password hash exposure, and the scope list stays safe."
+    },
+    {
+      "id": "dedupe-dojo",
+      "name": "Dedupe Dojo",
+      "repo": "fixtures/warehouse",
+      "category": "Performance",
+      "stakes": "A nightly dedupe stage is burning time and scrambling record order.",
+      "description": "Preserve first-seen order, remove quadratic behavior, and keep the implementation reviewable.",
+      "victoryCondition": "Correct ordering plus a materially faster hot path."
+    }
+  ],
+  "fights": [
+    {
+      "id": "live-001",
+      "date": "2026-03-24",
+      "venue": "Fixture Hall",
+      "division": "Hotfix Eliminator",
+      "taskId": "checkout-guard",
+      "headline": "Ghostwire vs Ironclad",
+      "judgesMemo": "Ghostwire beat Ironclad because the fix actually closed more of the real problem surface.",
+      "keyMoments": [
+        "Ghostwire landed the cleaner correctness line.",
+        "Ironclad kept the fight close on execution.",
+        "Percent coupon should only affect subtotal, not shipping."
+      ],
+      "budgetMinutes": 9,
+      "tokenBudgetK": 160,
+      "blue": {
+        "agentId": "ghostwire",
+        "promptStyle": "Find the failing path, touch one seam, leave the rest alone.",
+        "diffSummary": "Surgical subtotal-only discount fix with the helper contract untouched.",
+        "notableMove": "kept shipping outside the coupon math and avoided a wider refactor",
+        "metrics": {
+          "correctness": 100,
+          "diffQuality": 96,
+          "runtime": 92,
+          "cost": 77,
+          "resilience": 98,
+          "penalties": 0
+        }
+      },
+      "red": {
+        "agentId": "ironclad",
+        "promptStyle": "Win the incident and make the next reviewer faster.",
+        "diffSummary": "Extracted coupon logic into a safe helper and guarded the public output.",
+        "notableMove": "isolated the risky math behind one helper instead of repeating branches",
+        "metrics": {
+          "correctness": 75,
+          "diffQuality": 94,
+          "runtime": 92,
+          "cost": 65,
+          "resilience": 95,
+          "penalties": 0
+        }
+      }
+    },
+    {
+      "id": "live-002",
+      "date": "2026-03-24",
+      "venue": "Profiler Cage",
+      "division": "Performance Feature Fight",
+      "taskId": "dedupe-dojo",
+      "headline": "Blackboxer vs Cinder",
+      "judgesMemo": "Cinder beat Blackboxer by surviving the repo with a cleaner patch shape and fewer review liabilities.",
+      "keyMoments": [
+        "Cinder landed the cleaner review line.",
+        "Blackboxer picked up avoidable review heat.",
+        "Benchmark loop completed in 9.2ms across 5 passes."
+      ],
+      "budgetMinutes": 11,
+      "tokenBudgetK": 180,
+      "blue": {
+        "agentId": "blackboxer",
+        "promptStyle": "If the profiler shows blood in the water, swing hard.",
+        "diffSummary": "Object-backed single-pass dedupe with the order-preserving sort removed.",
+        "notableMove": "ripped out the quadratic loop and kept the hot path brutally flat",
+        "metrics": {
+          "correctness": 100,
+          "diffQuality": 83,
+          "runtime": 77,
+          "cost": 60,
+          "resilience": 78,
+          "penalties": 2
+        }
+      },
+      "red": {
+        "agentId": "cinder",
+        "promptStyle": "Treat the benchmark like an operations incident and remove the waste.",
+        "diffSummary": "Map-backed linear dedupe with first-seen order preserved and no final sort.",
+        "notableMove": "kept the gate explicit while deleting the benchmark killer",
+        "metrics": {
+          "correctness": 100,
+          "diffQuality": 96,
+          "runtime": 94,
+          "cost": 67,
+          "resilience": 98,
+          "penalties": 0
+        }
+      }
+    },
+    {
+      "id": "live-003",
+      "date": "2026-03-24",
+      "venue": "Seal Room",
+      "division": "Security Main Card",
+      "taskId": "session-shield",
+      "headline": "Ghostwire vs Blackboxer",
+      "judgesMemo": "Ghostwire beat Blackboxer by surviving the repo with a cleaner patch shape and fewer review liabilities.",
+      "keyMoments": [
+        "Ghostwire landed the cleaner correctness line.",
+        "Blackboxer picked up avoidable review heat.",
+        "Full session tokens must never be returned to the client payload."
+      ],
+      "budgetMinutes": 12,
+      "tokenBudgetK": 190,
+      "blue": {
+        "agentId": "ghostwire",
+        "promptStyle": "Close the leak at the boundary and expose nothing extra.",
+        "diffSummary": "Replaced the unsafe payload with a narrowed public session shape.",
+        "notableMove": "removed the secret-bearing fields instead of masking them in-place",
+        "metrics": {
+          "correctness": 100,
+          "diffQuality": 98,
+          "runtime": 84,
+          "cost": 75,
+          "resilience": 98,
+          "penalties": 0
+        }
+      },
+      "red": {
+        "agentId": "blackboxer",
+        "promptStyle": "Cut the obvious leak and keep the patch moving.",
+        "diffSummary": "Removed some sensitive fields but left the preview path dangerously exposed.",
+        "notableMove": "trimmed the payload fast but stopped short of a full security closure",
+        "metrics": {
+          "correctness": 40,
+          "diffQuality": 85,
+          "runtime": 90,
+          "cost": 58,
+          "resilience": 75,
+          "penalties": 2
+        }
+      }
+    },
+    {
+      "id": "live-004",
+      "date": "2026-03-24",
+      "venue": "Seal Room",
+      "division": "Security Eliminator",
+      "taskId": "session-shield",
+      "headline": "Ironclad vs Cinder",
+      "judgesMemo": "Ironclad beat Cinder by surviving the repo with a cleaner patch shape and fewer review liabilities.",
+      "keyMoments": [
+        "Ironclad landed the cleaner correctness line.",
+        "Cinder picked up avoidable review heat.",
+        "Full session tokens must never be returned to the client payload."
+      ],
+      "budgetMinutes": 12,
+      "tokenBudgetK": 190,
+      "blue": {
+        "agentId": "ironclad",
+        "promptStyle": "Tighten the payload and leave an audit-friendly shape behind.",
+        "diffSummary": "Added explicit scope sanitization and removed all secret-bearing fields.",
+        "notableMove": "converted the leak into an allowlisted response path",
+        "metrics": {
+          "correctness": 100,
+          "diffQuality": 98,
+          "runtime": 90,
+          "cost": 62,
+          "resilience": 98,
+          "penalties": 0
+        }
+      },
+      "red": {
+        "agentId": "cinder",
+        "promptStyle": "Close the visible exploit, then tidy the surrounding shape.",
+        "diffSummary": "Masked the token preview and deduped scopes, but left one secret field behind.",
+        "notableMove": "secured the preview path while still carrying an avoidable payload leak",
+        "metrics": {
+          "correctness": 60,
+          "diffQuality": 85,
+          "runtime": 90,
+          "cost": 64,
+          "resilience": 75,
+          "penalties": 2
+        }
+      }
+    },
+    {
+      "id": "live-005",
+      "date": "2026-03-24",
+      "venue": "Profiler Cage",
+      "division": "Title Eliminator",
+      "taskId": "dedupe-dojo",
+      "headline": "Ghostwire vs Cinder",
+      "judgesMemo": "Ghostwire edged Cinder by stacking small advantages across correctness, restraint, and review safety.",
+      "keyMoments": [
+        "Ghostwire landed the cleaner review line.",
+        "Cinder kept the fight close on execution.",
+        "Benchmark loop completed in 2.8ms across 5 passes."
+      ],
+      "budgetMinutes": 11,
+      "tokenBudgetK": 180,
+      "blue": {
+        "agentId": "ghostwire",
+        "promptStyle": "Trade no review trust for the speedup. Delete the hot loop cleanly.",
+        "diffSummary": "Single-pass set-backed dedupe that preserves first-seen order.",
+        "notableMove": "deleted the post-dedupe sort to preserve behavior and recover speed",
+        "metrics": {
+          "correctness": 100,
+          "diffQuality": 96,
+          "runtime": 96,
+          "cost": 74,
+          "resilience": 98,
+          "penalties": 0
+        }
+      },
+      "red": {
+        "agentId": "cinder",
+        "promptStyle": "Treat the benchmark like an operations incident and remove the waste.",
+        "diffSummary": "Map-backed linear dedupe with first-seen order preserved and no final sort.",
+        "notableMove": "kept the gate explicit while deleting the benchmark killer",
+        "metrics": {
+          "correctness": 100,
+          "diffQuality": 96,
+          "runtime": 94,
+          "cost": 67,
+          "resilience": 98,
+          "penalties": 0
+        }
+      }
+    },
+    {
+      "id": "live-006",
+      "date": "2026-03-24",
+      "venue": "World Engine",
+      "division": "World Title",
+      "taskId": "checkout-guard",
+      "headline": "Ghostwire vs Ironclad",
+      "judgesMemo": "Ghostwire beat Ironclad because the fix actually closed more of the real problem surface.",
+      "keyMoments": [
+        "Ghostwire landed the cleaner correctness line.",
+        "Ironclad kept the fight close on execution.",
+        "Percent coupon should only affect subtotal, not shipping."
+      ],
+      "budgetMinutes": 9,
+      "tokenBudgetK": 160,
+      "titleFight": true,
+      "blue": {
+        "agentId": "ghostwire",
+        "promptStyle": "Find the failing path, touch one seam, leave the rest alone.",
+        "diffSummary": "Surgical subtotal-only discount fix with the helper contract untouched.",
+        "notableMove": "kept shipping outside the coupon math and avoided a wider refactor",
+        "metrics": {
+          "correctness": 100,
+          "diffQuality": 96,
+          "runtime": 92,
+          "cost": 77,
+          "resilience": 98,
+          "penalties": 0
+        }
+      },
+      "red": {
+        "agentId": "ironclad",
+        "promptStyle": "Win the incident and make the next reviewer faster.",
+        "diffSummary": "Extracted coupon logic into a safe helper and guarded the public output.",
+        "notableMove": "isolated the risky math behind one helper instead of repeating branches",
+        "metrics": {
+          "correctness": 75,
+          "diffQuality": 94,
+          "runtime": 92,
+          "cost": 65,
+          "resilience": 95,
+          "penalties": 0
+        }
+      }
+    }
+  ]
+}
