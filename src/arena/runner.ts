@@ -13,8 +13,12 @@ import type {
   ArenaRunResult,
   ArenaTaskDefinition
 } from "./types.ts";
-import type { FightReplay, ScoreBreakdown } from "../lib/types.ts";
+import type { FightCornerCapture, FightReplay, FightTranscriptEntry, ScoreBreakdown } from "../lib/types.ts";
 import { computeFight } from "../lib/tournament.ts";
+
+const LOG_TAIL_MAX_LENGTH = 1800;
+const TRANSCRIPT_ENTRY_LIMIT = 14;
+const TRANSCRIPT_TEXT_MAX_LENGTH = 520;
 
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
@@ -29,6 +33,126 @@ function parseCsv(value: string | undefined): string[] {
     .split(",")
     .map((part) => part.trim())
     .filter(Boolean);
+}
+
+function isDefined<T>(value: T | undefined): value is T {
+  return value !== undefined;
+}
+
+function trimText(value: string, maxLength = TRANSCRIPT_TEXT_MAX_LENGTH): string {
+  const text = value.trim();
+  if (text.length <= maxLength) {
+    return text;
+  }
+  return `${text.slice(0, maxLength - 1)}…`;
+}
+
+function tailText(value: string, maxLength = LOG_TAIL_MAX_LENGTH): string {
+  const text = value.trim();
+  if (text.length <= maxLength) {
+    return text;
+  }
+  return `…${text.slice(text.length - (maxLength - 1))}`;
+}
+
+function normalizeTranscriptEntry(entry: FightTranscriptEntry): FightTranscriptEntry {
+  return {
+    ...entry,
+    text: trimText(entry.text)
+  };
+}
+
+function limitTranscript(entries: FightTranscriptEntry[]): FightTranscriptEntry[] {
+  if (entries.length <= TRANSCRIPT_ENTRY_LIMIT) {
+    return entries;
+  }
+
+  const head = entries[0];
+  const tail = entries.slice(-(TRANSCRIPT_ENTRY_LIMIT - 2));
+  const omittedCount = entries.length - tail.length - 1;
+
+  return [
+    head,
+    {
+      channel: "system",
+      title: "Transcript truncated",
+      text: `${omittedCount} earlier event${omittedCount === 1 ? "" : "s"} omitted from the saved replay.`
+    },
+    ...tail
+  ];
+}
+
+function buildCornerCapture(
+  task: ArenaTaskDefinition,
+  execution: ArenaAgentExecution,
+  diffStats: ArenaDiffStats,
+  durationMs: number,
+  evaluation: Awaited<ReturnType<ArenaTaskDefinition["evaluate"]>>
+): FightCornerCapture {
+  const transcript = (execution.capture?.transcript ?? []).map(normalizeTranscriptEntry);
+  const baseTranscript: FightTranscriptEntry[] = [];
+
+  if (!transcript.some((entry) => entry.channel === "user")) {
+    baseTranscript.push({
+      channel: "user",
+      title: `${task.card.name} brief`,
+      text: trimText(`${task.prompt}\nVictory condition: ${task.card.victoryCondition}`)
+    });
+  }
+
+  baseTranscript.push(...transcript);
+
+  if (!baseTranscript.some((entry) => entry.channel === "assistant")) {
+    baseTranscript.push({
+      channel: "assistant",
+      title: "Corner summary",
+      text: trimText(
+        `${execution.promptStyle}\n${execution.diffSummary}\nNotable move: ${execution.notableMove}`
+      )
+    });
+  }
+
+  if (diffStats.changedFiles.length > 0) {
+    baseTranscript.push({
+      channel: "tool",
+      title: "Workspace diff",
+      text: trimText(
+        `${diffStats.changedFiles.join(", ")} changed across ${diffStats.changedLineCount} touched lines.`
+      )
+    });
+  }
+
+  if (evaluation.notes[0]) {
+    baseTranscript.push({
+      channel: "system",
+      title: "Fixture verdict",
+      text: trimText(evaluation.notes[0])
+    });
+  }
+
+  const workspaceNotes = Array.from(
+    new Set(
+      [
+        ...execution.warnings,
+        ...evaluation.reviewFlags,
+        ...evaluation.notes,
+        ...(execution.capture?.workspaceNotes ?? [])
+      ].filter(Boolean)
+    )
+  );
+
+  return {
+    provider: execution.capture?.provider ?? "scripted",
+    model: execution.capture?.model,
+    durationMs: round(durationMs),
+    tokenEstimateK: execution.tokenEstimateK,
+    changedFiles: diffStats.changedFiles,
+    changedLineCount: diffStats.changedLineCount,
+    stdoutTail: execution.capture?.stdoutTail ? tailText(execution.capture.stdoutTail) : undefined,
+    stderrTail: execution.capture?.stderrTail ? tailText(execution.capture.stderrTail) : undefined,
+    transcript: limitTranscript(baseTranscript),
+    workspaceNotes: workspaceNotes.length > 0 ? workspaceNotes : execution.capture?.workspaceNotes
+  };
 }
 
 async function materializeTask(task: ArenaTaskDefinition, workspaceDir: string): Promise<Map<string, string>> {
@@ -166,6 +290,7 @@ async function runCorner(agent: ArenaAgentAdapter, task: ArenaTaskDefinition): P
 
     return {
       ...execution,
+      capture: buildCornerCapture(task, execution, diffStats, durationMs, evaluation),
       durationMs,
       evaluation,
       diffStats,
@@ -255,7 +380,6 @@ export async function runLiveArenaSeason(
 ): Promise<ArenaRunResult> {
   const env = options.env ?? process.env;
   const { agents: activeAgents, notes: registryNotes } = getLiveAgentRegistry(env);
-  const codexEnabled = registryNotes.some((note) => note.startsWith("Codex CLI enabled"));
   const selectedFightIds = parseCsv(env.AFC_FIGHT_IDS);
   const plannedFights =
     selectedFightIds.length > 0
@@ -286,8 +410,10 @@ export async function runLiveArenaSeason(
       budgetMinutes: task.budgetMinutes,
       tokenBudgetK: task.tokenBudgetK,
       titleFight: plan.titleFight,
+      watchable: Boolean(blue.capture || red.capture),
       blue: {
         agentId: blueAgent.profile.id,
+        capture: blue.capture,
         promptStyle: blue.promptStyle,
         diffSummary: blue.diffSummary,
         notableMove: blue.notableMove,
@@ -295,6 +421,7 @@ export async function runLiveArenaSeason(
       },
       red: {
         agentId: redAgent.profile.id,
+        capture: red.capture,
         promptStyle: red.promptStyle,
         diffSummary: red.diffSummary,
         notableMove: red.notableMove,
@@ -322,10 +449,24 @@ export async function runLiveArenaSeason(
         ? [`Fight filter active: ${selectedFightIds.join(", ")}.`]
         : []),
       "Each corner ran against a real fixture workspace in a fresh temp directory.",
-      codexEnabled
+      "Saved fight captures include transcript snippets plus stdout and stderr tails when the adapter exposes them.",
+      fights.some(
+        (fight) =>
+          fight.blue.capture?.provider !== "scripted" || fight.red.capture?.provider !== "scripted"
+      )
         ? "Any unselected fighters still use the built-in scripted adapters so you can mix real and deterministic corners."
-        : "Current live season uses built-in scripted agents; set AFC_CODEX_AGENT_IDS to replace selected corners with a real Codex CLI fighter."
+        : "Current live season uses built-in scripted agents; set AFC_CODEX_AGENT_IDS, AFC_CLAUDE_AGENT_IDS, or AFC_GEMINI_AGENT_IDS to replace selected corners with real CLI fighters."
     ],
+    runMeta: {
+      providers: Array.from(
+        new Set(
+          fights.flatMap((fight) =>
+            [fight.blue.capture?.provider, fight.red.capture?.provider].filter(isDefined)
+          )
+        )
+      ),
+      transcriptVersion: 1
+    },
     agents: activeAgents.map((agent) => agent.profile),
     tasks: liveTasks.map((task) => task.card),
     fights

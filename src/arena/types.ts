@@ -1,4 +1,11 @@
-import type { AgentProfile, FightReplay, LiveArenaDataset, ScoreBreakdown, TaskCard } from "../lib/types.ts";
+import type {
+  AgentProfile,
+  FightReplay,
+  FightTranscriptEntry,
+  LiveArenaDataset,
+  ScoreBreakdown,
+  TaskCard
+} from "../lib/types.ts";
 
 export interface ArenaFileFixture {
   content: string;
@@ -33,7 +40,17 @@ export interface ArenaAgentContext {
   workspaceDir: string;
 }
 
+export interface ArenaAgentCapture {
+  model?: string;
+  provider: string;
+  stderrTail?: string;
+  stdoutTail?: string;
+  transcript?: FightTranscriptEntry[];
+  workspaceNotes?: string[];
+}
+
 export interface ArenaAgentExecution {
+  capture?: ArenaAgentCapture;
   diffSummary: string;
   notableMove: string;
   promptStyle: string;

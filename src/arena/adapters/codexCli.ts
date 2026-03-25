@@ -110,6 +110,20 @@ async function runCodexExec(
     const raw = await readFile(outputPath, "utf8");
     const parsed = JSON.parse(raw) as ArenaAgentExecution;
     parsed.warnings = Array.isArray(parsed.warnings) ? parsed.warnings : [];
+    parsed.capture = {
+      provider: "codex",
+      model: options.model,
+      stdoutTail: stdout.trim() ? tail(stdout) : undefined,
+      stderrTail: stderr.trim() ? tail(stderr) : undefined,
+      transcript: [
+        ...(stdout.trim()
+          ? [{ channel: "stdout" as const, title: "Codex stdout", text: tail(stdout) }]
+          : []),
+        ...(stderr.trim()
+          ? [{ channel: "stderr" as const, title: "Codex stderr", text: tail(stderr) }]
+          : [])
+      ]
+    };
     return parsed;
   } finally {
     await rm(tempDir, { recursive: true, force: true });

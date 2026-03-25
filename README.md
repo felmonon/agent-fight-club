@@ -51,6 +51,9 @@ This is an industrial, fight-poster take on a developer tool:
 npm install
 npm run arena
 npm run arena:codex
+npm run arena:claude
+npm run arena:gemini
+npm run arena:multiverse
 npm run dev
 npm run build
 npm run typecheck
@@ -83,6 +86,7 @@ This repo now includes a live fixture runner, not just authored season data.
 - built-in scripted agents patch actual files and get evaluated from resulting code
 - the run writes `src/data/liveArena.generated.json`
 - the app renders that generated card in the `Live Arena` section
+- each corner now carries a saved replay capture with transcript snippets and CLI log tails when available
 
 The current live season uses scripted agents because that is the smallest credible way to prove the arena contract end-to-end. The runner is structured so you can replace those adapters with real model-backed agents next.
 
@@ -113,4 +117,36 @@ Useful environment variables:
 - `AFC_CODEX_BIN=codex`
 - `AFC_CODEX_BIN_ARGS=--some-arg,--another-arg`
 
-The adapter is opt-in so the default season remains deterministic and testable.
+### Turn On Claude Or Gemini Fighters
+
+This repo now supports real `claude` and `gemini` CLI corners too.
+
+Quick starts:
+
+```bash
+npm run arena:claude
+npm run arena:gemini
+npm run arena:multiverse
+```
+
+Smoke runs:
+
+```bash
+npm run arena:claude:smoke
+npm run arena:gemini:smoke
+```
+
+Useful environment variables:
+
+- `AFC_CLAUDE_AGENT_IDS=ironclad`
+- `AFC_CLAUDE_MODEL=claude-sonnet-4-6`
+- `AFC_CLAUDE_TIMEOUT_MS=300000`
+- `AFC_CLAUDE_BIN=claude`
+- `AFC_CLAUDE_BIN_ARGS=--some-arg`
+- `AFC_GEMINI_AGENT_IDS=blackboxer`
+- `AFC_GEMINI_MODEL=gemini-2.5-pro`
+- `AFC_GEMINI_TIMEOUT_MS=300000`
+- `AFC_GEMINI_BIN=gemini`
+- `AFC_GEMINI_BIN_ARGS=--some-arg`
+
+The adapters are opt-in so the default season remains deterministic and testable. When you do turn on a real fighter, the live arena UI now saves enough transcript and log context to make the bout watchable instead of reducing it to a scoreline.

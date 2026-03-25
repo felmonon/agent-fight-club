@@ -1,11 +1,18 @@
 {
-  "generatedAt": "2026-03-25T05:42:19.760Z",
+  "generatedAt": "2026-03-25T06:01:47.484Z",
   "source": "live-arena-runner",
   "notes": [
-    "Using scripted agents only. Set AFC_CODEX_AGENT_IDS=ghostwire to enable a real Codex CLI fighter.",
+    "Using scripted agents only. Set AFC_CODEX_AGENT_IDS, AFC_CLAUDE_AGENT_IDS, or AFC_GEMINI_AGENT_IDS to enable real CLI fighters.",
     "Each corner ran against a real fixture workspace in a fresh temp directory.",
-    "Current live season uses built-in scripted agents; set AFC_CODEX_AGENT_IDS to replace selected corners with a real Codex CLI fighter."
+    "Saved fight captures include transcript snippets plus stdout and stderr tails when the adapter exposes them.",
+    "Current live season uses built-in scripted agents; set AFC_CODEX_AGENT_IDS, AFC_CLAUDE_AGENT_IDS, or AFC_GEMINI_AGENT_IDS to replace selected corners with real CLI fighters."
   ],
+  "runMeta": {
+    "providers": [
+      "scripted"
+    ],
+    "transcriptVersion": 1
+  },
   "agents": [
     {
       "id": "ghostwire",
@@ -113,8 +120,44 @@
       ],
       "budgetMinutes": 9,
       "tokenBudgetK": 160,
+      "watchable": true,
       "blue": {
         "agentId": "ghostwire",
+        "capture": {
+          "provider": "scripted",
+          "durationMs": 0,
+          "tokenEstimateK": 34,
+          "changedFiles": [
+            "cart.mjs"
+          ],
+          "changedLineCount": 20,
+          "transcript": [
+            {
+              "channel": "user",
+              "title": "Checkout Guard brief",
+              "text": "Repair the checkout calculation with the smallest safe patch. Percent coupons should only discount the subtotal, not shipping. Keep the public helper shape intact.\nVictory condition: Fix totals for hot checkout paths and keep the public formatting helper stable."
+            },
+            {
+              "channel": "assistant",
+              "title": "Corner summary",
+              "text": "Find the failing path, touch one seam, leave the rest alone.\nSurgical subtotal-only discount fix with the helper contract untouched.\nNotable move: kept shipping outside the coupon math and avoided a wider refactor"
+            },
+            {
+              "channel": "tool",
+              "title": "Workspace diff",
+              "text": "cart.mjs changed across 20 touched lines."
+            },
+            {
+              "channel": "system",
+              "title": "Fixture verdict",
+              "text": "Percent coupon should only affect subtotal, not shipping."
+            }
+          ],
+          "workspaceNotes": [
+            "Percent coupon should only affect subtotal, not shipping.",
+            "Public helper exports must stay intact for the checkout UI."
+          ]
+        },
         "promptStyle": "Find the failing path, touch one seam, leave the rest alone.",
         "diffSummary": "Surgical subtotal-only discount fix with the helper contract untouched.",
         "notableMove": "kept shipping outside the coupon math and avoided a wider refactor",
@@ -129,6 +172,41 @@
       },
       "red": {
         "agentId": "ironclad",
+        "capture": {
+          "provider": "scripted",
+          "durationMs": 0,
+          "tokenEstimateK": 57,
+          "changedFiles": [
+            "cart.mjs"
+          ],
+          "changedLineCount": 23,
+          "transcript": [
+            {
+              "channel": "user",
+              "title": "Checkout Guard brief",
+              "text": "Repair the checkout calculation with the smallest safe patch. Percent coupons should only discount the subtotal, not shipping. Keep the public helper shape intact.\nVictory condition: Fix totals for hot checkout paths and keep the public formatting helper stable."
+            },
+            {
+              "channel": "assistant",
+              "title": "Corner summary",
+              "text": "Win the incident and make the next reviewer faster.\nExtracted coupon logic into a safe helper and guarded the public output.\nNotable move: isolated the risky math behind one helper instead of repeating branches"
+            },
+            {
+              "channel": "tool",
+              "title": "Workspace diff",
+              "text": "cart.mjs changed across 23 touched lines."
+            },
+            {
+              "channel": "system",
+              "title": "Fixture verdict",
+              "text": "Percent coupon should only affect subtotal, not shipping."
+            }
+          ],
+          "workspaceNotes": [
+            "Percent coupon should only affect subtotal, not shipping.",
+            "Public helper exports must stay intact for the checkout UI."
+          ]
+        },
         "promptStyle": "Win the incident and make the next reviewer faster.",
         "diffSummary": "Extracted coupon logic into a safe helper and guarded the public output.",
         "notableMove": "isolated the risky math behind one helper instead of repeating branches",
@@ -157,8 +235,46 @@
       ],
       "budgetMinutes": 11,
       "tokenBudgetK": 180,
+      "watchable": true,
       "blue": {
         "agentId": "blackboxer",
+        "capture": {
+          "provider": "scripted",
+          "durationMs": 0,
+          "tokenEstimateK": 68,
+          "changedFiles": [
+            "dedupe.mjs"
+          ],
+          "changedLineCount": 21,
+          "transcript": [
+            {
+              "channel": "user",
+              "title": "Dedupe Dojo brief",
+              "text": "Replace the quadratic dedupe path with a review-safe linear strategy. Preserve first-seen order. Do not sort the output after dedupe.\nVictory condition: Correct ordering plus a materially faster hot path."
+            },
+            {
+              "channel": "assistant",
+              "title": "Corner summary",
+              "text": "If the profiler shows blood in the water, swing hard.\nObject-backed single-pass dedupe with the order-preserving sort removed.\nNotable move: ripped out the quadratic loop and kept the hot path brutally flat"
+            },
+            {
+              "channel": "tool",
+              "title": "Workspace diff",
+              "text": "dedupe.mjs changed across 21 touched lines."
+            },
+            {
+              "channel": "system",
+              "title": "Fixture verdict",
+              "text": "Benchmark loop completed in 1.8ms across 5 passes."
+            }
+          ],
+          "workspaceNotes": [
+            "uses a less explicit sentinel map for speed",
+            "dedupe path still looks quadratic",
+            "Benchmark loop completed in 1.8ms across 5 passes.",
+            "Order must preserve the first seen record for each id."
+          ]
+        },
         "promptStyle": "If the profiler shows blood in the water, swing hard.",
         "diffSummary": "Object-backed single-pass dedupe with the order-preserving sort removed.",
         "notableMove": "ripped out the quadratic loop and kept the hot path brutally flat",
@@ -173,6 +289,41 @@
       },
       "red": {
         "agentId": "cinder",
+        "capture": {
+          "provider": "scripted",
+          "durationMs": 0,
+          "tokenEstimateK": 53,
+          "changedFiles": [
+            "dedupe.mjs"
+          ],
+          "changedLineCount": 21,
+          "transcript": [
+            {
+              "channel": "user",
+              "title": "Dedupe Dojo brief",
+              "text": "Replace the quadratic dedupe path with a review-safe linear strategy. Preserve first-seen order. Do not sort the output after dedupe.\nVictory condition: Correct ordering plus a materially faster hot path."
+            },
+            {
+              "channel": "assistant",
+              "title": "Corner summary",
+              "text": "Treat the benchmark like an operations incident and remove the waste.\nMap-backed linear dedupe with first-seen order preserved and no final sort.\nNotable move: kept the gate explicit while deleting the benchmark killer"
+            },
+            {
+              "channel": "tool",
+              "title": "Workspace diff",
+              "text": "dedupe.mjs changed across 21 touched lines."
+            },
+            {
+              "channel": "system",
+              "title": "Fixture verdict",
+              "text": "Benchmark loop completed in 2.2ms across 5 passes."
+            }
+          ],
+          "workspaceNotes": [
+            "Benchmark loop completed in 2.2ms across 5 passes.",
+            "Order must preserve the first seen record for each id."
+          ]
+        },
         "promptStyle": "Treat the benchmark like an operations incident and remove the waste.",
         "diffSummary": "Map-backed linear dedupe with first-seen order preserved and no final sort.",
         "notableMove": "kept the gate explicit while deleting the benchmark killer",
@@ -201,8 +352,44 @@
       ],
       "budgetMinutes": 12,
       "tokenBudgetK": 190,
+      "watchable": true,
       "blue": {
         "agentId": "ghostwire",
+        "capture": {
+          "provider": "scripted",
+          "durationMs": 0,
+          "tokenEstimateK": 39,
+          "changedFiles": [
+            "session.mjs"
+          ],
+          "changedLineCount": 15,
+          "transcript": [
+            {
+              "channel": "user",
+              "title": "Session Shield brief",
+              "text": "Close the data leak fast. Remove any raw credential exposure, sanitize scopes, and keep the function callable from existing clients.\nVictory condition: No raw token or password hash exposure, and the scope list stays safe."
+            },
+            {
+              "channel": "assistant",
+              "title": "Corner summary",
+              "text": "Close the leak at the boundary and expose nothing extra.\nReplaced the unsafe payload with a narrowed public session shape.\nNotable move: removed the secret-bearing fields instead of masking them in-place"
+            },
+            {
+              "channel": "tool",
+              "title": "Workspace diff",
+              "text": "session.mjs changed across 15 touched lines."
+            },
+            {
+              "channel": "system",
+              "title": "Fixture verdict",
+              "text": "Full session tokens must never be returned to the client payload."
+            }
+          ],
+          "workspaceNotes": [
+            "Full session tokens must never be returned to the client payload.",
+            "Privilege scopes should be deduped and stripped down to a safe allowlist."
+          ]
+        },
         "promptStyle": "Close the leak at the boundary and expose nothing extra.",
         "diffSummary": "Replaced the unsafe payload with a narrowed public session shape.",
         "notableMove": "removed the secret-bearing fields instead of masking them in-place",
@@ -217,6 +404,43 @@
       },
       "red": {
         "agentId": "blackboxer",
+        "capture": {
+          "provider": "scripted",
+          "durationMs": 0,
+          "tokenEstimateK": 71,
+          "changedFiles": [
+            "session.mjs"
+          ],
+          "changedLineCount": 15,
+          "transcript": [
+            {
+              "channel": "user",
+              "title": "Session Shield brief",
+              "text": "Close the data leak fast. Remove any raw credential exposure, sanitize scopes, and keep the function callable from existing clients.\nVictory condition: No raw token or password hash exposure, and the scope list stays safe."
+            },
+            {
+              "channel": "assistant",
+              "title": "Corner summary",
+              "text": "Cut the obvious leak and keep the patch moving.\nRemoved some sensitive fields but left the preview path dangerously exposed.\nNotable move: trimmed the payload fast but stopped short of a full security closure"
+            },
+            {
+              "channel": "tool",
+              "title": "Workspace diff",
+              "text": "session.mjs changed across 15 touched lines."
+            },
+            {
+              "channel": "system",
+              "title": "Fixture verdict",
+              "text": "Full session tokens must never be returned to the client payload."
+            }
+          ],
+          "workspaceNotes": [
+            "security patch leaves risky preview semantics",
+            "token preview still leaks the full token",
+            "Full session tokens must never be returned to the client payload.",
+            "Privilege scopes should be deduped and stripped down to a safe allowlist."
+          ]
+        },
         "promptStyle": "Cut the obvious leak and keep the patch moving.",
         "diffSummary": "Removed some sensitive fields but left the preview path dangerously exposed.",
         "notableMove": "trimmed the payload fast but stopped short of a full security closure",
@@ -245,8 +469,44 @@
       ],
       "budgetMinutes": 12,
       "tokenBudgetK": 190,
+      "watchable": true,
       "blue": {
         "agentId": "ironclad",
+        "capture": {
+          "provider": "scripted",
+          "durationMs": 0,
+          "tokenEstimateK": 63,
+          "changedFiles": [
+            "session.mjs"
+          ],
+          "changedLineCount": 17,
+          "transcript": [
+            {
+              "channel": "user",
+              "title": "Session Shield brief",
+              "text": "Close the data leak fast. Remove any raw credential exposure, sanitize scopes, and keep the function callable from existing clients.\nVictory condition: No raw token or password hash exposure, and the scope list stays safe."
+            },
+            {
+              "channel": "assistant",
+              "title": "Corner summary",
+              "text": "Tighten the payload and leave an audit-friendly shape behind.\nAdded explicit scope sanitization and removed all secret-bearing fields.\nNotable move: converted the leak into an allowlisted response path"
+            },
+            {
+              "channel": "tool",
+              "title": "Workspace diff",
+              "text": "session.mjs changed across 17 touched lines."
+            },
+            {
+              "channel": "system",
+              "title": "Fixture verdict",
+              "text": "Full session tokens must never be returned to the client payload."
+            }
+          ],
+          "workspaceNotes": [
+            "Full session tokens must never be returned to the client payload.",
+            "Privilege scopes should be deduped and stripped down to a safe allowlist."
+          ]
+        },
         "promptStyle": "Tighten the payload and leave an audit-friendly shape behind.",
         "diffSummary": "Added explicit scope sanitization and removed all secret-bearing fields.",
         "notableMove": "converted the leak into an allowlisted response path",
@@ -261,6 +521,43 @@
       },
       "red": {
         "agentId": "cinder",
+        "capture": {
+          "provider": "scripted",
+          "durationMs": 0,
+          "tokenEstimateK": 59,
+          "changedFiles": [
+            "session.mjs"
+          ],
+          "changedLineCount": 15,
+          "transcript": [
+            {
+              "channel": "user",
+              "title": "Session Shield brief",
+              "text": "Close the data leak fast. Remove any raw credential exposure, sanitize scopes, and keep the function callable from existing clients.\nVictory condition: No raw token or password hash exposure, and the scope list stays safe."
+            },
+            {
+              "channel": "assistant",
+              "title": "Corner summary",
+              "text": "Close the visible exploit, then tidy the surrounding shape.\nMasked the token preview and deduped scopes, but left one secret field behind.\nNotable move: secured the preview path while still carrying an avoidable payload leak"
+            },
+            {
+              "channel": "tool",
+              "title": "Workspace diff",
+              "text": "session.mjs changed across 15 touched lines."
+            },
+            {
+              "channel": "system",
+              "title": "Fixture verdict",
+              "text": "Full session tokens must never be returned to the client payload."
+            }
+          ],
+          "workspaceNotes": [
+            "payload still carries a sensitive field",
+            "sensitive hash still exposed",
+            "Full session tokens must never be returned to the client payload.",
+            "Privilege scopes should be deduped and stripped down to a safe allowlist."
+          ]
+        },
         "promptStyle": "Close the visible exploit, then tidy the surrounding shape.",
         "diffSummary": "Masked the token preview and deduped scopes, but left one secret field behind.",
         "notableMove": "secured the preview path while still carrying an avoidable payload leak",
@@ -289,8 +586,44 @@
       ],
       "budgetMinutes": 11,
       "tokenBudgetK": 180,
+      "watchable": true,
       "blue": {
         "agentId": "ghostwire",
+        "capture": {
+          "provider": "scripted",
+          "durationMs": 0,
+          "tokenEstimateK": 41,
+          "changedFiles": [
+            "dedupe.mjs"
+          ],
+          "changedLineCount": 21,
+          "transcript": [
+            {
+              "channel": "user",
+              "title": "Dedupe Dojo brief",
+              "text": "Replace the quadratic dedupe path with a review-safe linear strategy. Preserve first-seen order. Do not sort the output after dedupe.\nVictory condition: Correct ordering plus a materially faster hot path."
+            },
+            {
+              "channel": "assistant",
+              "title": "Corner summary",
+              "text": "Trade no review trust for the speedup. Delete the hot loop cleanly.\nSingle-pass set-backed dedupe that preserves first-seen order.\nNotable move: deleted the post-dedupe sort to preserve behavior and recover speed"
+            },
+            {
+              "channel": "tool",
+              "title": "Workspace diff",
+              "text": "dedupe.mjs changed across 21 touched lines."
+            },
+            {
+              "channel": "system",
+              "title": "Fixture verdict",
+              "text": "Benchmark loop completed in 1.9ms across 5 passes."
+            }
+          ],
+          "workspaceNotes": [
+            "Benchmark loop completed in 1.9ms across 5 passes.",
+            "Order must preserve the first seen record for each id."
+          ]
+        },
         "promptStyle": "Trade no review trust for the speedup. Delete the hot loop cleanly.",
         "diffSummary": "Single-pass set-backed dedupe that preserves first-seen order.",
         "notableMove": "deleted the post-dedupe sort to preserve behavior and recover speed",
@@ -305,6 +638,41 @@
       },
       "red": {
         "agentId": "cinder",
+        "capture": {
+          "provider": "scripted",
+          "durationMs": 0,
+          "tokenEstimateK": 53,
+          "changedFiles": [
+            "dedupe.mjs"
+          ],
+          "changedLineCount": 21,
+          "transcript": [
+            {
+              "channel": "user",
+              "title": "Dedupe Dojo brief",
+              "text": "Replace the quadratic dedupe path with a review-safe linear strategy. Preserve first-seen order. Do not sort the output after dedupe.\nVictory condition: Correct ordering plus a materially faster hot path."
+            },
+            {
+              "channel": "assistant",
+              "title": "Corner summary",
+              "text": "Treat the benchmark like an operations incident and remove the waste.\nMap-backed linear dedupe with first-seen order preserved and no final sort.\nNotable move: kept the gate explicit while deleting the benchmark killer"
+            },
+            {
+              "channel": "tool",
+              "title": "Workspace diff",
+              "text": "dedupe.mjs changed across 21 touched lines."
+            },
+            {
+              "channel": "system",
+              "title": "Fixture verdict",
+              "text": "Benchmark loop completed in 1.9ms across 5 passes."
+            }
+          ],
+          "workspaceNotes": [
+            "Benchmark loop completed in 1.9ms across 5 passes.",
+            "Order must preserve the first seen record for each id."
+          ]
+        },
         "promptStyle": "Treat the benchmark like an operations incident and remove the waste.",
         "diffSummary": "Map-backed linear dedupe with first-seen order preserved and no final sort.",
         "notableMove": "kept the gate explicit while deleting the benchmark killer",
@@ -334,8 +702,44 @@
       "budgetMinutes": 9,
       "tokenBudgetK": 160,
       "titleFight": true,
+      "watchable": true,
       "blue": {
         "agentId": "ghostwire",
+        "capture": {
+          "provider": "scripted",
+          "durationMs": 0,
+          "tokenEstimateK": 34,
+          "changedFiles": [
+            "cart.mjs"
+          ],
+          "changedLineCount": 20,
+          "transcript": [
+            {
+              "channel": "user",
+              "title": "Checkout Guard brief",
+              "text": "Repair the checkout calculation with the smallest safe patch. Percent coupons should only discount the subtotal, not shipping. Keep the public helper shape intact.\nVictory condition: Fix totals for hot checkout paths and keep the public formatting helper stable."
+            },
+            {
+              "channel": "assistant",
+              "title": "Corner summary",
+              "text": "Find the failing path, touch one seam, leave the rest alone.\nSurgical subtotal-only discount fix with the helper contract untouched.\nNotable move: kept shipping outside the coupon math and avoided a wider refactor"
+            },
+            {
+              "channel": "tool",
+              "title": "Workspace diff",
+              "text": "cart.mjs changed across 20 touched lines."
+            },
+            {
+              "channel": "system",
+              "title": "Fixture verdict",
+              "text": "Percent coupon should only affect subtotal, not shipping."
+            }
+          ],
+          "workspaceNotes": [
+            "Percent coupon should only affect subtotal, not shipping.",
+            "Public helper exports must stay intact for the checkout UI."
+          ]
+        },
         "promptStyle": "Find the failing path, touch one seam, leave the rest alone.",
         "diffSummary": "Surgical subtotal-only discount fix with the helper contract untouched.",
         "notableMove": "kept shipping outside the coupon math and avoided a wider refactor",
@@ -350,6 +754,41 @@
       },
       "red": {
         "agentId": "ironclad",
+        "capture": {
+          "provider": "scripted",
+          "durationMs": 0,
+          "tokenEstimateK": 57,
+          "changedFiles": [
+            "cart.mjs"
+          ],
+          "changedLineCount": 23,
+          "transcript": [
+            {
+              "channel": "user",
+              "title": "Checkout Guard brief",
+              "text": "Repair the checkout calculation with the smallest safe patch. Percent coupons should only discount the subtotal, not shipping. Keep the public helper shape intact.\nVictory condition: Fix totals for hot checkout paths and keep the public formatting helper stable."
+            },
+            {
+              "channel": "assistant",
+              "title": "Corner summary",
+              "text": "Win the incident and make the next reviewer faster.\nExtracted coupon logic into a safe helper and guarded the public output.\nNotable move: isolated the risky math behind one helper instead of repeating branches"
+            },
+            {
+              "channel": "tool",
+              "title": "Workspace diff",
+              "text": "cart.mjs changed across 23 touched lines."
+            },
+            {
+              "channel": "system",
+              "title": "Fixture verdict",
+              "text": "Percent coupon should only affect subtotal, not shipping."
+            }
+          ],
+          "workspaceNotes": [
+            "Percent coupon should only affect subtotal, not shipping.",
+            "Public helper exports must stay intact for the checkout UI."
+          ]
+        },
         "promptStyle": "Win the incident and make the next reviewer faster.",
         "diffSummary": "Extracted coupon logic into a safe helper and guarded the public output.",
         "notableMove": "isolated the risky math behind one helper instead of repeating branches",

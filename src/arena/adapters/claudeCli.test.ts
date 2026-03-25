@@ -3,8 +3,8 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { agents } from "../../data/season.ts";
-import { createCodexCliAdapter } from "./codexCli.ts";
 import type { ArenaTaskDefinition } from "../types.ts";
+import { createClaudeCliAdapter } from "./claudeCli.ts";
 
 const cleanupDirs: string[] = [];
 
@@ -12,21 +12,22 @@ afterEach(async () => {
   await Promise.all(cleanupDirs.splice(0).map((dir) => rm(dir, { recursive: true, force: true })));
 });
 
-describe("codex cli adapter", () => {
+describe("claude cli adapter", () => {
   it("runs through a CLI contract and returns parsed arena output", async () => {
-    const tempDir = await mkdtemp(path.join(os.tmpdir(), "afc-codex-adapter-test-"));
+    const tempDir = await mkdtemp(path.join(os.tmpdir(), "afc-claude-adapter-test-"));
     cleanupDirs.push(tempDir);
 
     const workspaceDir = path.join(tempDir, "workspace");
-    const stubPath = path.join(tempDir, "codex-stub.mjs");
+    const stubPath = path.join(tempDir, "claude-stub.mjs");
     await mkdir(workspaceDir, { recursive: true });
     await writeFile(path.join(workspaceDir, "fixture.mjs"), "export const score = 1;\n", "utf8");
     await writeFile(stubPath, STUB_SOURCE, "utf8");
     await chmod(stubPath, 0o755);
 
-    const adapter = createCodexCliAdapter(agents[0], {
+    const adapter = createClaudeCliAdapter(agents[0], {
       binary: process.execPath,
       binaryArgs: [stubPath],
+      model: "claude-sonnet-4-6",
       timeoutMs: 5000
     });
 
@@ -37,7 +38,7 @@ describe("codex cli adapter", () => {
         repo: "fixtures/stub",
         category: "Hotfix",
         stakes: "Test the adapter contract.",
-        description: "No-op fixture for the Codex CLI adapter test.",
+        description: "No-op fixture for the Claude CLI adapter test.",
         victoryCondition: "Modify fixture.mjs and return structured JSON."
       },
       prompt: "Append a comment to fixture.mjs",
@@ -57,11 +58,12 @@ describe("codex cli adapter", () => {
     const result = await adapter.run({ task, workspaceDir });
     const source = await readFile(path.join(workspaceDir, "fixture.mjs"), "utf8");
 
-    expect(source).toContain("// codex stub edit");
-    expect(result.promptStyle).toBe("Stub pressure style");
-    expect(result.tokenEstimateK).toBe(17);
+    expect(source).toContain("// claude stub edit");
+    expect(result.promptStyle).toBe("Claude pressure style");
+    expect(result.diffSummary).toContain("claude-sonnet-4-6");
+    expect(result.tokenEstimateK).toBe(19);
     expect(result.warnings).toEqual([]);
-    expect(result.capture?.provider).toBe("codex");
+    expect(result.capture?.provider).toBe("claude");
   });
 });
 
@@ -76,20 +78,20 @@ function take(flag) {
   return index >= 0 ? args[index + 1] : undefined;
 }
 
-const workspaceDir = take("--cd");
-const outputPath = take("-o");
-const fixturePath = path.join(workspaceDir, "fixture.mjs");
+const model = take("--model") ?? "unknown";
+const fixturePath = path.join(process.cwd(), "fixture.mjs");
 const source = await readFile(fixturePath, "utf8");
-await writeFile(fixturePath, source + "// codex stub edit\\n", "utf8");
-await writeFile(
-  outputPath,
+await writeFile(fixturePath, source + "// claude stub edit\\n", "utf8");
+console.log(
   JSON.stringify({
-    promptStyle: "Stub pressure style",
-    diffSummary: "Stubbed a real codex exec response",
-    notableMove: "edited the fixture file and returned structured JSON",
-    tokenEstimateK: 17,
-    warnings: []
-  }),
-  "utf8"
+    type: "result",
+    result: {
+      promptStyle: "Claude pressure style",
+      diffSummary: \`Stubbed a real Claude response for \${model}\`,
+      notableMove: "edited the fixture file and returned structured JSON",
+      tokenEstimateK: 19,
+      warnings: []
+    }
+  })
 );
 `;

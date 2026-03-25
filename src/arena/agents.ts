@@ -2,7 +2,9 @@ import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { agents as seedAgents } from "../data/season.ts";
 import type { AgentProfile } from "../lib/types.ts";
+import { createClaudeCliAdapter, type ClaudeCliAdapterOptions } from "./adapters/claudeCli.ts";
 import { createCodexCliAdapter, type CodexCliAdapterOptions } from "./adapters/codexCli.ts";
+import { createGeminiCliAdapter, type GeminiCliAdapterOptions } from "./adapters/geminiCli.ts";
 import type { ArenaAgentAdapter, ArenaAgentContext, ArenaAgentExecution } from "./types.ts";
 
 type PatchHandler = (context: ArenaAgentContext) => Promise<ArenaAgentExecution>;
@@ -417,6 +419,15 @@ function parseCsv(value: string | undefined): string[] {
     .filter(Boolean);
 }
 
+function claudeOptionsFromEnv(env: Record<string, string | undefined>): ClaudeCliAdapterOptions {
+  return {
+    binary: env.AFC_CLAUDE_BIN || "claude",
+    binaryArgs: parseCsv(env.AFC_CLAUDE_BIN_ARGS),
+    model: env.AFC_CLAUDE_MODEL,
+    timeoutMs: env.AFC_CLAUDE_TIMEOUT_MS ? Number(env.AFC_CLAUDE_TIMEOUT_MS) : undefined
+  };
+}
+
 function codexOptionsFromEnv(env: Record<string, string | undefined>): CodexCliAdapterOptions {
   return {
     binary: env.AFC_CODEX_BIN || "codex",
@@ -426,32 +437,92 @@ function codexOptionsFromEnv(env: Record<string, string | undefined>): CodexCliA
   };
 }
 
+function geminiOptionsFromEnv(env: Record<string, string | undefined>): GeminiCliAdapterOptions {
+  return {
+    binary: env.AFC_GEMINI_BIN || "gemini",
+    binaryArgs: parseCsv(env.AFC_GEMINI_BIN_ARGS),
+    model: env.AFC_GEMINI_MODEL,
+    timeoutMs: env.AFC_GEMINI_TIMEOUT_MS ? Number(env.AFC_GEMINI_TIMEOUT_MS) : undefined
+  };
+}
+
+interface ProviderRegistration {
+  createAdapter: (id: string) => ArenaAgentAdapter;
+  ids: string[];
+  label: string;
+  note: string;
+}
+
 export function getLiveAgentRegistry(
   env: Record<string, string | undefined> = process.env
 ): LiveAgentRegistry {
+  const registrations: ProviderRegistration[] = [];
   const selectedCodexIds = parseCsv(env.AFC_CODEX_AGENT_IDS);
-  if (selectedCodexIds.length === 0) {
+  const selectedClaudeIds = parseCsv(env.AFC_CLAUDE_AGENT_IDS);
+  const selectedGeminiIds = parseCsv(env.AFC_GEMINI_AGENT_IDS);
+
+  if (selectedCodexIds.length > 0) {
+    const codexOptions = codexOptionsFromEnv(env);
+    const modelNote = codexOptions.model ? ` model ${codexOptions.model}` : "";
+    registrations.push({
+      ids: selectedCodexIds,
+      label: "Codex CLI",
+      createAdapter: (id) => createCodexCliAdapter(requireProfile(id), codexOptions),
+      note: `Codex CLI enabled for: ${selectedCodexIds.join(", ")} using ${codexOptions.binary}${modelNote}.`
+    });
+  }
+
+  if (selectedClaudeIds.length > 0) {
+    const claudeOptions = claudeOptionsFromEnv(env);
+    const modelNote = claudeOptions.model ? ` model ${claudeOptions.model}` : "";
+    registrations.push({
+      ids: selectedClaudeIds,
+      label: "Claude CLI",
+      createAdapter: (id) => createClaudeCliAdapter(requireProfile(id), claudeOptions),
+      note: `Claude CLI enabled for: ${selectedClaudeIds.join(", ")} using ${claudeOptions.binary}${modelNote}.`
+    });
+  }
+
+  if (selectedGeminiIds.length > 0) {
+    const geminiOptions = geminiOptionsFromEnv(env);
+    const modelNote = geminiOptions.model ? ` model ${geminiOptions.model}` : "";
+    registrations.push({
+      ids: selectedGeminiIds,
+      label: "Gemini CLI",
+      createAdapter: (id) => createGeminiCliAdapter(requireProfile(id), geminiOptions),
+      note: `Gemini CLI enabled for: ${selectedGeminiIds.join(", ")} using ${geminiOptions.binary}${modelNote}.`
+    });
+  }
+
+  if (registrations.length === 0) {
     return {
       agents: scriptedLiveAgents,
-      notes: ["Using scripted agents only. Set AFC_CODEX_AGENT_IDS=ghostwire to enable a real Codex CLI fighter."]
+      notes: [
+        "Using scripted agents only. Set AFC_CODEX_AGENT_IDS, AFC_CLAUDE_AGENT_IDS, or AFC_GEMINI_AGENT_IDS to enable real CLI fighters."
+      ]
     };
   }
 
-  const codexOptions = codexOptionsFromEnv(env);
   const agentMap = new Map(scriptedLiveAgents.map((agent) => [agent.profile.id, agent]));
+  const claimedAgents = new Map<string, string>();
 
-  for (const id of selectedCodexIds) {
-    if (!agentMap.has(id)) {
-      throw new Error(`AFC_CODEX_AGENT_IDS includes unknown live agent: ${id}`);
+  for (const registration of registrations) {
+    for (const id of registration.ids) {
+      if (!agentMap.has(id)) {
+        throw new Error(`${registration.label} includes unknown live agent: ${id}`);
+      }
+      const existingProvider = claimedAgents.get(id);
+      if (existingProvider) {
+        throw new Error(`${id} cannot be assigned to both ${existingProvider} and ${registration.label}.`);
+      }
+      claimedAgents.set(id, registration.label);
+      agentMap.set(id, registration.createAdapter(id));
     }
-    agentMap.set(id, createCodexCliAdapter(requireProfile(id), codexOptions));
   }
-
-  const modelNote = codexOptions.model ? ` model ${codexOptions.model}` : "";
 
   return {
     agents: Array.from(agentMap.values()),
-    notes: [`Codex CLI enabled for: ${selectedCodexIds.join(", ")} using ${codexOptions.binary}${modelNote}.`]
+    notes: registrations.map((registration) => registration.note)
   };
 }
 

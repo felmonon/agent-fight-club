@@ -33,8 +33,29 @@ export interface ScoreBreakdown {
   penalties: number;
 }
 
+export interface FightTranscriptEntry {
+  atMs?: number;
+  channel: "assistant" | "stderr" | "stdout" | "system" | "tool" | "user";
+  text: string;
+  title?: string;
+}
+
+export interface FightCornerCapture {
+  changedFiles?: string[];
+  changedLineCount?: number;
+  durationMs?: number;
+  model?: string;
+  provider: string;
+  stderrTail?: string;
+  stdoutTail?: string;
+  tokenEstimateK?: number;
+  transcript?: FightTranscriptEntry[];
+  workspaceNotes?: string[];
+}
+
 export interface FightCorner {
   agentId: string;
+  capture?: FightCornerCapture;
   promptStyle: string;
   diffSummary: string;
   notableMove: string;
@@ -55,6 +76,7 @@ export interface FightReplay {
   budgetMinutes: number;
   tokenBudgetK: number;
   titleFight?: boolean;
+  watchable?: boolean;
 }
 
 export interface ComputedFightReplay extends FightReplay {
@@ -101,5 +123,9 @@ export interface SeasonDataset {
 export interface LiveArenaDataset extends SeasonDataset {
   generatedAt: string;
   notes: string[];
+  runMeta?: {
+    providers?: string[];
+    transcriptVersion?: number;
+  };
   source: string;
 }
