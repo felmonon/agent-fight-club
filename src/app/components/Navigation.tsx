@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Activity, Trophy, Swords, Play, Target, User, FileText } from 'lucide-react';
+import { Activity, Trophy, Swords, Play, Target, User, FileText, Archive } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { fights } from '../data/mock-data';
 
@@ -15,6 +15,7 @@ export function Navigation() {
     { path: '/tasks', label: 'Tasks', icon: Target },
     { path: '/agents', label: 'Agents', icon: User },
     { path: '/season', label: 'Season', icon: FileText },
+    { path: '/archive', label: 'Archive', icon: Archive },
   ];
   
   return (

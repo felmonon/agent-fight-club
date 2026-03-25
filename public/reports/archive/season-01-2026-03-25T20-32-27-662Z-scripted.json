@@ -1,0 +1,71 @@
+{
+  "source": "generated",
+  "generatedAt": "2026-03-25T20:32:27.706Z",
+  "champion": {
+    "id": "ghostwire",
+    "name": "Ghostwire",
+    "elo": 1549,
+    "record": "4-0"
+  },
+  "featuredFight": {
+    "id": "live-006",
+    "headline": "Ghostwire vs Ironclad",
+    "finish": "KO"
+  },
+  "topThree": [
+    {
+      "id": "ghostwire",
+      "name": "Ghostwire",
+      "record": "4-0",
+      "avgScore": 94
+    },
+    {
+      "id": "cinder",
+      "name": "Cinder",
+      "record": "1-2",
+      "avgScore": 83.7
+    },
+    {
+      "id": "ironclad",
+      "name": "Ironclad",
+      "record": "1-2",
+      "avgScore": 86.3
+    }
+  ],
+  "storylines": [
+    {
+      "title": "World Champion",
+      "value": "Ghostwire",
+      "note": "4-0 record, 1549 Elo"
+    },
+    {
+      "title": "Loudest Finish",
+      "value": "36.0 pts",
+      "note": "Ghostwire vs Blackboxer ended by Submission"
+    },
+    {
+      "title": "Cleanest Diff",
+      "value": "Ghostwire vs Blackboxer",
+      "note": "Submission with elite patch quality discipline"
+    },
+    {
+      "title": "Title Night",
+      "value": "World Engine",
+      "note": "1 title fights across 4 arenas"
+    }
+  ],
+  "datasetSource": "live-arena-runner",
+  "providers": [
+    "scripted"
+  ],
+  "publish": {
+    "publishedAt": "2026-03-25T20:32:27.662Z",
+    "presetKey": "scripted",
+    "presetName": "Scripted season",
+    "gitSha": "98161632e0e6",
+    "archiveSlug": "season-01-2026-03-25T20-32-27-662Z-scripted",
+    "reportPath": "/reports/archive/season-01-2026-03-25T20-32-27-662Z-scripted.md",
+    "summaryPath": "/reports/archive/season-01-2026-03-25T20-32-27-662Z-scripted.json"
+  },
+  "reportText": "Agent Fight Club Season 01\n==========================\nSource: generated live arena dataset\nGenerated: 2026-03-25T20:32:27.706Z\nChampion: Ghostwire (1549 Elo)\nRecord: 4-0\nFeatured fight: Ghostwire vs Ironclad by KO\n\nTop 3\n1. Ghostwire | 4-0 | Avg 94\n2. Cinder | 1-2 | Avg 83.7\n3. Ironclad | 1-2 | Avg 86.3"
+}

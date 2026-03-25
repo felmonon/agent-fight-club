@@ -3,6 +3,7 @@ import { Swords, AlertCircle, TrendingUp, Target, Shield, Zap } from 'lucide-rea
 import { motion } from 'motion/react';
 import { fights, agents, getFightInsight } from '../data/mock-data';
 import { ScoreBadge, TagBadge } from '../components/Badges';
+import { CornerEvidence } from '../components/CornerEvidence';
 import { useLiveSimulation } from '../hooks/useLiveSimulation';
 
 export default function FightMatchup() {
@@ -376,6 +377,29 @@ export default function FightMatchup() {
           </div>
         </div>
       </section>
+
+      {insight && isCompleted && (
+        <section className="border-b border-afc-steel-dark bg-afc-black">
+          <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">
+            <div className="flex items-center gap-3 mb-8">
+              <Shield className="w-6 h-6 text-afc-orange" />
+              <h3 className="text-2xl font-bold uppercase tracking-tight">Replay Evidence</h3>
+            </div>
+
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+              <CornerEvidence
+                label={fight.agentA}
+                corner={insight.blue}
+                accentClassName="text-afc-lime"
+              />
+              <CornerEvidence
+                label={fight.agentB}
+                corner={insight.red}
+              />
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="bg-afc-black">
         <div className="max-w-[1600px] mx-auto px-4 py-12 text-center md:px-8">

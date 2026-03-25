@@ -120,12 +120,53 @@ export interface SeasonDataset {
   fights: FightReplay[];
 }
 
+export interface LiveArenaRunMeta {
+  providers?: string[];
+  transcriptVersion?: number;
+  gitSha?: string;
+  publishPreset?: string;
+  publishPresetName?: string;
+  publishedAt?: string;
+  reportSlug?: string;
+  workflowRunUrl?: string;
+}
+
 export interface LiveArenaDataset extends SeasonDataset {
   generatedAt: string;
   notes: string[];
-  runMeta?: {
-    providers?: string[];
-    transcriptVersion?: number;
-  };
+  runMeta?: LiveArenaRunMeta;
   source: string;
+}
+
+export interface PublishedSeasonArchiveEntry {
+  slug: string;
+  title: string;
+  datasetSource: string;
+  reportSource: "generated" | "seed";
+  generatedAt?: string;
+  publishedAt: string;
+  publishPreset?: string;
+  publishPresetName?: string;
+  gitSha?: string;
+  providers: string[];
+  workflowRunUrl?: string;
+  reportPath: string;
+  summaryPath: string;
+  champion: {
+    id: string;
+    name: string;
+    elo: number;
+    record: string;
+  };
+  featuredFight: {
+    id: string;
+    headline: string;
+    finish: string;
+  };
+}
+
+export interface PublishedSeasonArchiveIndex {
+  generatedAt: string;
+  latestSlug?: string;
+  entries: PublishedSeasonArchiveEntry[];
 }

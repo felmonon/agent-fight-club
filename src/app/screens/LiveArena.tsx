@@ -1,6 +1,7 @@
 import { Activity, Clock, DollarSign, Zap, AlertTriangle } from 'lucide-react';
 import { motion } from 'motion/react';
-import { fights } from '../data/mock-data';
+import { Link } from 'react-router-dom';
+import { fights, liveArenaMeta } from '../data/mock-data';
 import { FightCard } from '../components/FightCard';
 import { TagBadge } from '../components/Badges';
 import { StatCard } from '../components/StatCard';
@@ -49,6 +50,12 @@ export default function LiveArena() {
                   {new Date().toLocaleTimeString()}
                 </span>
               </div>
+              <a
+                href={liveArenaMeta.publishedReportPath}
+                className="text-afc-orange hover:text-afc-orange/80 uppercase tracking-wider text-xs font-bold"
+              >
+                Published Report
+              </a>
             </div>
           </div>
         </div>
@@ -57,6 +64,42 @@ export default function LiveArena() {
       {/* Mission Control Panel */}
       <section className="border-b border-afc-steel-dark bg-afc-black">
         <div className="max-w-[1600px] mx-auto px-4 py-8 md:px-8">
+          <div className="border border-afc-steel-dark bg-afc-charcoal p-4 mb-6">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-1 font-bold">
+                  Publish Status
+                </div>
+                <div className="text-sm text-afc-steel-light">
+                  Source: <span className="text-foreground font-bold">{liveArenaMeta.source}</span>
+                </div>
+                <div className="text-sm text-afc-steel-light">
+                  Generated: {new Date(liveArenaMeta.generatedAt).toLocaleString()}
+                </div>
+                <div className="text-sm text-afc-steel-light">
+                  Published: {liveArenaMeta.publishedAt ? new Date(liveArenaMeta.publishedAt).toLocaleString() : 'Not captured'}
+                </div>
+                <div className="text-sm text-afc-steel-light">
+                  Preset: <span className="text-foreground font-bold">{liveArenaMeta.publishPresetName ?? 'Unlabeled'}</span>
+                  {liveArenaMeta.gitSha ? ` · ${liveArenaMeta.gitSha}` : ''}
+                </div>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                {liveArenaMeta.providers.map((provider) => (
+                  <TagBadge key={provider} variant={provider === 'scripted' ? 'warning' : 'champion'}>
+                    {provider}
+                  </TagBadge>
+                ))}
+                <Link
+                  to="/archive"
+                  className="text-[10px] uppercase tracking-wider text-afc-orange hover:text-afc-orange/80"
+                >
+                  View Archive
+                </Link>
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 xl:grid-cols-5 gap-4 mb-8">
             <StatCard
               label="Active Agents"

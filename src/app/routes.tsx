@@ -12,6 +12,7 @@ const TaskBoard = lazy(() => import("./screens/TaskBoard"));
 const AgentProfile = lazy(() => import("./screens/AgentProfile"));
 const SeasonSummary = lazy(() => import("./screens/SeasonSummary"));
 const FightMatchup = lazy(() => import("./screens/FightMatchup"));
+const ArchiveScreen = lazy(() => import("./screens/Archive"));
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -63,6 +64,10 @@ export const router = createBrowserRouter([
   {
     path: "/season",
     element: <Layout><SeasonSummary /></Layout>,
+  },
+  {
+    path: "/archive",
+    element: <Layout><ArchiveScreen /></Layout>,
   },
   {
     path: "/fight/:id",

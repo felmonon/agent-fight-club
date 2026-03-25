@@ -1,0 +1,60 @@
+{
+  "generatedAt": "2026-03-25T20:57:49.909Z",
+  "latestSlug": "season-01-2026-03-25T20-57-49-909Z-gemini",
+  "entries": [
+    {
+      "slug": "season-01-2026-03-25T20-57-49-909Z-gemini",
+      "title": "Season 01 • All Gemini",
+      "datasetSource": "live-arena-runner",
+      "reportSource": "generated",
+      "generatedAt": "2026-03-25T21:07:27.037Z",
+      "publishedAt": "2026-03-25T20:57:49.909Z",
+      "publishPreset": "gemini",
+      "publishPresetName": "All Gemini",
+      "gitSha": "98161632e0e6",
+      "providers": [
+        "gemini"
+      ],
+      "reportPath": "/reports/archive/season-01-2026-03-25T20-57-49-909Z-gemini.md",
+      "summaryPath": "/reports/archive/season-01-2026-03-25T20-57-49-909Z-gemini.json",
+      "champion": {
+        "id": "ghostwire",
+        "name": "Ghostwire",
+        "elo": 1527,
+        "record": "3-1"
+      },
+      "featuredFight": {
+        "id": "live-006",
+        "headline": "Ghostwire vs Ironclad",
+        "finish": "Unanimous"
+      }
+    },
+    {
+      "slug": "season-01-2026-03-25T20-32-27-662Z-scripted",
+      "title": "Season 01 • Scripted season",
+      "datasetSource": "live-arena-runner",
+      "reportSource": "generated",
+      "generatedAt": "2026-03-25T20:32:27.706Z",
+      "publishedAt": "2026-03-25T20:32:27.662Z",
+      "publishPreset": "scripted",
+      "publishPresetName": "Scripted season",
+      "gitSha": "98161632e0e6",
+      "providers": [
+        "scripted"
+      ],
+      "reportPath": "/reports/archive/season-01-2026-03-25T20-32-27-662Z-scripted.md",
+      "summaryPath": "/reports/archive/season-01-2026-03-25T20-32-27-662Z-scripted.json",
+      "champion": {
+        "id": "ghostwire",
+        "name": "Ghostwire",
+        "elo": 1549,
+        "record": "4-0"
+      },
+      "featuredFight": {
+        "id": "live-006",
+        "headline": "Ghostwire vs Ironclad",
+        "finish": "KO"
+      }
+    }
+  ]
+}

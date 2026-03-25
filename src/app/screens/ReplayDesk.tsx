@@ -1,6 +1,8 @@
 import { Play } from 'lucide-react';
 import { motion } from 'motion/react';
-import { fights, getFightInsight } from '../data/mock-data';
+import { Link } from 'react-router-dom';
+import { fights, getFightInsight, liveArenaMeta } from '../data/mock-data';
+import { CornerEvidence } from '../components/CornerEvidence';
 import { FightCard } from '../components/FightCard';
 import { FilterBar } from '../components/FilterBar';
 import { useFilter, useSort } from '../hooks/useFilter';
@@ -47,6 +49,25 @@ export default function ReplayDesk() {
               <p className="text-sm text-afc-steel-light">
                 Forensic analysis of completed fights. Review scores, diffs, judges memos, and decision breakdowns.
               </p>
+            </div>
+
+            <div className="border border-afc-steel-dark bg-afc-black p-4 text-xs text-afc-steel-light uppercase tracking-wider">
+              <div className="mb-1 font-bold text-afc-orange">Latest Published Card</div>
+              <div>Source: {liveArenaMeta.source}</div>
+              <div>Generated: {new Date(liveArenaMeta.generatedAt).toLocaleString()}</div>
+              <div>Published: {liveArenaMeta.publishedAt ? new Date(liveArenaMeta.publishedAt).toLocaleString() : 'Not captured'}</div>
+              <div>Preset: {liveArenaMeta.publishPresetName ?? 'Unlabeled'}{liveArenaMeta.gitSha ? ` · ${liveArenaMeta.gitSha}` : ''}</div>
+              <div className="mt-2 flex flex-wrap gap-3">
+                <a href={liveArenaMeta.publishedReportPath} className="text-afc-orange hover:text-afc-orange/80">
+                  Markdown Report
+                </a>
+                <a href={liveArenaMeta.publishedSummaryPath} className="text-afc-orange hover:text-afc-orange/80">
+                  Summary JSON
+                </a>
+                <Link to="/archive" className="text-afc-orange hover:text-afc-orange/80">
+                  Publish Archive
+                </Link>
+              </div>
             </div>
           </motion.div>
 
@@ -156,6 +177,29 @@ export default function ReplayDesk() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {featuredInsight && (
+        <section className="border-b border-afc-steel-dark bg-afc-black">
+          <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-2 h-2 bg-afc-orange" />
+              <h2 className="text-xl font-bold uppercase tracking-tight">Saved Replay Evidence</h2>
+            </div>
+
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+              <CornerEvidence
+                label={featuredFight.agentA}
+                corner={featuredInsight.blue}
+                accentClassName="text-afc-lime"
+              />
+              <CornerEvidence
+                label={featuredFight.agentB}
+                corner={featuredInsight.red}
+              />
             </div>
           </div>
         </section>

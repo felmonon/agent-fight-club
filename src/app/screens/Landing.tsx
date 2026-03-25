@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Swords, TrendingUp, Zap, Target, Play, Trophy } from 'lucide-react';
-import { agents, fights, seasonStats } from '../data/mock-data';
+import { agents, fights, liveArenaMeta, seasonStats } from '../data/mock-data';
 import { FightCard } from '../components/FightCard';
 import { TagBadge } from '../components/Badges';
 
@@ -62,6 +62,46 @@ export default function Landing() {
                 <Target className="w-5 h-5" />
                 Browse Replays
               </Link>
+            </div>
+
+            <div className="mt-6 grid grid-cols-1 gap-3 lg:grid-cols-[1fr_auto] lg:items-center">
+              <div className="border border-afc-steel-dark bg-afc-charcoal/80 p-4">
+                <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-1 font-bold">
+                  Latest Published Card
+                </div>
+                <div className="text-sm text-afc-steel-light">
+                  Source: <span className="text-foreground font-bold">{liveArenaMeta.source}</span>
+                </div>
+                <div className="text-sm text-afc-steel-light">
+                  Generated: {new Date(liveArenaMeta.generatedAt).toLocaleString()}
+                </div>
+                <div className="text-sm text-afc-steel-light">
+                  Published: {liveArenaMeta.publishedAt ? new Date(liveArenaMeta.publishedAt).toLocaleString() : 'Not captured'}
+                </div>
+                <div className="text-sm text-afc-steel-light">
+                  Preset: <span className="text-foreground font-bold">{liveArenaMeta.publishPresetName ?? 'Unlabeled'}</span>
+                  {liveArenaMeta.gitSha ? ` · ${liveArenaMeta.gitSha}` : ''}
+                </div>
+                <div className="mt-2 flex flex-wrap gap-3 text-xs uppercase tracking-wider">
+                  <a href={liveArenaMeta.publishedReportPath} className="text-afc-orange hover:text-afc-orange/80">
+                    Markdown Report
+                  </a>
+                  <a href={liveArenaMeta.publishedSummaryPath} className="text-afc-orange hover:text-afc-orange/80">
+                    Summary JSON
+                  </a>
+                  <Link to="/archive" className="text-afc-orange hover:text-afc-orange/80">
+                    Publish Archive
+                  </Link>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {liveArenaMeta.providers.map((provider) => (
+                  <TagBadge key={provider} variant={provider === 'scripted' ? 'warning' : 'champion'}>
+                    {provider}
+                  </TagBadge>
+                ))}
+              </div>
             </div>
           </div>
         </div>

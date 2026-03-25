@@ -1,8 +1,12 @@
 import liveArenaData from "../../data/liveArena.generated.json";
+import liveArenaArchiveData from "../../data/liveArenaArchive.generated.json";
 import { buildSeasonSummaryFromData, computeFight } from "../../lib/tournament.ts";
 import type {
   ComputedFightReplay,
+  FightTranscriptEntry,
   LiveArenaDataset,
+  PublishedSeasonArchiveEntry,
+  PublishedSeasonArchiveIndex,
   ScoreBreakdown,
   TaskCard as ArenaTaskCard
 } from "../../lib/types.ts";
@@ -121,7 +125,12 @@ export interface FightInsight {
     metrics: ScoreBreakdown;
     changedFiles: string[];
     changedLineCount: number;
+    durationMs?: number;
+    model?: string;
     provider: string;
+    transcript: FightTranscriptEntry[];
+    stdoutTail?: string;
+    stderrTail?: string;
     tokenEstimateK: number;
     workspaceNotes: string[];
   };
@@ -132,15 +141,42 @@ export interface FightInsight {
     metrics: ScoreBreakdown;
     changedFiles: string[];
     changedLineCount: number;
+    durationMs?: number;
+    model?: string;
     provider: string;
+    transcript: FightTranscriptEntry[];
+    stdoutTail?: string;
+    stderrTail?: string;
     tokenEstimateK: number;
     workspaceNotes: string[];
   };
 }
 
+export interface LiveArenaMeta {
+  generatedAt: string;
+  notes: string[];
+  providers: string[];
+  publishedReportPath: string;
+  publishedSummaryPath: string;
+  source: string;
+  archiveCount: number;
+  archiveIndexPath: string;
+  latestArchiveReportPath?: string;
+  latestArchiveSummaryPath?: string;
+  gitSha?: string;
+  publishPreset?: string;
+  publishPresetName?: string;
+  publishedAt?: string;
+  transcriptVersion?: number;
+  workflowRunUrl?: string;
+}
+
 const liveDataset = liveArenaData as LiveArenaDataset;
+const archiveDataset = liveArenaArchiveData as PublishedSeasonArchiveIndex;
 const computedFights = liveDataset.fights.map(computeFight);
 const seasonSummary = buildSeasonSummaryFromData(liveDataset);
+export const publishedSeasons: PublishedSeasonArchiveEntry[] = archiveDataset.entries;
+export const latestPublishedSeason = publishedSeasons[0];
 const previousSeasonSummary =
   liveDataset.fights.length > 1
     ? buildSeasonSummaryFromData({ ...liveDataset, fights: liveDataset.fights.slice(0, -1) })
@@ -459,7 +495,12 @@ function buildCornerInsight(fight: ComputedFightReplay, corner: "blue" | "red"):
     metrics: fight[corner].metrics,
     changedFiles: capture?.changedFiles ?? [],
     changedLineCount: capture?.changedLineCount ?? 0,
+    durationMs: capture?.durationMs,
+    model: capture?.model,
     provider: capture?.provider ?? "scripted",
+    transcript: capture?.transcript ?? [],
+    stdoutTail: capture?.stdoutTail,
+    stderrTail: capture?.stderrTail,
     tokenEstimateK: capture?.tokenEstimateK ?? 0,
     workspaceNotes: capture?.workspaceNotes ?? []
   };
@@ -489,6 +530,7 @@ function buildFightInsight(fight: Fight): FightInsight | undefined {
         changedFiles: [],
         changedLineCount: 0,
         provider: "scheduled",
+        transcript: [],
         tokenEstimateK: 0,
         workspaceNotes: []
       },
@@ -500,6 +542,7 @@ function buildFightInsight(fight: Fight): FightInsight | undefined {
         changedFiles: [],
         changedLineCount: 0,
         provider: "scheduled",
+        transcript: [],
         tokenEstimateK: 0,
         workspaceNotes: []
       }
@@ -623,6 +666,25 @@ const agentHistoryMap = buildAgentHistoryMap();
 export function getAgentHistory(agentId: string): AgentHistoryPoint[] {
   return agentHistoryMap.get(agentId) ?? [];
 }
+
+export const liveArenaMeta: LiveArenaMeta = {
+  generatedAt: liveDataset.generatedAt,
+  notes: liveDataset.notes,
+  providers: liveDataset.runMeta?.providers ?? [],
+  publishedReportPath: "/reports/latest-season.md",
+  publishedSummaryPath: "/reports/latest-season.json",
+  source: liveDataset.source,
+  archiveCount: publishedSeasons.length,
+  archiveIndexPath: "/reports/archive/index.json",
+  latestArchiveReportPath: latestPublishedSeason?.reportPath,
+  latestArchiveSummaryPath: latestPublishedSeason?.summaryPath,
+  gitSha: liveDataset.runMeta?.gitSha,
+  publishPreset: liveDataset.runMeta?.publishPreset,
+  publishPresetName: liveDataset.runMeta?.publishPresetName,
+  publishedAt: liveDataset.runMeta?.publishedAt,
+  transcriptVersion: liveDataset.runMeta?.transcriptVersion,
+  workflowRunUrl: liveDataset.runMeta?.workflowRunUrl
+};
 
 function biggestUpsetStats(): SeasonStats["biggestUpset"] {
   const indexedAgents = new Map(agents.map((agent) => [agent.modelName, agent]));

@@ -1,0 +1,120 @@
+name: Publish Live Arena
+
+on:
+  workflow_dispatch:
+    inputs:
+      preset:
+        description: Arena preset to publish
+        required: true
+        default: scripted
+        type: choice
+        options:
+          - scripted
+          - codex
+          - claude
+          - gemini
+          - versus
+          - multiverse
+      push_changes:
+        description: Commit generated artifacts back to the branch
+        required: true
+        default: true
+        type: boolean
+  schedule:
+    - cron: "0 16 * * 1-5"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-live-arena
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      AFC_PUBLISH_PRESET: ${{ inputs.preset || 'scripted' }}
+      AFC_CLAUDE_MODEL: ${{ vars.AFC_CLAUDE_MODEL }}
+      AFC_CLAUDE_TIMEOUT_MS: ${{ vars.AFC_CLAUDE_TIMEOUT_MS }}
+      AFC_CODEX_MODEL: ${{ vars.AFC_CODEX_MODEL }}
+      AFC_CODEX_TIMEOUT_MS: ${{ vars.AFC_CODEX_TIMEOUT_MS }}
+      AFC_GEMINI_MODEL: ${{ vars.AFC_GEMINI_MODEL }}
+      AFC_GEMINI_TIMEOUT_MS: ${{ vars.AFC_GEMINI_TIMEOUT_MS }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Show publish contract
+        run: node --experimental-strip-types scripts/publish-provider-contract.ts "$AFC_PUBLISH_PRESET"
+
+      - name: Validate provider secrets
+        run: node --experimental-strip-types scripts/publish-provider-contract.ts "$AFC_PUBLISH_PRESET" --check-secrets
+
+      - name: Install Codex CLI
+        if: contains(fromJSON('["codex","versus","multiverse"]'), env.AFC_PUBLISH_PRESET)
+        run: npm install -g @openai/codex
+
+      - name: Install Claude Code
+        if: contains(fromJSON('["claude","multiverse"]'), env.AFC_PUBLISH_PRESET)
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Install Gemini CLI
+        if: contains(fromJSON('["gemini","versus","multiverse"]'), env.AFC_PUBLISH_PRESET)
+        run: npm install -g @google/gemini-cli
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      - name: Publish live arena
+        run: node --experimental-strip-types scripts/publish-live-arena.ts "$AFC_PUBLISH_PRESET"
+
+      - name: Build app
+        run: npm run build
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Browser smoke
+        run: npm run test:e2e
+
+      - name: Upload publish artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: arena-publish-${{ env.AFC_PUBLISH_PRESET }}-${{ github.run_number }}
+          path: |
+            public/reports
+            src/data/liveArena.generated.json
+            src/data/liveArenaArchive.generated.json
+
+      - name: Commit generated artifacts
+        if: github.event_name == 'schedule' || inputs.push_changes
+        run: |
+          if [ -z "$(git status --porcelain -- public/reports src/data/liveArena.generated.json src/data/liveArenaArchive.generated.json)" ]; then
+            echo "No generated changes to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/reports src/data/liveArena.generated.json src/data/liveArenaArchive.generated.json
+          git commit -m "chore: publish live arena (${AFC_PUBLISH_PRESET})"
+          git push
