@@ -32,6 +32,7 @@ async function rewriteFile(
 function scriptedAgent(profileId: string, handlers: Record<string, PatchHandler>): ArenaAgentAdapter {
   return {
     profile: requireProfile(profileId),
+    provider: "scripted",
     async run(context) {
       const handler = handlers[context.task.card.id];
       if (!handler) {

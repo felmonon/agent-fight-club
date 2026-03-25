@@ -36,6 +36,7 @@ export interface ArenaDiffStats {
 }
 
 export interface ArenaAgentContext {
+  fightId: string;
   task: ArenaTaskDefinition;
   workspaceDir: string;
 }
@@ -60,6 +61,7 @@ export interface ArenaAgentExecution {
 
 export interface ArenaAgentAdapter {
   profile: AgentProfile;
+  provider: string;
   run: (context: ArenaAgentContext) => Promise<ArenaAgentExecution>;
 }
 

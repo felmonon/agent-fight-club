@@ -33,6 +33,42 @@ function tail(text: string, maxLength = 1200): string {
   return text.length <= maxLength ? text : text.slice(text.length - maxLength);
 }
 
+function formatCommand(binary: string, args: string[]): string {
+  return [binary, ...args.map((arg) => (/\s/.test(arg) ? JSON.stringify(arg) : arg))].join(" ");
+}
+
+function buildCodexFailureMessage(args: {
+  binary: string;
+  commandArgs: string[];
+  context: ArenaAgentContext;
+  exitCode?: number | null;
+  profile: AgentProfile;
+  stderr: string;
+  stdout: string;
+  timeoutMs?: number;
+}): string {
+  const combined = `${args.stdout}\n${args.stderr}`;
+  const lowerCombined = combined.toLowerCase();
+  const hint = lowerCombined.includes("exhausted your capacity")
+    ? "Hint: Codex reported quota exhaustion. Retry after the account reset window or switch models."
+    : lowerCombined.includes("login") || lowerCombined.includes("auth")
+      ? "Hint: Codex auth looks invalid on this runner. Rebuild the auth bundle or use OPENAI_API_KEY."
+      : undefined;
+
+  return [
+    `Codex CLI failed for ${args.profile.name} on fight ${args.context.fightId} task ${args.context.task.card.id}.`,
+    args.exitCode === undefined
+      ? `Timeout: exceeded ${args.timeoutMs}ms.`
+      : `Exit code: ${args.exitCode}.`,
+    `Command: ${formatCommand(args.binary, args.commandArgs)}`,
+    hint,
+    args.stdout.trim() ? `Stdout tail:\n${tail(args.stdout)}` : undefined,
+    args.stderr.trim() ? `Stderr tail:\n${tail(args.stderr)}` : undefined
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
 async function runCodexExec(
   context: ArenaAgentContext,
   profile: AgentProfile,
@@ -44,6 +80,14 @@ async function runCodexExec(
   const timeoutMs = options.timeoutMs ?? 300_000;
   const binary = options.binary ?? "codex";
   const binaryArgs = options.binaryArgs ?? [];
+  const displayArgs = [
+    ...binaryArgs,
+    "exec",
+    "--skip-git-repo-check",
+    "--full-auto",
+    "--ephemeral",
+    ...(options.model ? ["--model", options.model] : [])
+  ];
 
   await writeFile(schemaPath, `${JSON.stringify(OUTPUT_SCHEMA, null, 2)}\n`, "utf8");
 
@@ -100,11 +144,31 @@ async function runCodexExec(
     });
 
     if (timedOut) {
-      throw new Error(`Codex CLI timed out after ${timeoutMs}ms.\n${tail(stdout || stderr)}`);
+      throw new Error(
+        buildCodexFailureMessage({
+          binary,
+          commandArgs: [...displayArgs, "--cd", context.workspaceDir, "<arena-prompt>"],
+          context,
+          profile,
+          stderr,
+          stdout,
+          timeoutMs
+        })
+      );
     }
 
     if (exitCode !== 0) {
-      throw new Error(`Codex CLI exited with code ${exitCode}.\n${tail(`${stdout}\n${stderr}`)}`);
+      throw new Error(
+        buildCodexFailureMessage({
+          binary,
+          commandArgs: [...displayArgs, "--cd", context.workspaceDir, "<arena-prompt>"],
+          context,
+          exitCode,
+          profile,
+          stderr,
+          stdout
+        })
+      );
     }
 
     const raw = await readFile(outputPath, "utf8");
@@ -136,6 +200,7 @@ export function createCodexCliAdapter(
 ): ArenaAgentAdapter {
   return {
     profile,
+    provider: "codex",
     run(context) {
       return runCodexExec(context, profile, options);
     }

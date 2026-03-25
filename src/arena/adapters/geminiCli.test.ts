@@ -65,7 +65,7 @@ describe("gemini cli adapter", () => {
       })
     };
 
-    const result = await adapter.run({ task, workspaceDir });
+    const result = await adapter.run({ fightId: "live-test", task, workspaceDir });
     const source = await readFile(path.join(workspaceDir, "fixture.mjs"), "utf8");
     const args = JSON.parse(await readFile(argsPath, "utf8")) as {
       approvalMode: string;

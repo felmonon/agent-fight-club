@@ -253,6 +253,7 @@ export function createClaudeCliAdapter(
 ): ArenaAgentAdapter {
   return {
     profile,
+    provider: "claude",
     run(context) {
       return runClaudeExec(context, profile, options);
     }

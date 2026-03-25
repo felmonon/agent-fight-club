@@ -1,6 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { runLiveArenaSeason } from "./runner.ts";
 import { computeFight } from "../lib/tournament.ts";
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 describe("live arena runner", () => {
   it("executes live fixture fights and produces a champion-grade card", async () => {
@@ -19,5 +23,21 @@ describe("live arena runner", () => {
 
     const computedTitleFight = computeFight(titleFight!);
     expect(computedTitleFight.winnerId).toBe("ghostwire");
+  });
+
+  it("emits fight lifecycle logs when arena logging is enabled", async () => {
+    const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+
+    await runLiveArenaSeason({
+      env: {
+        AFC_ARENA_LOGS: "1",
+        AFC_FIGHT_IDS: "live-001"
+      }
+    });
+
+    const lines = logSpy.mock.calls.map(([message]) => String(message));
+    expect(lines.some((line) => line.includes("[arena][fight] live-001 checkout-guard"))).toBe(true);
+    expect(lines.some((line) => line.includes("[arena][corner:start] live-001 Ghostwire [scripted]"))).toBe(true);
+    expect(lines.some((line) => line.includes("[arena][result] live-001 winner Ghostwire"))).toBe(true);
   });
 });

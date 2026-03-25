@@ -14,6 +14,42 @@ function tail(text: string, maxLength = 1200): string {
   return text.length <= maxLength ? text : text.slice(text.length - maxLength);
 }
 
+function formatCommand(binary: string, args: string[]): string {
+  return [binary, ...args.map((arg) => (/\s/.test(arg) ? JSON.stringify(arg) : arg))].join(" ");
+}
+
+function buildGeminiFailureMessage(args: {
+  binary: string;
+  commandArgs: string[];
+  context: ArenaAgentContext;
+  exitCode?: number | null;
+  profile: AgentProfile;
+  stderr: string;
+  stdout: string;
+  timeoutMs?: number;
+}): string {
+  const combined = `${args.stdout}\n${args.stderr}`;
+  const lowerCombined = combined.toLowerCase();
+  const hint = lowerCombined.includes("please set an auth method")
+    ? "Hint: Gemini auth is present but no auth mode was selected. Restore ~/.gemini/settings.json with oauth-personal or provide GEMINI_API_KEY."
+    : lowerCombined.includes("enoent") || lowerCombined.includes("projects.json")
+      ? "Hint: Gemini expected writable state under ~/.gemini. Ensure settings.json and projects.json exist on the runner."
+      : undefined;
+
+  return [
+    `Gemini CLI failed for ${args.profile.name} on fight ${args.context.fightId} task ${args.context.task.card.id}.`,
+    args.exitCode === undefined
+      ? `Timeout: exceeded ${args.timeoutMs}ms.`
+      : `Exit code: ${args.exitCode}.`,
+    `Command: ${formatCommand(args.binary, args.commandArgs)}`,
+    hint,
+    args.stdout.trim() ? `Stdout tail:\n${tail(args.stdout)}` : undefined,
+    args.stderr.trim() ? `Stderr tail:\n${tail(args.stderr)}` : undefined
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
@@ -227,6 +263,8 @@ async function runGeminiCli(
     args.push("--model", options.model);
   }
 
+  const displayArgs = [...args.filter((arg) => arg !== prompt), "<arena-prompt>"];
+
   const child = spawn(binary, args, {
     cwd: context.workspaceDir,
     env: process.env,
@@ -257,11 +295,31 @@ async function runGeminiCli(
   });
 
   if (timedOut) {
-    throw new Error(`Gemini CLI timed out after ${timeoutMs}ms.\n${tail(stdout || stderr)}`);
+    throw new Error(
+      buildGeminiFailureMessage({
+        binary,
+        commandArgs: displayArgs,
+        context,
+        profile,
+        stderr,
+        stdout,
+        timeoutMs
+      })
+    );
   }
 
   if (exitCode !== 0) {
-    throw new Error(`Gemini CLI exited with code ${exitCode}.\n${tail(`${stdout}\n${stderr}`)}`);
+    throw new Error(
+      buildGeminiFailureMessage({
+        binary,
+        commandArgs: displayArgs,
+        context,
+        exitCode,
+        profile,
+        stderr,
+        stdout
+      })
+    );
   }
 
   const parsed = parseJsonResult(stdout);
@@ -288,6 +346,7 @@ export function createGeminiCliAdapter(
 ): ArenaAgentAdapter {
   return {
     profile,
+    provider: "gemini",
     run(context) {
       return runGeminiCli(context, profile, options);
     }

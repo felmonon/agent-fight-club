@@ -53,8 +53,9 @@ Optional GitHub repository variables for model and timeout control:
 - `AFC_CLAUDE_TIMEOUT_MS`
 - `AFC_GEMINI_MODEL`
 - `AFC_GEMINI_TIMEOUT_MS`
+- `AFC_ARENA_HEARTBEAT_MS`
 
-The publish workflow installs provider CLIs only when the selected preset needs them.
+The publish workflow installs provider CLIs only when the selected preset needs them. It also enables arena lifecycle logs in CI and emits a heartbeat every `AFC_ARENA_HEARTBEAT_MS` milliseconds while live corners are still running.
 
 ## Recommended First Real Publish
 
@@ -85,3 +86,9 @@ The workflows support either API-key auth or base64-encoded auth bundles for Cod
 - `GEMINI_OAUTH_CREDS_JSON_B64` should be the base64-encoded contents of `~/.gemini/oauth_creds.json`
 
 If those bundle secrets are present, the publish workflow restores them to the same home-directory paths before running the provider CLIs. For Gemini OAuth, the workflow also writes a minimal `~/.gemini/settings.json` with `oauth-personal` selected so the CLI uses the restored bundle non-interactively.
+
+## Workflow Guardrails
+
+- `Publish Live Arena` has a 60-minute job timeout.
+- The `Publish live arena` step itself has a 40-minute timeout.
+- Long-running provider bouts log fight start, corner start, heartbeat, corner completion, and fight result lines into the GitHub Actions log.

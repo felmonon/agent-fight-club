@@ -19,6 +19,12 @@ import { computeFight } from "../lib/tournament.ts";
 const LOG_TAIL_MAX_LENGTH = 1800;
 const TRANSCRIPT_ENTRY_LIMIT = 14;
 const TRANSCRIPT_TEXT_MAX_LENGTH = 520;
+const DEFAULT_ARENA_HEARTBEAT_MS = 15_000;
+
+interface ArenaLoggingConfig {
+  enabled: boolean;
+  heartbeatMs: number;
+}
 
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
@@ -53,6 +59,29 @@ function tailText(value: string, maxLength = LOG_TAIL_MAX_LENGTH): string {
     return text;
   }
   return `…${text.slice(text.length - (maxLength - 1))}`;
+}
+
+function formatDurationMs(durationMs: number): string {
+  const roundedSeconds = Math.round(durationMs / 100) / 10;
+  return `${roundedSeconds}s`;
+}
+
+function resolveArenaLoggingConfig(env: Record<string, string | undefined>): ArenaLoggingConfig {
+  const heartbeatMs = Number(env.AFC_ARENA_HEARTBEAT_MS ?? DEFAULT_ARENA_HEARTBEAT_MS);
+  return {
+    enabled: env.AFC_ARENA_LOGS === "1" || env.GITHUB_ACTIONS === "true",
+    heartbeatMs: Number.isFinite(heartbeatMs) && heartbeatMs > 0 ? heartbeatMs : DEFAULT_ARENA_HEARTBEAT_MS
+  };
+}
+
+function logArena(config: ArenaLoggingConfig, message: string) {
+  if (config.enabled) {
+    console.log(message);
+  }
+}
+
+function describeCorner(fightId: string, agent: ArenaAgentAdapter, task: ArenaTaskDefinition): string {
+  return `${fightId} ${agent.profile.name} [${agent.provider}] on ${task.card.id}`;
 }
 
 function normalizeTranscriptEntry(entry: FightTranscriptEntry): FightTranscriptEntry {
@@ -277,16 +306,39 @@ function deriveJudgesMemo(
   return `${winner} edged ${loser} by stacking small advantages across correctness, restraint, and review safety.`;
 }
 
-async function runCorner(agent: ArenaAgentAdapter, task: ArenaTaskDefinition): Promise<ArenaCornerResult> {
+async function runCorner(
+  fightId: string,
+  agent: ArenaAgentAdapter,
+  task: ArenaTaskDefinition,
+  logging: ArenaLoggingConfig
+): Promise<ArenaCornerResult> {
   const workspaceDir = await mkdtemp(path.join(os.tmpdir(), `afc-${task.card.id}-${agent.profile.id}-`));
+  const startedAt = performance.now();
+  const label = describeCorner(fightId, agent, task);
+  const heartbeatHandle =
+    logging.enabled
+      ? setInterval(() => {
+          const elapsedMs = performance.now() - startedAt;
+          logArena(
+            logging,
+            `[arena][heartbeat] ${label} still running after ${formatDurationMs(elapsedMs)}.`
+          );
+        }, logging.heartbeatMs)
+      : undefined;
+
+  heartbeatHandle?.unref();
 
   try {
+    logArena(logging, `[arena][corner:start] ${label} started.`);
     const snapshot = await materializeTask(task, workspaceDir);
-    const startedAt = performance.now();
-    const execution = await agent.run({ task, workspaceDir });
+    const execution = await agent.run({ fightId, task, workspaceDir });
     const durationMs = performance.now() - startedAt;
     const evaluation = await task.evaluate(workspaceDir);
     const diffStats = await computeDiffStats(workspaceDir, snapshot);
+    logArena(
+      logging,
+      `[arena][corner:done] ${label} finished in ${formatDurationMs(durationMs)} with ${evaluation.passedChecks}/${evaluation.totalChecks} checks and ${diffStats.changedFiles.length} changed file(s).`
+    );
 
     return {
       ...execution,
@@ -296,7 +348,16 @@ async function runCorner(agent: ArenaAgentAdapter, task: ArenaTaskDefinition): P
       diffStats,
       metrics: deriveMetrics(execution, evaluation, diffStats, durationMs)
     };
+  } catch (error) {
+    const durationMs = performance.now() - startedAt;
+    const details = error instanceof Error ? error.message : String(error);
+    logArena(logging, `[arena][corner:error] ${label} failed after ${formatDurationMs(durationMs)}.`);
+    throw new Error(
+      `[arena] ${label} failed after ${formatDurationMs(durationMs)}.\n${details}`,
+      error instanceof Error ? { cause: error } : undefined
+    );
   } finally {
+    clearInterval(heartbeatHandle);
     await rm(workspaceDir, { recursive: true, force: true });
   }
 }
@@ -379,6 +440,7 @@ export async function runLiveArenaSeason(
   options: { env?: Record<string, string | undefined> } = {}
 ): Promise<ArenaRunResult> {
   const env = options.env ?? process.env;
+  const logging = resolveArenaLoggingConfig(env);
   const { agents: activeAgents, notes: registryNotes } = getLiveAgentRegistry(env);
   const selectedFightIds = parseCsv(env.AFC_FIGHT_IDS);
   const plannedFights =
@@ -391,12 +453,23 @@ export async function runLiveArenaSeason(
   }
 
   const fights: FightReplay[] = [];
+  logArena(
+    logging,
+    `[arena][season:start] Running ${plannedFights.length} fight(s) with providers: ${Array.from(new Set(activeAgents.map((agent) => agent.provider))).join(", ")}.`
+  );
 
   for (const plan of plannedFights) {
     const blueAgent = requireAgent(plan.blueAgentId, activeAgents);
     const redAgent = requireAgent(plan.redAgentId, activeAgents);
     const task = requireTask(plan.taskId);
-    const [blue, red] = await Promise.all([runCorner(blueAgent, task), runCorner(redAgent, task)]);
+    logArena(
+      logging,
+      `[arena][fight] ${plan.id} ${task.card.id}: ${blueAgent.profile.name} (${blueAgent.provider}) vs ${redAgent.profile.name} (${redAgent.provider}).`
+    );
+    const [blue, red] = await Promise.all([
+      runCorner(plan.id, blueAgent, task, logging),
+      runCorner(plan.id, redAgent, task, logging)
+    ]);
 
     const baseFight: FightReplay = {
       id: plan.id,
@@ -432,6 +505,10 @@ export async function runLiveArenaSeason(
     const computedFight = computeFight(baseFight);
     const winnerName = computedFight.winnerId === blueAgent.profile.id ? blueAgent.profile.name : redAgent.profile.name;
     const loserName = computedFight.loserId === blueAgent.profile.id ? blueAgent.profile.name : redAgent.profile.name;
+    logArena(
+      logging,
+      `[arena][result] ${plan.id} winner ${winnerName} over ${loserName} by ${computedFight.finish}.`
+    );
 
     fights.push({
       ...baseFight,
@@ -439,6 +516,8 @@ export async function runLiveArenaSeason(
       keyMoments: deriveKeyMoments(blue, red, winnerName, loserName)
     });
   }
+
+  logArena(logging, `[arena][season:done] Completed ${fights.length} fight(s).`);
 
   return {
     generatedAt: new Date().toISOString(),
