@@ -2,7 +2,7 @@ import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { performance } from "node:perf_hooks";
-import { liveAgents } from "./agents.ts";
+import { getLiveAgentRegistry } from "./agents.ts";
 import { liveTasks } from "./tasks.ts";
 import type {
   ArenaAgentAdapter,
@@ -22,6 +22,13 @@ function clamp(value: number, min: number, max: number): number {
 
 function round(value: number): number {
   return Math.round(value);
+}
+
+function parseCsv(value: string | undefined): string[] {
+  return (value ?? "")
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
 }
 
 async function materializeTask(task: ArenaTaskDefinition, workspaceDir: string): Promise<Map<string, string>> {
@@ -227,8 +234,8 @@ const fightPlan: ArenaFightPlan[] = [
   }
 ];
 
-function requireAgent(id: string): ArenaAgentAdapter {
-  const agent = liveAgents.find((candidate) => candidate.profile.id === id);
+function requireAgent(id: string, agents: ArenaAgentAdapter[]): ArenaAgentAdapter {
+  const agent = agents.find((candidate) => candidate.profile.id === id);
   if (!agent) {
     throw new Error(`Unknown live agent: ${id}`);
   }
@@ -243,12 +250,27 @@ function requireTask(id: string): ArenaTaskDefinition {
   return task;
 }
 
-export async function runLiveArenaSeason(): Promise<ArenaRunResult> {
+export async function runLiveArenaSeason(
+  options: { env?: Record<string, string | undefined> } = {}
+): Promise<ArenaRunResult> {
+  const env = options.env ?? process.env;
+  const { agents: activeAgents, notes: registryNotes } = getLiveAgentRegistry(env);
+  const codexEnabled = registryNotes.some((note) => note.startsWith("Codex CLI enabled"));
+  const selectedFightIds = parseCsv(env.AFC_FIGHT_IDS);
+  const plannedFights =
+    selectedFightIds.length > 0
+      ? fightPlan.filter((fight) => selectedFightIds.includes(fight.id))
+      : fightPlan;
+
+  if (plannedFights.length === 0) {
+    throw new Error(`AFC_FIGHT_IDS did not match any fights: ${selectedFightIds.join(", ")}`);
+  }
+
   const fights: FightReplay[] = [];
 
-  for (const plan of fightPlan) {
-    const blueAgent = requireAgent(plan.blueAgentId);
-    const redAgent = requireAgent(plan.redAgentId);
+  for (const plan of plannedFights) {
+    const blueAgent = requireAgent(plan.blueAgentId, activeAgents);
+    const redAgent = requireAgent(plan.redAgentId, activeAgents);
     const task = requireTask(plan.taskId);
     const [blue, red] = await Promise.all([runCorner(blueAgent, task), runCorner(redAgent, task)]);
 
@@ -295,10 +317,16 @@ export async function runLiveArenaSeason(): Promise<ArenaRunResult> {
     generatedAt: new Date().toISOString(),
     source: "live-arena-runner",
     notes: [
+      ...registryNotes,
+      ...(selectedFightIds.length > 0
+        ? [`Fight filter active: ${selectedFightIds.join(", ")}.`]
+        : []),
       "Each corner ran against a real fixture workspace in a fresh temp directory.",
-      "Current live season uses built-in scripted agents; the adapter interface is ready for real model runners."
+      codexEnabled
+        ? "Any unselected fighters still use the built-in scripted adapters so you can mix real and deterministic corners."
+        : "Current live season uses built-in scripted agents; set AFC_CODEX_AGENT_IDS to replace selected corners with a real Codex CLI fighter."
     ],
-    agents: liveAgents.map((agent) => agent.profile),
+    agents: activeAgents.map((agent) => agent.profile),
     tasks: liveTasks.map((task) => task.card),
     fights
   };

@@ -4,7 +4,7 @@ import { computeFight } from "../lib/tournament.ts";
 
 describe("live arena runner", () => {
   it("executes live fixture fights and produces a champion-grade card", async () => {
-    const dataset = await runLiveArenaSeason();
+    const dataset = await runLiveArenaSeason({ env: {} });
     expect(dataset.source).toBe("live-arena-runner");
     expect(dataset.fights).toHaveLength(6);
     expect(dataset.tasks).toHaveLength(3);

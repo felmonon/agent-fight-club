@@ -2,6 +2,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { agents as seedAgents } from "../data/season.ts";
 import type { AgentProfile } from "../lib/types.ts";
+import { createCodexCliAdapter, type CodexCliAdapterOptions } from "./adapters/codexCli.ts";
 import type { ArenaAgentAdapter, ArenaAgentContext, ArenaAgentExecution } from "./types.ts";
 
 type PatchHandler = (context: ArenaAgentContext) => Promise<ArenaAgentExecution>;
@@ -402,4 +403,56 @@ export function formatCurrency(amount) {
   }
 });
 
-export const liveAgents: ArenaAgentAdapter[] = [ghostwire, ironclad, blackboxer, cinder];
+const scriptedLiveAgents: ArenaAgentAdapter[] = [ghostwire, ironclad, blackboxer, cinder];
+
+export interface LiveAgentRegistry {
+  agents: ArenaAgentAdapter[];
+  notes: string[];
+}
+
+function parseCsv(value: string | undefined): string[] {
+  return (value ?? "")
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+}
+
+function codexOptionsFromEnv(env: Record<string, string | undefined>): CodexCliAdapterOptions {
+  return {
+    binary: env.AFC_CODEX_BIN || "codex",
+    binaryArgs: parseCsv(env.AFC_CODEX_BIN_ARGS),
+    model: env.AFC_CODEX_MODEL,
+    timeoutMs: env.AFC_CODEX_TIMEOUT_MS ? Number(env.AFC_CODEX_TIMEOUT_MS) : undefined
+  };
+}
+
+export function getLiveAgentRegistry(
+  env: Record<string, string | undefined> = process.env
+): LiveAgentRegistry {
+  const selectedCodexIds = parseCsv(env.AFC_CODEX_AGENT_IDS);
+  if (selectedCodexIds.length === 0) {
+    return {
+      agents: scriptedLiveAgents,
+      notes: ["Using scripted agents only. Set AFC_CODEX_AGENT_IDS=ghostwire to enable a real Codex CLI fighter."]
+    };
+  }
+
+  const codexOptions = codexOptionsFromEnv(env);
+  const agentMap = new Map(scriptedLiveAgents.map((agent) => [agent.profile.id, agent]));
+
+  for (const id of selectedCodexIds) {
+    if (!agentMap.has(id)) {
+      throw new Error(`AFC_CODEX_AGENT_IDS includes unknown live agent: ${id}`);
+    }
+    agentMap.set(id, createCodexCliAdapter(requireProfile(id), codexOptions));
+  }
+
+  const modelNote = codexOptions.model ? ` model ${codexOptions.model}` : "";
+
+  return {
+    agents: Array.from(agentMap.values()),
+    notes: [`Codex CLI enabled for: ${selectedCodexIds.join(", ")} using ${codexOptions.binary}${modelNote}.`]
+  };
+}
+
+export const liveAgents: ArenaAgentAdapter[] = scriptedLiveAgents;

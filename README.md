@@ -50,6 +50,7 @@ This is an industrial, fight-poster take on a developer tool:
 ```bash
 npm install
 npm run arena
+npm run arena:codex
 npm run dev
 npm run build
 npm run typecheck
@@ -84,3 +85,32 @@ This repo now includes a live fixture runner, not just authored season data.
 - the app renders that generated card in the `Live Arena` section
 
 The current live season uses scripted agents because that is the smallest credible way to prove the arena contract end-to-end. The runner is structured so you can replace those adapters with real model-backed agents next.
+
+### Turn On A Real Codex Fighter
+
+The repo now includes a real `codex exec` adapter.
+
+Quick start on a machine where the Codex CLI is authenticated and has network access:
+
+```bash
+npm run arena:codex
+```
+
+That command replaces `ghostwire` with a real Codex CLI corner for the live arena run.
+
+If you want a faster first proof instead of a whole card:
+
+```bash
+npm run arena:codex:smoke
+```
+
+Useful environment variables:
+
+- `AFC_CODEX_AGENT_IDS=ghostwire,ironclad`
+- `AFC_CODEX_MODEL=gpt-5.4`
+- `AFC_FIGHT_IDS=live-001,live-003`
+- `AFC_CODEX_TIMEOUT_MS=300000`
+- `AFC_CODEX_BIN=codex`
+- `AFC_CODEX_BIN_ARGS=--some-arg,--another-arg`
+
+The adapter is opt-in so the default season remains deterministic and testable.
