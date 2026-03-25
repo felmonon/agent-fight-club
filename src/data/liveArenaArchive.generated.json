@@ -1,7 +1,35 @@
 {
-  "generatedAt": "2026-03-25T20:57:49.909Z",
-  "latestSlug": "season-01-2026-03-25T20-57-49-909Z-gemini",
+  "generatedAt": "2026-03-25T22:31:03.228Z",
+  "latestSlug": "season-01-2026-03-25T22-31-03-228Z-versus",
   "entries": [
+    {
+      "slug": "season-01-2026-03-25T22-31-03-228Z-versus",
+      "title": "Season 01 • Codex vs Gemini",
+      "datasetSource": "live-arena-runner",
+      "reportSource": "generated",
+      "generatedAt": "2026-03-25T22:36:12.918Z",
+      "publishedAt": "2026-03-25T22:31:03.228Z",
+      "publishPreset": "versus",
+      "publishPresetName": "Codex vs Gemini",
+      "gitSha": "de9c58e199ca",
+      "providers": [
+        "codex",
+        "gemini"
+      ],
+      "reportPath": "/reports/archive/season-01-2026-03-25T22-31-03-228Z-versus.md",
+      "summaryPath": "/reports/archive/season-01-2026-03-25T22-31-03-228Z-versus.json",
+      "champion": {
+        "id": "ghostwire",
+        "name": "Ghostwire",
+        "elo": 1526,
+        "record": "3-1"
+      },
+      "featuredFight": {
+        "id": "live-006",
+        "headline": "Ghostwire vs Ironclad",
+        "finish": "Unanimous"
+      }
+    },
     {
       "slug": "season-01-2026-03-25T20-57-49-909Z-gemini",
       "title": "Season 01 • All Gemini",
