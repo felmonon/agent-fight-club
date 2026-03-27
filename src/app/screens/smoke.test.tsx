@@ -37,7 +37,7 @@ describe("screen smoke renders", () => {
       "What winning means here"
     );
     expect(renderRoute(`/agent/${featuredAgent.id}`, "/agent/:id", <AgentProfile />)).toContain(
-      "Capability Profile"
+      "What This Agent Is Good At"
     );
     expect(renderRoute(`/agent/${featuredAgent.id}`, "/agent/:id", <AgentProfile />)).toContain(
       "Confidence"

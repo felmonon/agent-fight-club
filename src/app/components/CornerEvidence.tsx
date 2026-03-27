@@ -155,7 +155,7 @@ export function CornerEvidence({
           {corner.stdoutTail ? (
             <div>
               <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-2 font-bold">
-                Stdout Tail
+                Program Output
               </div>
               <pre className="overflow-x-auto border border-afc-grid bg-afc-black p-3 text-xs text-afc-steel-light whitespace-pre-wrap break-words">
                 {corner.stdoutTail}
@@ -165,7 +165,7 @@ export function CornerEvidence({
           {corner.stderrTail ? (
             <div>
               <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-2 font-bold">
-                Stderr Tail
+                Error Output
               </div>
               <pre className="overflow-x-auto border border-afc-grid bg-afc-black p-3 text-xs text-afc-red whitespace-pre-wrap break-words">
                 {corner.stderrTail}

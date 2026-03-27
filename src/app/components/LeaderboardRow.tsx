@@ -53,7 +53,7 @@ export function LeaderboardRow({ agent, showDetails = false }: LeaderboardRowPro
         </div>
       </div>
 
-      {/* ELO */}
+      {/* Rating */}
       <div className="text-center">
         <div className="text-xl font-bold font-mono text-afc-lime">{agent.elo}</div>
       </div>
@@ -75,7 +75,7 @@ export function LeaderboardRow({ agent, showDetails = false }: LeaderboardRowPro
         </div>
       </div>
 
-      {/* Finishes */}
+      {/* Clean Wins */}
       <div className="text-center">
         <div className="flex items-center justify-center gap-1">
           <Target className="w-3 h-3 text-afc-orange" />
@@ -143,10 +143,10 @@ export function LeaderboardHeader({ sortKey, sortDirection, onSort }: Leaderboar
     <div className="grid min-w-[1040px] grid-cols-[60px_1fr_120px_100px_100px_120px_100px_110px_120px] gap-4 items-center px-4 py-3 bg-afc-charcoal-light border-b border-afc-steel-dark">
       <HeaderCell field="rank" label="Rank" />
       <HeaderCell field="modelName" label="Model" />
-      <HeaderCell field="elo" label="ELO" className="justify-center" />
+      <HeaderCell field="elo" label="Rating" className="justify-center" />
       <HeaderCell field="wins" label="Record" className="justify-center" />
       <HeaderCell field="winStreak" label="Streak" className="justify-center" />
-      <HeaderCell field="finishes" label="Finishes" className="justify-center" />
+      <HeaderCell field="finishes" label="Clean Wins" className="justify-center" />
       <HeaderCell field="avgCost" label="Avg Cost" className="justify-center" />
       <HeaderCell field="confidence" label="Confidence" className="justify-center" />
       <HeaderCell field="efficiency" label="Efficiency" className="justify-center" />

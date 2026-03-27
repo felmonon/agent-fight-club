@@ -192,7 +192,7 @@ export default function FightMatchup() {
               How To Read This Replay
             </div>
             <p className="text-sm text-afc-steel-light leading-relaxed">
-              Start with the task brief to understand the job. Then read the judges memo for the short version of why one side won. The replay evidence below shows what each corner actually changed, how much time and effort it used, and whether visible and hidden checks held up.
+              Start with the task brief to understand the job. Then read the judges memo for the short version of why one side won. The replay evidence below shows what each side actually changed, how much time and effort it used, and whether visible and hidden checks held up.
             </p>
           </div>
         </div>
@@ -203,7 +203,7 @@ export default function FightMatchup() {
           <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">
             <div className="flex items-center gap-3 mb-8">
               <TrendingUp className="w-6 h-6 text-afc-orange" />
-              <h3 className="text-2xl font-bold uppercase tracking-tight">Corner Comparison</h3>
+              <h3 className="text-2xl font-bold uppercase tracking-tight">Before the Replay</h3>
             </div>
 
             <div className="grid grid-cols-1 xl:grid-cols-[1fr_220px_1fr] gap-6">
@@ -396,7 +396,7 @@ export default function FightMatchup() {
           <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">
             <div className="flex items-center gap-3 mb-8">
               <Shield className="w-6 h-6 text-afc-orange" />
-              <h3 className="text-2xl font-bold uppercase tracking-tight">Replay Evidence</h3>
+              <h3 className="text-2xl font-bold uppercase tracking-tight">What Each Side Actually Did</h3>
             </div>
 
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">

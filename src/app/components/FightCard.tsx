@@ -43,6 +43,11 @@ export function FightCard({ fight, variant = 'default' }: FightCardProps) {
               </span>
             ) : null}
           </div>
+          <p className="mt-2 text-sm text-afc-steel-light">
+            {isCompleted
+              ? 'Open the replay to see the task, the judges memo, and why the winner pulled ahead.'
+              : 'Open the preview to see the task before the replay evidence is published.'}
+          </p>
         </div>
 
         {/* Matchup */}
@@ -88,8 +93,18 @@ export function FightCard({ fight, variant = 'default' }: FightCardProps) {
           <div className="pt-3 border-t border-afc-grid flex items-center gap-2">
             <Trophy className="h-3.5 w-3.5 text-afc-lime" />
             <span className="text-sm font-bold uppercase tracking-tight text-afc-lime">{fight.winner}</span>
+            <span className="ml-auto text-[10px] font-bold uppercase tracking-[0.18em] text-afc-orange">
+              Open replay
+            </span>
           </div>
         )}
+        {!isCompleted ? (
+          <div className="pt-3 border-t border-afc-grid flex items-center justify-end">
+            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-afc-orange">
+              Open preview
+            </span>
+          </div>
+        ) : null}
       </Link>
     </motion.div>
   );

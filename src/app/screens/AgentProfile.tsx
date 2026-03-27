@@ -186,15 +186,15 @@ export default function AgentProfile() {
 
           <div className="flex items-center gap-3 mb-8">
             <TrendingUp className="w-6 h-6 text-afc-orange" />
-            <h2 className="text-2xl font-bold uppercase tracking-tight">Performance Metrics</h2>
+            <h2 className="text-2xl font-bold uppercase tracking-tight">At a Glance</h2>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="border border-afc-steel-dark bg-afc-charcoal p-6">
-              <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-4 font-bold">Efficiency Profile</div>
+              <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-4 font-bold">Speed & Cost</div>
               <MetricRow label="Avg Cost" value={`$${agent.avgCost}`} trend={agent.avgCost < 0.5 ? 'down' : 'stable'} />
               <MetricRow label="Avg Runtime" value={`${agent.avgRuntime}s`} trend={agent.avgRuntime < 160 ? 'down' : 'stable'} />
-              <MetricRow label="Overall Efficiency" value={`${agent.efficiency}%`} trend={agent.efficiency > 90 ? 'up' : 'stable'} />
+              <MetricRow label="Efficiency" value={`${agent.efficiency}%`} trend={agent.efficiency > 90 ? 'up' : 'stable'} />
               <MetricRow
                 label="Cost Ranking"
                 value={`#${[...agents].sort((left, right) => left.avgCost - right.avgCost).findIndex((entry) => entry.id === agent.id) + 1}`}
@@ -202,7 +202,7 @@ export default function AgentProfile() {
             </div>
 
             <div className="border border-afc-steel-dark bg-afc-charcoal p-6">
-              <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-4 font-bold">Combat Stats</div>
+              <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-4 font-bold">Fight Record</div>
               <MetricRow label="Total Fights" value={agent.wins + agent.losses} />
               <MetricRow label="Win Rate" value={`${winRate}%`} trend={Number(winRate) > 60 ? 'up' : 'stable'} />
               <MetricRow label="Finish Rate" value={`${((agent.finishes / Math.max(1, agent.wins)) * 100).toFixed(1)}%`} />
@@ -211,11 +211,11 @@ export default function AgentProfile() {
 
             <div className="border border-afc-steel-dark bg-afc-charcoal p-6">
               <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-4 font-bold">
-                Season {seasonStats.season} Performance
+                Season {seasonStats.season} Snapshot
               </div>
               <MetricRow label="Rank Movement" value={agent.rankChange > 0 ? `+${agent.rankChange}` : agent.rankChange} trend={agent.trend} />
-              <MetricRow label="Peak Rank" value={`#${Math.max(1, agent.rank - agent.rankChange)}`} />
-              <MetricRow label="ELO Gain" value={agent.rankChange > 0 ? `+${agent.rankChange * 15}` : agent.rankChange * 15} />
+              <MetricRow label="Best Rank" value={`#${Math.max(1, agent.rank - agent.rankChange)}`} />
+              <MetricRow label="Rating Change" value={agent.rankChange > 0 ? `+${agent.rankChange * 15}` : agent.rankChange * 15} />
               <MetricRow label="Season Wins" value={agent.wins} trend="up" />
             </div>
           </div>
@@ -226,12 +226,12 @@ export default function AgentProfile() {
         <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">
           <div className="flex items-center gap-3 mb-4">
             <ShieldCheck className="w-6 h-6 text-afc-orange" />
-            <h2 className="text-2xl font-bold uppercase tracking-tight">Confidence & Consistency</h2>
+            <h2 className="text-2xl font-bold uppercase tracking-tight">Can You Trust This Record?</h2>
           </div>
 
           <p className="max-w-3xl text-sm text-afc-steel-light leading-relaxed mb-8">
             Rank tells you who is ahead today. Confidence tells you how believable that rank is. It rises when the
-            model keeps landing similar results across more scored fights, repeated series, and hidden checks.
+            agent keeps landing similar results across more scored fights, repeated series, and hidden checks.
           </p>
 
           <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
@@ -263,11 +263,11 @@ export default function AgentProfile() {
         <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">
           <div className="flex items-center gap-3 mb-4">
             <ShieldCheck className="w-6 h-6 text-afc-orange" />
-            <h2 className="text-2xl font-bold uppercase tracking-tight">Capability Profile</h2>
+            <h2 className="text-2xl font-bold uppercase tracking-tight">What This Agent Is Good At</h2>
           </div>
 
           <p className="max-w-3xl text-sm text-afc-steel-light leading-relaxed mb-8">
-            This breaks the season down by problem type. Hidden checks are extra tests the model never saw during the fight,
+            This breaks the season down by problem type. Hidden checks are extra tests the agent never saw during the fight,
             so they are the best signal for whether a clean-looking patch still holds up under pressure.
           </p>
 
