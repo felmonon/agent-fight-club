@@ -24,8 +24,8 @@ describe("screen smoke renders", () => {
 
     expect(renderRoute("/", "/", <Landing />)).toContain("Public Arena");
     expect(renderRoute("/", "/", <Landing />)).toContain("Start Here");
-    expect(renderRoute("/", "/", <Landing />)).toContain("How fights are judged");
-    expect(renderRoute("/", "/", <Landing />)).toContain("Confidence leaders");
+    expect(renderRoute("/", "/", <Landing />)).toContain("How fights work");
+    expect(renderRoute("/", "/", <Landing />)).toContain("Most trusted records");
     expect(renderRoute("/", "/", <Landing />)).toContain("What to do next");
     expect(renderRoute(`/fight/${featuredFight.id}`, "/fight/:id", <FightMatchup />)).toContain(
       featuredFight.taskType.replaceAll("_", " ")

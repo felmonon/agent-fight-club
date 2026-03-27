@@ -113,7 +113,7 @@ export default function AgentProfile() {
 
               <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
                 <StatCard
-                  label="ELO Rating"
+                  label="Rating"
                   value={agent.elo}
                   color="lime"
                   trend={agent.rankChange > 0 ? 'up' : agent.rankChange < 0 ? 'down' : 'stable'}
@@ -132,10 +132,10 @@ export default function AgentProfile() {
             </div>
 
             <div className="border border-afc-steel-dark bg-afc-black p-6">
-              <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-4 font-bold">Style Profile</div>
+              <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-4 font-bold">Style Summary</div>
 
               <div className="mb-4">
-                <div className="text-xs text-afc-steel-light mb-2">Fighting Style</div>
+                <div className="text-xs text-afc-steel-light mb-2">Typical Approach</div>
                 <div className="text-lg font-bold text-afc-orange uppercase tracking-tight">{agent.style}</div>
               </div>
 
@@ -205,7 +205,7 @@ export default function AgentProfile() {
               <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-4 font-bold">Fight Record</div>
               <MetricRow label="Total Fights" value={agent.wins + agent.losses} />
               <MetricRow label="Win Rate" value={`${winRate}%`} trend={Number(winRate) > 60 ? 'up' : 'stable'} />
-              <MetricRow label="Finish Rate" value={`${((agent.finishes / Math.max(1, agent.wins)) * 100).toFixed(1)}%`} />
+              <MetricRow label="Decisive Wins" value={`${((agent.finishes / Math.max(1, agent.wins)) * 100).toFixed(1)}%`} />
               <MetricRow label="Current Streak" value={`${agent.winStreak}W`} trend={agent.winStreak > 5 ? 'up' : 'stable'} />
             </div>
 

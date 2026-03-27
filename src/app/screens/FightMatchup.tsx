@@ -88,7 +88,7 @@ export default function FightMatchup() {
 
                   <div className="inline-block space-y-2 text-left">
                     <div className="flex items-center gap-3">
-                      <span className="text-xs text-afc-steel-light uppercase tracking-wider w-20">ELO</span>
+                      <span className="text-xs text-afc-steel-light uppercase tracking-wider w-20">Rating</span>
                       <span className="text-2xl font-bold font-mono text-afc-lime">{agentA.elo}</span>
                     </div>
                     <div className="flex items-center gap-3">
@@ -156,7 +156,7 @@ export default function FightMatchup() {
 
                   <div className="inline-block space-y-2 text-left">
                     <div className="flex items-center gap-3">
-                      <span className="text-xs text-afc-steel-light uppercase tracking-wider w-20">ELO</span>
+                      <span className="text-xs text-afc-steel-light uppercase tracking-wider w-20">Rating</span>
                       <span className="text-2xl font-bold font-mono text-afc-lime">{agentB.elo}</span>
                     </div>
                     <div className="flex items-center gap-3">
@@ -209,7 +209,7 @@ export default function FightMatchup() {
             <div className="grid grid-cols-1 xl:grid-cols-[1fr_220px_1fr] gap-6">
               <div className="space-y-4">
                 <div className="border border-afc-steel-dark bg-afc-charcoal p-4">
-                  <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-3 font-bold">Style Profile</div>
+                  <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-3 font-bold">Approach</div>
                   <div className="text-lg font-bold text-afc-orange uppercase tracking-tight mb-2">{agentA.style}</div>
                   <div className="text-sm text-afc-steel-light">{agentA.strengths[0]}</div>
                 </div>
@@ -234,19 +234,19 @@ export default function FightMatchup() {
 
               <div className="flex flex-col justify-center">
                 <div className="border border-afc-orange bg-afc-orange/10 p-6 text-center">
-                  <div className="text-[10px] text-afc-orange uppercase tracking-wider mb-2 font-bold">Expected Edge</div>
+                  <div className="text-[10px] text-afc-orange uppercase tracking-wider mb-2 font-bold">Pre-fight edge</div>
                   <div className="text-3xl font-bold text-afc-orange mb-2">{Math.abs(agentA.elo - agentB.elo)}</div>
-                  <div className="text-xs text-afc-steel-light">ELO difference</div>
+                  <div className="text-xs text-afc-steel-light">Rating difference</div>
                   <div className="mt-4 pt-4 border-t border-afc-orange/20">
                     <div className="text-sm font-bold">{agentA.elo > agentB.elo ? fight.agentA : fight.agentB}</div>
-                    <div className="text-[10px] text-afc-steel-light uppercase mt-1">Favored</div>
+                    <div className="text-[10px] text-afc-steel-light uppercase mt-1">Pre-fight favorite</div>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-4">
                 <div className="border border-afc-steel-dark bg-afc-charcoal p-4">
-                  <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-3 font-bold">Style Profile</div>
+                  <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-3 font-bold">Approach</div>
                   <div className="text-lg font-bold text-afc-orange uppercase tracking-tight mb-2">{agentB.style}</div>
                   <div className="text-sm text-afc-steel-light">{agentB.strengths[0]}</div>
                 </div>
@@ -329,7 +329,7 @@ export default function FightMatchup() {
                   </div>
                   <p className="text-sm text-afc-steel-light leading-relaxed">
                     {insight?.task?.constraints
-                      ? `Budget $${insight.task.constraints.budget.toFixed(1)}, timeout ${insight.task.constraints.timeout}s, ${insight.task.constraints.tools.length} tools available.`
+                      ? `Each side had a $${insight.task.constraints.budget.toFixed(1)} run budget, a ${insight.task.constraints.timeout}s time limit, and ${insight.task.constraints.tools.length} available tools.`
                       : 'Standard AFC contract: same repo, same budget, same scoring rubric.'}
                   </p>
                   <div className="border border-afc-steel-dark bg-afc-charcoal p-4">
@@ -345,7 +345,7 @@ export default function FightMatchup() {
                       <div className="text-lg font-bold">{fight.rounds}</div>
                     </div>
                     <div className="border border-afc-steel-dark bg-afc-charcoal p-3">
-                      <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-1">Finish</div>
+                      <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-1">Outcome</div>
                       <div className="text-lg font-bold">{insight?.finish ?? 'Pending'}</div>
                     </div>
                   </div>
@@ -363,7 +363,7 @@ export default function FightMatchup() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="border border-afc-steel-dark bg-afc-black p-5">
-                  <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-3 font-bold">{fight.agentA} Plan</div>
+                  <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-3 font-bold">{fight.agentA} Approach</div>
                   <div className="space-y-3 text-sm">
                     <p>{insight?.blue.promptStyle}</p>
                     <p className="text-afc-steel-light">{insight?.blue.diffSummary}</p>
@@ -375,7 +375,7 @@ export default function FightMatchup() {
                 </div>
 
                 <div className="border border-afc-steel-dark bg-afc-black p-5">
-                  <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-3 font-bold">{fight.agentB} Plan</div>
+                  <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-3 font-bold">{fight.agentB} Approach</div>
                   <div className="space-y-3 text-sm">
                     <p>{insight?.red.promptStyle}</p>
                     <p className="text-afc-steel-light">{insight?.red.diffSummary}</p>

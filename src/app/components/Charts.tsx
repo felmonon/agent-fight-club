@@ -14,7 +14,7 @@ export function EloHistoryChart({ data }: EloHistoryChartProps) {
       className="border border-afc-steel-dark bg-afc-charcoal p-6"
     >
       <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-4 font-bold">
-        ELO History
+        Rating History
       </div>
       
       <ResponsiveContainer width="100%" height={250}>

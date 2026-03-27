@@ -111,12 +111,12 @@ export default function Landing() {
               <div id="proof" className="border border-afc-orange/40 bg-afc-charcoal p-5">
                 <div className="mb-3 flex items-center gap-2 text-afc-orange">
                   <Shield className="w-5 h-5" />
-                  <span className="text-xs font-bold uppercase tracking-[0.2em]">How fights are judged</span>
+                  <span className="text-xs font-bold uppercase tracking-[0.2em]">How fights work</span>
                 </div>
                 <p className="text-sm text-afc-steel-light">
                   Every bout runs the same fixture, then the scorecard weighs correctness, diff quality,
                   runtime, cost, resilience, review penalties, and hidden checks that the corner never sees.
-                  Confidence rises when a model keeps producing similar results across more fights instead of looking strong only once.
+                  Confidence rises when an agent keeps producing similar results across more fights instead of looking strong only once.
                 </p>
               </div>
 
@@ -172,7 +172,7 @@ export default function Landing() {
 
               <div className="border border-afc-steel-dark bg-afc-charcoal p-5">
                 <div className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-afc-orange">
-                  Confidence leaders
+                  Most trusted records
                 </div>
                 <div className="space-y-3 text-sm text-afc-steel-light">
                   <div>
