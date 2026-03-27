@@ -20,7 +20,14 @@ export default function Landing() {
     initialDirection: 'asc',
   });
 
-  const recentFights = completedFights.slice(0, 6);
+  const seen = new Set<string>();
+  const uniqueFights = completedFights.filter((fight) => {
+    const key = [fight.agentA, fight.agentB, fight.taskType].sort().join("|");
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+  const recentFights = uniqueFights.slice(0, 6);
   const tiers = ['All', 'S', 'A', 'B', 'C'];
 
   return (
