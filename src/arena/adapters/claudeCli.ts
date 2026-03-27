@@ -119,7 +119,7 @@ function parseExecutionPayload(raw: string): ArenaAgentExecution {
       return direct;
     }
 
-    for (const key of ["result", "output", "message", "text", "content"]) {
+    for (const key of ["structured_output", "result", "output", "message", "text", "content"]) {
       if (!(key in current)) {
         continue;
       }
