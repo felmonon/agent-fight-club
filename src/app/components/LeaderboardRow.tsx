@@ -10,7 +10,7 @@ interface LeaderboardRowProps {
 
 export function LeaderboardRow({ agent, showDetails = false }: LeaderboardRowProps) {
   const winRate = ((agent.wins / (agent.wins + agent.losses)) * 100).toFixed(1);
-  
+
   return (
     <Link
       to={`/agent/${agent.id}`}
@@ -27,7 +27,7 @@ export function LeaderboardRow({ agent, showDetails = false }: LeaderboardRowPro
           )}
         </div>
       </div>
-      
+
       {/* Agent Name & Tags */}
       <div>
         <div className="text-lg font-bold uppercase tracking-tight mb-1 group-hover:text-afc-orange transition-colors">
@@ -38,30 +38,28 @@ export function LeaderboardRow({ agent, showDetails = false }: LeaderboardRowPro
         </div>
         <div className="flex flex-wrap gap-1">
           {agent.tags.slice(0, 2).map((tag, idx) => {
-            const variant = tag.includes('CHAMPION') 
-              ? 'champion' 
-              : tag.includes('UPSET') 
-              ? 'upset' 
-              : tag.includes('EFFICIENT') 
-              ? 'efficient' 
+            const variant = tag.includes('CHAMPION')
+              ? 'champion'
+              : tag.includes('UPSET')
+              ? 'upset'
+              : tag.includes('EFFICIENT')
+              ? 'efficient'
               : tag.includes('REVIEW')
               ? 'warning'
               : 'default';
-            
+
             return <TagBadge key={idx} variant={variant}>{tag}</TagBadge>;
           })}
         </div>
       </div>
-      
+
       {/* ELO */}
       <div className="text-center">
-        <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-1">ELO</div>
         <div className="text-xl font-bold font-mono text-afc-lime">{agent.elo}</div>
       </div>
-      
+
       {/* Record */}
       <div className="text-center">
-        <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-1">Record</div>
         <div className="text-sm font-mono">
           <span className="text-afc-green font-bold">{agent.wins}</span>
           <span className="text-afc-steel mx-1">-</span>
@@ -69,35 +67,31 @@ export function LeaderboardRow({ agent, showDetails = false }: LeaderboardRowPro
         </div>
         <div className="text-[10px] text-afc-steel">({winRate}%)</div>
       </div>
-      
+
       {/* Win Streak */}
       <div className="text-center">
-        <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-1">Streak</div>
         <div className={`text-lg font-bold font-mono ${agent.winStreak > 5 ? 'text-afc-orange' : 'text-foreground'}`}>
           {agent.winStreak > 0 ? `${agent.winStreak}W` : 'L'}
         </div>
       </div>
-      
+
       {/* Finishes */}
       <div className="text-center">
-        <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-1">Finishes</div>
         <div className="flex items-center justify-center gap-1">
           <Target className="w-3 h-3 text-afc-orange" />
           <span className="text-sm font-bold font-mono">{agent.finishes}</span>
         </div>
       </div>
-      
+
       {/* Avg Cost */}
       <div className="text-center">
-        <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-1">Avg Cost</div>
         <div className={`text-sm font-bold font-mono ${agent.avgCost < 0.5 ? 'text-afc-lime' : 'text-foreground'}`}>
           ${agent.avgCost}
         </div>
       </div>
-      
+
       {/* Efficiency */}
       <div className="text-center">
-        <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-1">Efficiency</div>
         <div className={`text-sm font-bold font-mono ${agent.efficiency > 90 ? 'text-afc-lime' : 'text-foreground'}`}>
           {agent.efficiency}%
         </div>
@@ -117,11 +111,11 @@ export function LeaderboardHeader({ sortKey, sortDirection, onSort }: Leaderboar
     if (sortKey !== field) {
       return <ArrowUpDown className="w-3 h-3 opacity-0 group-hover:opacity-50" />;
     }
-    return sortDirection === 'asc' 
+    return sortDirection === 'asc'
       ? <ArrowUp className="w-3 h-3 text-afc-orange" />
       : <ArrowDown className="w-3 h-3 text-afc-orange" />;
   };
-  
+
   const HeaderCell = ({ field, label, className = '' }: { field: keyof Agent; label: string; className?: string }) => {
     const isActive = sortKey === field;
     return (
@@ -136,9 +130,9 @@ export function LeaderboardHeader({ sortKey, sortDirection, onSort }: Leaderboar
       </button>
     );
   };
-  
+
   return (
-    <div className="grid min-w-[920px] grid-cols-[60px_1fr_120px_100px_100px_120px_100px_120px] gap-4 items-center px-4 py-3 bg-afc-charcoal-light border-b border-afc-steel-dark sticky top-[65px] z-40">
+    <div className="grid min-w-[920px] grid-cols-[60px_1fr_120px_100px_100px_120px_100px_120px] gap-4 items-center px-4 py-3 bg-afc-charcoal-light border-b border-afc-steel-dark sticky top-[57px] z-40">
       <HeaderCell field="rank" label="Rank" />
       <HeaderCell field="modelName" label="Model" />
       <HeaderCell field="elo" label="ELO" className="justify-center" />
