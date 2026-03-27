@@ -3,6 +3,7 @@ import type { AgentProfile } from "../lib/types.ts";
 import { createClaudeCliAdapter, type ClaudeCliAdapterOptions } from "./adapters/claudeCli.ts";
 import { createCodexCliAdapter, type CodexCliAdapterOptions } from "./adapters/codexCli.ts";
 import { createGeminiCliAdapter, type GeminiCliAdapterOptions } from "./adapters/geminiCli.ts";
+import { scriptedAgentMap, scriptedAgents } from "./scriptedAgents.ts";
 import type { ArenaAgentAdapter } from "./types.ts";
 
 function requireProfile(id: string): AgentProfile {
@@ -60,6 +61,15 @@ interface ProviderRegistration {
 }
 
 const LIVE_AGENT_IDS = ["ghostwire", "ironclad", "blackboxer", "cinder"] as const;
+const LIVE_AGENT_ID_SET = new Set<string>(LIVE_AGENT_IDS);
+
+function requireLiveArenaAgent(id: string) {
+  if (!LIVE_AGENT_ID_SET.has(id)) {
+    throw new Error(
+      `Unknown live arena agent: ${id}. Valid ids: ${LIVE_AGENT_IDS.join(", ")}.`
+    );
+  }
+}
 
 export function getLiveAgentRegistry(
   env: Record<string, string | undefined> = process.env
@@ -102,18 +112,15 @@ export function getLiveAgentRegistry(
     });
   }
 
-  if (registrations.length === 0) {
-    throw new Error(
-      "No CLI agents configured. Set AFC_CLAUDE_AGENT_IDS, AFC_CODEX_AGENT_IDS, and/or AFC_GEMINI_AGENT_IDS to assign agents to real CLI providers."
-    );
-  }
-
-  const agentMap = new Map<string, ArenaAgentAdapter>();
+  const agentMap = new Map<string, ArenaAgentAdapter>(
+    LIVE_AGENT_IDS.map((id) => [id, scriptedAgentMap.get(id)!] as const)
+  );
   const claimedAgents = new Map<string, string>();
 
   for (const registration of registrations) {
     for (const id of registration.ids) {
       requireProfile(id);
+      requireLiveArenaAgent(id);
       const existingProvider = claimedAgents.get(id);
       if (existingProvider) {
         throw new Error(`${id} cannot be assigned to both ${existingProvider} and ${registration.label}.`);
@@ -123,18 +130,10 @@ export function getLiveAgentRegistry(
     }
   }
 
-  const unclaimed = LIVE_AGENT_IDS.filter((id) => !claimedAgents.has(id));
-  if (unclaimed.length > 0) {
-    throw new Error(
-      `All agents must be assigned to a CLI provider. Unassigned: ${unclaimed.join(", ")}. ` +
-      `Use AFC_CLAUDE_AGENT_IDS, AFC_CODEX_AGENT_IDS, and/or AFC_GEMINI_AGENT_IDS to assign them.`
-    );
-  }
-
   return {
     agents: LIVE_AGENT_IDS.map((id) => agentMap.get(id)!),
     notes: registrations.map((registration) => registration.note)
   };
 }
 
-export const liveAgents: ArenaAgentAdapter[] = [];
+export const liveAgents: ArenaAgentAdapter[] = scriptedAgents;

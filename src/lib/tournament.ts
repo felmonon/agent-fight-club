@@ -136,13 +136,29 @@ function buildRankings(computedFights: ComputedFightReplay[], dataset: SeasonDat
       losses: row.losses,
       finishes: row.finishes,
       elo: Number(row.elo.toFixed(0)),
-      avgScore: Number((row.avgScoreTotal / row.bouts).toFixed(1)),
+      avgScore: row.bouts > 0 ? Number((row.avgScoreTotal / row.bouts).toFixed(1)) : 0,
       recentForm: row.recentForm
     }))
     .sort((left, right) => right.elo - left.elo || right.wins - left.wins);
 }
 
 function buildStorylines(computedFights: ComputedFightReplay[], rankings: StandingRow[]): StorylineCard[] {
+  const champion = rankings[0];
+  if (!champion || computedFights.length === 0) {
+    return [
+      {
+        title: "World Champion",
+        value: champion?.agent.name ?? "TBD",
+        note: champion ? `${champion.elo} Elo preseason lead` : "Waiting on opening card"
+      },
+      {
+        title: "Opening Card",
+        value: "Not published",
+        note: "Storylines unlock after the first scored fight lands."
+      }
+    ];
+  }
+
   const widestMargin = computedFights.reduce((best, current) =>
     current.margin > best.margin ? current : best
   );
@@ -155,7 +171,6 @@ function buildStorylines(computedFights: ComputedFightReplay[], rankings: Standi
       best.winnerId === best.blue.agentId ? best.blue.metrics : best.red.metrics;
     return currentWinnerMetrics.diffQuality > bestWinnerMetrics.diffQuality ? current : best;
   });
-  const champion = rankings[0];
   const venueCount = new Set(computedFights.map((fight) => fight.venue)).size;
 
   return [
@@ -182,15 +197,69 @@ function buildStorylines(computedFights: ComputedFightReplay[], rankings: Standi
   ];
 }
 
+function createPlaceholderFight(dataset: SeasonDataset): ComputedFightReplay {
+  const blueAgent = dataset.agents[0];
+  const redAgent = dataset.agents[1] ?? dataset.agents[0];
+  const task = dataset.tasks[0];
+
+  return {
+    id: "season-preview",
+    date: new Date().toISOString().slice(0, 10),
+    venue: "Preview Card",
+    division: "Preseason",
+    taskId: task?.id ?? "preseason-task",
+    headline: `${blueAgent?.name ?? "Blue"} vs ${redAgent?.name ?? "Red"}`,
+    judgesMemo: "No published fights yet.",
+    keyMoments: ["The leaderboard will update after the opening card lands."],
+    budgetMinutes: 0,
+    tokenBudgetK: 0,
+    blue: {
+      agentId: blueAgent?.id ?? "blue-corner",
+      promptStyle: "Awaiting opening card.",
+      diffSummary: "No diff yet.",
+      notableMove: "Warm-up in progress.",
+      metrics: {
+        correctness: 0,
+        diffQuality: 0,
+        runtime: 0,
+        cost: 0,
+        resilience: 0,
+        penalties: 0
+      }
+    },
+    red: {
+      agentId: redAgent?.id ?? "red-corner",
+      promptStyle: "Awaiting opening card.",
+      diffSummary: "No diff yet.",
+      notableMove: "Warm-up in progress.",
+      metrics: {
+        correctness: 0,
+        diffQuality: 0,
+        runtime: 0,
+        cost: 0,
+        resilience: 0,
+        penalties: 0
+      }
+    },
+    blueScore: 0,
+    redScore: 0,
+    margin: 0,
+    winnerId: blueAgent?.id ?? "blue-corner",
+    loserId: redAgent?.id ?? "red-corner",
+    finish: "No Contest"
+  };
+}
+
 export function buildSeasonSummaryFromData(dataset: SeasonDataset): SeasonSummary {
   const computedFights = dataset.fights.map(computeFight);
   const rankings = buildRankings(computedFights, dataset);
   const { agentMap, taskMap } = buildMapsFromDataset(dataset);
+  const featuredFight = computedFights[computedFights.length - 1] ?? createPlaceholderFight(dataset);
 
   return {
     champion: rankings[0],
     rankings,
-    featuredFight: computedFights[computedFights.length - 1],
+    featuredFight,
     fights: [...computedFights].reverse(),
     storylines: buildStorylines(computedFights, rankings),
     taskMap,

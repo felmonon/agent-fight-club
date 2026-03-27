@@ -21,6 +21,7 @@ describe("screen smoke renders", () => {
     const featuredFight = fights[0];
 
     expect(renderRoute("/", "/", <Landing />)).toContain("Public Arena");
+    expect(renderRoute("/", "/", <Landing />)).toContain("Scoring contract");
     expect(renderRoute(`/fight/${featuredFight.id}`, "/fight/:id", <FightMatchup />)).toContain(
       featuredFight.taskType.replaceAll("_", " ")
     );
