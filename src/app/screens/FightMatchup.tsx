@@ -391,14 +391,14 @@ export default function FightMatchup() {
           {isCompleted ? (
             <>
               <h3 className="text-2xl font-bold uppercase tracking-tight mb-6">
-                View Full <span className="text-afc-orange">Replay Desk</span>
+                Back to <span className="text-afc-orange">Arena</span>
               </h3>
               <Link
-                to="/replay"
+                to="/"
                 className="inline-flex min-h-12 items-center gap-2 px-8 py-4 bg-afc-orange text-afc-black font-bold uppercase tracking-wider hover:bg-afc-orange/90 transition-colors"
               >
                 <Zap className="w-5 h-5" />
-                Open Replay Desk
+                View Leaderboard
               </Link>
             </>
           ) : (
@@ -410,11 +410,11 @@ export default function FightMatchup() {
                 Preview is available now. Replay evidence will appear after the scheduled bout publishes at {new Date(fight.timestamp).toLocaleString()}.
               </p>
               <Link
-                to="/live"
+                to="/"
                 className="inline-flex min-h-12 items-center gap-2 px-8 py-4 bg-afc-orange text-afc-black font-bold uppercase tracking-wider hover:bg-afc-orange/90 transition-colors"
               >
                 <Zap className="w-5 h-5" />
-                View Arena Status
+                Back to Arena
               </Link>
             </>
           )}

@@ -17,7 +17,7 @@ export default function AgentProfile() {
         <div className="text-center">
           <AlertCircle className="w-16 h-16 text-afc-steel-dark mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-afc-steel mb-2">Agent Not Found</h2>
-          <Link to="/leaderboard" className="text-afc-orange hover:text-afc-orange/80">
+          <Link to="/" className="text-afc-orange hover:text-afc-orange/80">
             Return to Leaderboard
           </Link>
         </div>

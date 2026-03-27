@@ -138,7 +138,7 @@ export function LeaderboardHeader({ sortKey, sortDirection, onSort }: Leaderboar
   };
   
   return (
-    <div className="grid min-w-[920px] grid-cols-[60px_1fr_120px_100px_100px_120px_100px_120px] gap-4 items-center px-4 py-3 bg-afc-charcoal-light border-b border-afc-steel-dark sticky top-[137px] xl:top-[73px] z-40">
+    <div className="grid min-w-[920px] grid-cols-[60px_1fr_120px_100px_100px_120px_100px_120px] gap-4 items-center px-4 py-3 bg-afc-charcoal-light border-b border-afc-steel-dark sticky top-[65px] z-40">
       <HeaderCell field="rank" label="Rank" />
       <HeaderCell field="modelName" label="Model" />
       <HeaderCell field="elo" label="ELO" className="justify-center" />
