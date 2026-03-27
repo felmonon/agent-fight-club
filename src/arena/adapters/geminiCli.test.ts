@@ -1,16 +1,15 @@
-import { chmod, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
-import os from "node:os";
+import { chmod, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { agents } from "../../data/season.ts";
+import { createStubArenaTask, createTempDirRegistry, createWorkspace } from "../../test/support/arena.ts";
 import { createGeminiCliAdapter } from "./geminiCli.ts";
-import type { ArenaTaskDefinition } from "../types.ts";
 
-const cleanupDirs: string[] = [];
+const tempDirs = createTempDirRegistry();
 const originalArgsPath = process.env.AFC_GEMINI_ARGS_PATH;
 
 afterEach(async () => {
-  await Promise.all(cleanupDirs.splice(0).map((dir) => rm(dir, { recursive: true, force: true })));
+  await tempDirs.cleanup();
 
   if (originalArgsPath === undefined) {
     delete process.env.AFC_GEMINI_ARGS_PATH;
@@ -21,13 +20,9 @@ afterEach(async () => {
 
 describe("gemini cli adapter", () => {
   it("runs through the Gemini CLI contract and returns parsed arena output", async () => {
-    const tempDir = await mkdtemp(path.join(os.tmpdir(), "afc-gemini-adapter-test-"));
-    cleanupDirs.push(tempDir);
-
-    const workspaceDir = path.join(tempDir, "workspace");
+    const { tempDir, workspaceDir } = await createWorkspace(tempDirs, "afc-gemini-adapter-test-");
     const stubPath = path.join(tempDir, "gemini-stub.mjs");
     const argsPath = path.join(tempDir, "args.json");
-    await mkdir(workspaceDir, { recursive: true });
     await writeFile(path.join(workspaceDir, "fixture.mjs"), "export const score = 1;\n", "utf8");
     await writeFile(stubPath, STUB_SOURCE, "utf8");
     await chmod(stubPath, 0o755);
@@ -41,29 +36,7 @@ describe("gemini cli adapter", () => {
       model: "gemini-test"
     });
 
-    const task: ArenaTaskDefinition = {
-      card: {
-        id: "stub-task",
-        name: "Stub Task",
-        repo: "fixtures/stub",
-        category: "Hotfix",
-        stakes: "Test the adapter contract.",
-        description: "No-op fixture for the Gemini CLI adapter test.",
-        victoryCondition: "Modify fixture.mjs and return structured JSON."
-      },
-      prompt: "Append a comment to fixture.mjs",
-      files: [{ path: "fixture.mjs", content: "export const score = 1;\n" }],
-      budgetMinutes: 5,
-      tokenBudgetK: 64,
-      evaluate: async () => ({
-        passedChecks: 1,
-        totalChecks: 1,
-        performanceScore: 90,
-        reviewFlags: [],
-        notes: [],
-        notableMove: "stub"
-      })
-    };
+    const task = createStubArenaTask();
 
     const result = await adapter.run({ fightId: "live-test", task, workspaceDir });
     const source = await readFile(path.join(workspaceDir, "fixture.mjs"), "utf8");

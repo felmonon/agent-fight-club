@@ -1,14 +1,12 @@
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
-import os from "node:os";
-import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { scriptedAgentMap } from "./scriptedAgents.ts";
 import { liveTasks } from "./tasks.ts";
+import { createTempDirRegistry, createWorkspace, materializeTaskFiles } from "../test/support/arena.ts";
 
-const cleanupDirs: string[] = [];
+const tempDirs = createTempDirRegistry();
 
 afterEach(async () => {
-  await Promise.all(cleanupDirs.splice(0).map((dir) => rm(dir, { recursive: true, force: true })));
+  await tempDirs.cleanup();
 });
 
 async function materializeTask(taskId: string) {
@@ -17,12 +15,8 @@ async function materializeTask(taskId: string) {
     throw new Error(`Unknown task: ${taskId}`);
   }
 
-  const workspaceDir = await mkdtemp(path.join(os.tmpdir(), `afc-task-test-${taskId}-`));
-  cleanupDirs.push(workspaceDir);
-
-  await Promise.all(
-    task.files.map((file) => writeFile(path.join(workspaceDir, file.path), file.content, "utf8"))
-  );
+  const { workspaceDir } = await createWorkspace(tempDirs, `afc-task-test-${taskId}-`);
+  await materializeTaskFiles(task, workspaceDir);
 
   return { task, workspaceDir };
 }

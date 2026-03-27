@@ -31,6 +31,8 @@
     "typecheck": "tsc --noEmit",
     "report": "node --experimental-strip-types scripts/season-report.ts",
     "test": "vitest run",
+    "test:core": "vitest run --project core",
+    "test:ui": "vitest run --project ui-smoke",
     "test:e2e": "npm run build && playwright test"
   },
   "dependencies": {

@@ -1,25 +1,23 @@
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
-import os from "node:os";
+import { writeFile } from "node:fs/promises";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { fights, seedSeason } from "../src/data/season.ts";
+import { createTempDirRegistry } from "../src/test/support/arena.ts";
 import {
   buildSeasonReportText,
   loadSeasonReportDataset
 } from "./season-report-lib.ts";
 import type { LiveArenaDataset } from "../src/lib/types.ts";
 
-const cleanupDirs: string[] = [];
+const tempDirs = createTempDirRegistry();
 
 afterEach(async () => {
-  await Promise.all(cleanupDirs.splice(0).map((dir) => rm(dir, { recursive: true, force: true })));
+  await tempDirs.cleanup();
 });
 
 describe("season report dataset loader", () => {
   it("prefers the generated live arena dataset when one is available", async () => {
-    const tempDir = await mkdtemp(path.join(os.tmpdir(), "afc-season-report-"));
-    cleanupDirs.push(tempDir);
-
+    const tempDir = await tempDirs.createDir("afc-season-report-");
     const generatedPath = path.join(tempDir, "liveArena.generated.json");
     const generatedDataset: LiveArenaDataset = {
       ...seedSeason,
@@ -57,7 +55,7 @@ describe("season report dataset loader", () => {
 
   it("falls back to the seed dataset when the generated file is missing", async () => {
     const reportDataset = await loadSeasonReportDataset({
-      generatedPath: path.join(os.tmpdir(), "afc-missing-liveArena.generated.json"),
+      generatedPath: path.join(await tempDirs.createDir("afc-season-missing-"), "liveArena.generated.json"),
       fallbackDataset: seedSeason
     });
 

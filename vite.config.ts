@@ -9,6 +9,25 @@ export default defineConfig({
   },
   plugins: [react(), tailwindcss()],
   test: {
-    exclude: [...configDefaults.exclude, "tests/e2e/**/*"]
+    exclude: [...configDefaults.exclude, "tests/e2e/**/*"],
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: { label: "core", color: "green" },
+          include: ["src/**/*.test.ts", "scripts/**/*.test.ts"],
+          exclude: ["src/app/**/*.test.tsx", "tests/e2e/**/*"],
+          environment: "node"
+        }
+      },
+      {
+        extends: true,
+        test: {
+          name: { label: "ui-smoke", color: "cyan" },
+          include: ["src/app/**/*.test.tsx"],
+          environment: "node"
+        }
+      }
+    ]
   }
 });

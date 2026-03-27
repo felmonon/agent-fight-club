@@ -1,21 +1,19 @@
-import { mkdtemp, readFile, rm } from "node:fs/promises";
-import os from "node:os";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { seedSeason } from "../src/data/season.ts";
+import { createTempDirRegistry } from "../src/test/support/arena.ts";
 import { writeLiveArenaArtifacts } from "./live-arena-publish-lib.ts";
 
-const cleanupDirs: string[] = [];
+const tempDirs = createTempDirRegistry();
 
 afterEach(async () => {
-  await Promise.all(cleanupDirs.splice(0).map((dir) => rm(dir, { recursive: true, force: true })));
+  await tempDirs.cleanup();
 });
 
 describe("live arena publish artifacts", () => {
   it("writes dataset, latest artifacts, and archive snapshots", async () => {
-    const tempDir = await mkdtemp(path.join(os.tmpdir(), "afc-publish-artifacts-"));
-    cleanupDirs.push(tempDir);
-
+    const tempDir = await tempDirs.createDir("afc-publish-artifacts-");
     const artifacts = await writeLiveArenaArtifacts(seedSeason, {
       datasetPath: path.join(tempDir, "liveArena.generated.json"),
       markdownReportPath: path.join(tempDir, "reports/latest-season.md"),
