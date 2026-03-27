@@ -35,7 +35,14 @@ export function FightCard({ fight, variant = 'default' }: FightCardProps) {
       >
         {/* Task label */}
         <div className="mb-4">
-          <span className="text-xs font-bold uppercase tracking-wider text-afc-orange">{taskLabel}</span>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-afc-orange">{taskLabel}</span>
+            {fight.seriesSize && fight.seriesSize > 1 ? (
+              <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-afc-steel-light">
+                Bout {fight.seriesBout}/{fight.seriesSize}
+              </span>
+            ) : null}
+          </div>
         </div>
 
         {/* Matchup */}

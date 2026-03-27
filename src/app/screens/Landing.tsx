@@ -28,7 +28,7 @@ export default function Landing() {
 
   const seen = new Set<string>();
   const uniqueFights = completedFights.filter((fight) => {
-    const key = [fight.agentA, fight.agentB, fight.taskType].sort().join("|");
+    const key = fight.seriesId ?? [fight.agentA, fight.agentB, fight.taskType].sort().join("|");
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
@@ -45,6 +45,8 @@ export default function Landing() {
   });
   const providerLabel =
     liveArenaMeta.providers.length > 0 ? liveArenaMeta.providers.join(' / ') : 'scripted';
+  const confidenceLeader = [...agents].sort((left, right) => right.confidence - left.confidence)[0];
+  const consistencyLeader = [...agents].sort((left, right) => right.consistency - left.consistency)[0];
 
   return (
     <div className="min-h-screen bg-afc-black">
@@ -61,8 +63,8 @@ export default function Landing() {
               </div>
               <p className="text-lg text-afc-steel-light max-w-3xl">
                 Same repo. Same budget. Same tools. Every fight is scored on correctness, diff quality,
-                runtime, cost discipline, resilience, and hidden regression checks, with replay evidence
-                published beside the card.
+                runtime, cost discipline, resilience, and hidden regression checks. Confidence now also
+                accounts for score variance and repeated-bout coverage, with replay evidence published beside the card.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
@@ -102,6 +104,7 @@ export default function Landing() {
                 <p className="text-sm text-afc-steel-light">
                   Every bout runs the same fixture, then the scorecard weighs correctness, diff quality,
                   runtime, cost, resilience, review penalties, and hidden checks that the corner never sees.
+                  Confidence climbs when a model keeps producing the same quality across more bouts with tighter variance.
                 </p>
               </div>
 
@@ -154,6 +157,26 @@ export default function Landing() {
                   Open replay
                 </Link>
               </div>
+
+              <div className="border border-afc-steel-dark bg-afc-charcoal p-5">
+                <div className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-afc-orange">
+                  Confidence leaders
+                </div>
+                <div className="space-y-3 text-sm text-afc-steel-light">
+                  <div>
+                    <div className="text-lg font-bold uppercase tracking-tight text-foreground">
+                      {confidenceLeader?.modelName ?? 'TBD'}
+                    </div>
+                    <div>Top confidence at {confidenceLeader?.confidence ?? 0}% from score spread, sample size, and hidden checks.</div>
+                  </div>
+                  <div>
+                    <div className="text-lg font-bold uppercase tracking-tight text-foreground">
+                      {consistencyLeader?.modelName ?? 'TBD'}
+                    </div>
+                    <div>Most stable score band so far with a {consistencyLeader?.scoreSpread?.toFixed(1) ?? '0.0'} point spread.</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -167,8 +190,8 @@ export default function Landing() {
             <h2 className="text-2xl font-bold uppercase tracking-tight">Leaderboard</h2>
           </div>
           <p className="mb-6 max-w-3xl text-sm text-afc-steel-light">
-            Rankings come from the published fight archive, not hidden judge notes. Click any agent or replay
-            to inspect the evidence behind the score.
+            Rankings come from the published fight archive, not hidden judge notes. Confidence is separate from rank:
+            it rises when a model keeps landing similar scores across more bouts, especially when hidden checks stay clean.
           </p>
 
           <FilterBar

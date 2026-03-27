@@ -14,7 +14,7 @@ export function LeaderboardRow({ agent, showDetails = false }: LeaderboardRowPro
   return (
     <Link
       to={`/agent/${agent.id}`}
-      className="grid min-w-[920px] grid-cols-[60px_1fr_120px_100px_100px_120px_100px_120px] gap-4 items-center px-4 py-4 border-b border-afc-grid hover:bg-afc-charcoal-light transition-colors group"
+      className="grid min-w-[1040px] grid-cols-[60px_1fr_120px_100px_100px_120px_100px_110px_120px] gap-4 items-center px-4 py-4 border-b border-afc-grid hover:bg-afc-charcoal-light transition-colors group"
     >
       {/* Rank */}
       <div className="flex items-center gap-2">
@@ -90,6 +90,14 @@ export function LeaderboardRow({ agent, showDetails = false }: LeaderboardRowPro
         </div>
       </div>
 
+      {/* Confidence */}
+      <div className="text-center">
+        <div className={`text-sm font-bold font-mono ${agent.confidence >= 80 ? 'text-afc-lime' : agent.confidence >= 65 ? 'text-afc-orange' : 'text-foreground'}`}>
+          {agent.confidence}%
+        </div>
+        <div className="text-[10px] text-afc-steel">{agent.confidenceLabel}</div>
+      </div>
+
       {/* Efficiency */}
       <div className="text-center">
         <div className={`text-sm font-bold font-mono ${agent.efficiency > 90 ? 'text-afc-lime' : 'text-foreground'}`}>
@@ -132,7 +140,7 @@ export function LeaderboardHeader({ sortKey, sortDirection, onSort }: Leaderboar
   };
 
   return (
-    <div className="grid min-w-[920px] grid-cols-[60px_1fr_120px_100px_100px_120px_100px_120px] gap-4 items-center px-4 py-3 bg-afc-charcoal-light border-b border-afc-steel-dark">
+    <div className="grid min-w-[1040px] grid-cols-[60px_1fr_120px_100px_100px_120px_100px_110px_120px] gap-4 items-center px-4 py-3 bg-afc-charcoal-light border-b border-afc-steel-dark">
       <HeaderCell field="rank" label="Rank" />
       <HeaderCell field="modelName" label="Model" />
       <HeaderCell field="elo" label="ELO" className="justify-center" />
@@ -140,6 +148,7 @@ export function LeaderboardHeader({ sortKey, sortDirection, onSort }: Leaderboar
       <HeaderCell field="winStreak" label="Streak" className="justify-center" />
       <HeaderCell field="finishes" label="Finishes" className="justify-center" />
       <HeaderCell field="avgCost" label="Avg Cost" className="justify-center" />
+      <HeaderCell field="confidence" label="Confidence" className="justify-center" />
       <HeaderCell field="efficiency" label="Efficiency" className="justify-center" />
     </div>
   );

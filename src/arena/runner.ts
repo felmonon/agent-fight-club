@@ -41,6 +41,21 @@ function parseCsv(value: string | undefined): string[] {
     .filter(Boolean);
 }
 
+function parsePositiveInt(
+  value: string | undefined,
+  fallback: number,
+  options: { max?: number; min?: number } = {}
+): number {
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed)) {
+    return fallback;
+  }
+
+  const min = options.min ?? 1;
+  const max = options.max ?? Number.MAX_SAFE_INTEGER;
+  return clamp(parsed, min, max);
+}
+
 function isDefined<T>(value: T | undefined): value is T {
   return value !== undefined;
 }
@@ -433,6 +448,22 @@ const fightPlan: ArenaFightPlan[] = [
   }
 ];
 
+function expandFightPlan(plans: ArenaFightPlan[], repeatCount: number): ArenaFightPlan[] {
+  if (repeatCount <= 1) {
+    return plans;
+  }
+
+  return plans.flatMap((plan) =>
+    Array.from({ length: repeatCount }, (_, index) => ({
+      ...plan,
+      id: `${plan.id}-r${index + 1}`,
+      seriesId: plan.id,
+      seriesBout: index + 1,
+      seriesSize: repeatCount
+    }))
+  );
+}
+
 function requireAgent(id: string, agents: ArenaAgentAdapter[]): ArenaAgentAdapter {
   const agent = agents.find((candidate) => candidate.profile.id === id);
   if (!agent) {
@@ -456,10 +487,12 @@ export async function runLiveArenaSeason(
   const logging = resolveArenaLoggingConfig(env);
   const { agents: activeAgents, notes: registryNotes } = getLiveAgentRegistry(env);
   const selectedFightIds = parseCsv(env.AFC_FIGHT_IDS);
-  const plannedFights =
+  const repeatCount = parsePositiveInt(env.AFC_REPEAT_BOUTS, 1, { min: 1, max: 5 });
+  const basePlannedFights =
     selectedFightIds.length > 0
       ? fightPlan.filter((fight) => selectedFightIds.includes(fight.id))
       : fightPlan;
+  const plannedFights = expandFightPlan(basePlannedFights, repeatCount);
 
   if (plannedFights.length === 0) {
     throw new Error(`AFC_FIGHT_IDS did not match any fights: ${selectedFightIds.join(", ")}`);
@@ -490,6 +523,9 @@ export async function runLiveArenaSeason(
       venue: plan.venue,
       division: plan.division,
       taskId: task.card.id,
+      seriesId: plan.seriesId,
+      seriesBout: plan.seriesBout,
+      seriesSize: plan.seriesSize,
       headline: `${blueAgent.profile.name} vs ${redAgent.profile.name}`,
       judgesMemo: "",
       keyMoments: [],
@@ -539,6 +575,9 @@ export async function runLiveArenaSeason(
       ...registryNotes,
       ...(selectedFightIds.length > 0
         ? [`Fight filter active: ${selectedFightIds.join(", ")}.`]
+        : []),
+      ...(repeatCount > 1
+        ? [`Each scheduled matchup was repeated ${repeatCount} times to produce confidence and variance signals.`]
         : []),
       "Each corner ran against a real fixture workspace in a fresh temp directory.",
       "Saved fight captures include transcript snippets plus stdout and stderr tails when the adapter exposes them.",

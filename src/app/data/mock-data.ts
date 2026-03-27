@@ -1,5 +1,6 @@
 import liveArenaData from "../../data/liveArena.generated.json";
 import liveArenaArchiveData from "../../data/liveArenaArchive.generated.json";
+import { buildConsistencyProfile, type ConsistencyProfile } from "./consistency.ts";
 import {
   buildCapabilityProfile,
   capabilityFamilyForTask,
@@ -20,7 +21,12 @@ import type {
 } from "../../lib/types.ts";
 
 export interface Agent {
+  confidence: number;
+  confidenceLabel: ConsistencyProfile["confidenceLabel"];
+  confidenceSummary: string;
+  consistency: number;
   id: string;
+  hiddenCheckRate: number | null;
   name: string;
   modelName: string;
   provider: string;
@@ -41,6 +47,8 @@ export interface Agent {
   strengths: string[];
   weaknesses: string[];
   lastFight: string;
+  scoreSpread: number;
+  seriesSampleCount: number;
   signatureWin?: string;
   worstLoss?: string;
   organization?: string;
@@ -51,6 +59,9 @@ export interface Fight {
   agentA: string;
   agentB: string;
   winner: string;
+  seriesId?: string;
+  seriesBout?: number;
+  seriesSize?: number;
   taskType: string;
   repository: string;
   status: "scheduled" | "completed";
@@ -314,6 +325,9 @@ function buildCompletedFight(fight: ComputedFightReplay): Fight {
     agentA: seasonSummary.agentMap.get(fight.blue.agentId)?.name ?? fight.blue.agentId,
     agentB: seasonSummary.agentMap.get(fight.red.agentId)?.name ?? fight.red.agentId,
     winner: seasonSummary.agentMap.get(fight.winnerId)?.name ?? fight.winnerId,
+    seriesId: fight.seriesId,
+    seriesBout: fight.seriesBout,
+    seriesSize: fight.seriesSize,
     taskType: toTaskType(task?.name ?? fight.taskId),
     repository: task?.repo ?? fight.venue,
     status: "completed",
@@ -388,9 +402,15 @@ const baseAgents = seasonSummary.rankings.map((row, index): Agent => {
     estimateRuntime(fight, fight.blue.agentId === row.agent.id ? "blue" : "red")
   );
   const { strengths, weaknesses } = strengthProfile(row.agent.id);
+  const consistencyProfile = buildConsistencyProfile(row.agent.id, computedFights);
 
   return {
+    confidence: consistencyProfile.confidence,
+    confidenceLabel: consistencyProfile.confidenceLabel,
+    confidenceSummary: consistencyProfile.summary,
+    consistency: consistencyProfile.consistency,
     id: row.agent.id,
+    hiddenCheckRate: consistencyProfile.hiddenPassRate,
     name: row.agent.name,
     modelName: row.agent.name,
     provider: row.agent.lab,
@@ -413,6 +433,8 @@ const baseAgents = seasonSummary.rankings.map((row, index): Agent => {
     lastFight: appearances.at(-1)
       ? new Date(`${appearances.at(-1)!.date}T18:00:00Z`).toISOString()
       : liveDataset.generatedAt,
+    scoreSpread: consistencyProfile.scoreSpread,
+    seriesSampleCount: consistencyProfile.seriesCount,
     signatureWin: buildNarrativeRecord(row.agent.id, true),
     worstLoss: buildNarrativeRecord(row.agent.id, false),
     organization: liveDataset.runMeta?.providers?.join(" / ") ?? "scripted"
@@ -421,6 +443,7 @@ const baseAgents = seasonSummary.rankings.map((row, index): Agent => {
 
 const efficientLeader = [...baseAgents].sort((left, right) => left.avgCost - right.avgCost)[0];
 const finisherLeader = [...baseAgents].sort((left, right) => right.finishes - left.finishes)[0];
+const confidenceLeader = [...baseAgents].sort((left, right) => right.confidence - left.confidence)[0];
 const risingLeader = [...baseAgents].sort((left, right) => right.rankChange - left.rankChange)[0];
 
 export const agents: Agent[] = baseAgents.map((agent) => {
@@ -428,6 +451,7 @@ export const agents: Agent[] = baseAgents.map((agent) => {
 
   if (agent.rank === 1) tags.push("CHAMPION");
   if (agent.id === efficientLeader?.id) tags.push("MOST EFFICIENT");
+  if (agent.id === confidenceLeader?.id) tags.push("HIGH CONFIDENCE");
   if (agent.id === risingLeader?.id && agent.rankChange > 0) tags.push("RISING STAR");
   if (agent.id === finisherLeader?.id && agent.finishes > 0) tags.push("DOMINANT");
   if (agent.losses > agent.wins) tags.push("UNDER REVIEW");

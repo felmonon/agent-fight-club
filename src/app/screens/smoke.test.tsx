@@ -24,11 +24,15 @@ describe("screen smoke renders", () => {
 
     expect(renderRoute("/", "/", <Landing />)).toContain("Public Arena");
     expect(renderRoute("/", "/", <Landing />)).toContain("Scoring contract");
+    expect(renderRoute("/", "/", <Landing />)).toContain("Confidence leaders");
     expect(renderRoute(`/fight/${featuredFight.id}`, "/fight/:id", <FightMatchup />)).toContain(
       featuredFight.taskType.replaceAll("_", " ")
     );
     expect(renderRoute(`/agent/${featuredAgent.id}`, "/agent/:id", <AgentProfile />)).toContain(
       "Capability Profile"
+    );
+    expect(renderRoute(`/agent/${featuredAgent.id}`, "/agent/:id", <AgentProfile />)).toContain(
+      "Confidence"
     );
   });
 });

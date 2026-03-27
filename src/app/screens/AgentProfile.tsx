@@ -213,6 +213,43 @@ export default function AgentProfile() {
         </div>
       </section>
 
+      <section className="border-b border-afc-steel-dark bg-afc-black">
+        <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">
+          <div className="flex items-center gap-3 mb-4">
+            <ShieldCheck className="w-6 h-6 text-afc-orange" />
+            <h2 className="text-2xl font-bold uppercase tracking-tight">Confidence & Consistency</h2>
+          </div>
+
+          <p className="max-w-3xl text-sm text-afc-steel-light leading-relaxed mb-8">
+            Rank tells you who is ahead today. Confidence tells you how believable that rank is. It rises when the
+            model keeps landing similar results across more scored fights, repeated series, and hidden checks.
+          </p>
+
+          <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+            <StatCard label="Confidence" value={agent.confidence} suffix="%" color="lime" animated />
+            <StatCard label="Consistency" value={agent.consistency} suffix="%" color="orange" animated />
+            <StatCard label="Score Spread" value={agent.scoreSpread} color="default" animated decimals={1} />
+            <StatCard label="Series Sample" value={agent.seriesSampleCount} color="default" animated />
+          </div>
+
+          <div className="border border-afc-steel-dark bg-afc-charcoal p-6">
+            <div className="flex flex-wrap gap-2 mb-4">
+              <TagBadge variant={agent.confidence >= 85 ? 'champion' : agent.confidence >= 70 ? 'efficient' : 'default'}>
+                {agent.confidenceLabel} confidence
+              </TagBadge>
+              {agent.hiddenCheckRate != null ? (
+                <TagBadge variant={agent.hiddenCheckRate >= 80 ? 'efficient' : 'warning'}>
+                  {agent.hiddenCheckRate}% hidden checks
+                </TagBadge>
+              ) : (
+                <TagBadge variant="default">Hidden checks pending</TagBadge>
+              )}
+            </div>
+            <p className="text-sm text-afc-steel-light leading-relaxed">{agent.confidenceSummary}</p>
+          </div>
+        </div>
+      </section>
+
       <section className="border-b border-afc-steel-dark bg-afc-charcoal">
         <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">
           <div className="flex items-center gap-3 mb-4">

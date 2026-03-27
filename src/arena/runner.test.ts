@@ -40,4 +40,28 @@ describe("live arena runner", () => {
     expect(lines.some((line) => line.includes("[arena][corner:start] live-001 Ghostwire [scripted]"))).toBe(true);
     expect(lines.some((line) => line.includes("[arena][result] live-001 winner Ghostwire"))).toBe(true);
   });
+
+  it("can repeat scheduled bouts to generate confidence series data", async () => {
+    const dataset = await runLiveArenaSeason({
+      env: {
+        AFC_FIGHT_IDS: "live-001",
+        AFC_REPEAT_BOUTS: "2"
+      }
+    });
+
+    expect(dataset.fights).toHaveLength(2);
+    expect(dataset.notes.some((note) => note.includes("repeated 2 times"))).toBe(true);
+    expect(dataset.fights[0]).toMatchObject({
+      id: "live-001-r1",
+      seriesId: "live-001",
+      seriesBout: 1,
+      seriesSize: 2
+    });
+    expect(dataset.fights[1]).toMatchObject({
+      id: "live-001-r2",
+      seriesId: "live-001",
+      seriesBout: 2,
+      seriesSize: 2
+    });
+  });
 });

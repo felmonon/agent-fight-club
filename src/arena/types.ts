@@ -83,6 +83,9 @@ export interface ArenaFightPlan {
   division: string;
   id: string;
   redAgentId: string;
+  seriesBout?: number;
+  seriesId?: string;
+  seriesSize?: number;
   taskId: string;
   titleFight?: boolean;
   venue: string;

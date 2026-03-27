@@ -80,6 +80,9 @@ export interface FightReplay {
   venue: string;
   division: string;
   taskId: string;
+  seriesId?: string;
+  seriesBout?: number;
+  seriesSize?: number;
   blue: FightCorner;
   red: FightCorner;
   headline: string;
