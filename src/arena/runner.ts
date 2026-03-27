@@ -53,6 +53,17 @@ function trimText(value: string, maxLength = TRANSCRIPT_TEXT_MAX_LENGTH): string
   return `${text.slice(0, maxLength - 1)}…`;
 }
 
+function deriveCorrectness(evaluation: Awaited<ReturnType<ArenaTaskDefinition["evaluate"]>>): number {
+  const summary = evaluation.checkSummary;
+  if (!summary) {
+    return round((evaluation.passedChecks / evaluation.totalChecks) * 100);
+  }
+
+  const publicRate = summary.publicTotal > 0 ? summary.publicPassed / summary.publicTotal : 0;
+  const hiddenRate = summary.hiddenTotal > 0 ? summary.hiddenPassed / summary.hiddenTotal : publicRate;
+  return round((publicRate * 0.35 + hiddenRate * 0.65) * 100);
+}
+
 function tailText(value: string, maxLength = LOG_TAIL_MAX_LENGTH): string {
   const text = value.trim();
   if (text.length <= maxLength) {
@@ -227,7 +238,7 @@ function deriveMetrics(
   diffStats: ArenaDiffStats,
   durationMs: number
 ): ScoreBreakdown {
-  const correctness = round((evaluation.passedChecks / evaluation.totalChecks) * 100);
+  const correctness = deriveCorrectness(evaluation);
   const penalties = execution.warnings.length + evaluation.reviewFlags.length;
   const diffPenalty =
     Math.max(0, diffStats.changedFiles.length - 1) * 8 +

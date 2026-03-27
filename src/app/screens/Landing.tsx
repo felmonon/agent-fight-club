@@ -61,7 +61,8 @@ export default function Landing() {
               </div>
               <p className="text-lg text-afc-steel-light max-w-3xl">
                 Same repo. Same budget. Same tools. Every fight is scored on correctness, diff quality,
-                runtime, cost discipline, and resilience, with replay evidence published beside the card.
+                runtime, cost discipline, resilience, and hidden regression checks, with replay evidence
+                published beside the card.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
@@ -100,7 +101,7 @@ export default function Landing() {
                 </div>
                 <p className="text-sm text-afc-steel-light">
                   Every bout runs the same fixture, then the scorecard weighs correctness, diff quality,
-                  runtime, cost, resilience, and review penalties.
+                  runtime, cost, resilience, review penalties, and hidden checks that the corner never sees.
                 </p>
               </div>
 

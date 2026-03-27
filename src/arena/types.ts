@@ -12,12 +12,21 @@ export interface ArenaFileFixture {
   path: string;
 }
 
+export interface ArenaCheckSummary {
+  hiddenPassed: number;
+  hiddenTotal: number;
+  publicPassed: number;
+  publicTotal: number;
+}
+
 export interface ArenaEvaluation {
+  checkSummary?: ArenaCheckSummary;
   notes: string[];
   notableMove: string;
   passedChecks: number;
   performanceScore: number;
   reviewFlags: string[];
+  robustnessScore?: number;
   totalChecks: number;
 }
 
