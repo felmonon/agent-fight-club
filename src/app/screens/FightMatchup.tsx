@@ -275,6 +275,14 @@ export default function FightMatchup() {
               </p>
 
               <div className="pt-6 mt-6 border-t border-afc-grid">
+                <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-3 font-bold">Plain-English task</div>
+                <p className="text-sm text-afc-steel-light leading-relaxed mb-4">
+                  This fight asks both agents to handle the same engineering problem under the same limits.
+                  The winner is the one that solves more of the real problem with a cleaner, lower-risk patch.
+                </p>
+              </div>
+
+              <div className="pt-6 mt-6 border-t border-afc-grid">
                 <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-3 font-bold">Key Moments</div>
                 <div className="space-y-3">
                   {(insight?.keyMoments ?? [
@@ -311,6 +319,13 @@ export default function FightMatchup() {
                       ? `Budget $${insight.task.constraints.budget.toFixed(1)}, timeout ${insight.task.constraints.timeout}s, ${insight.task.constraints.tools.length} tools available.`
                       : 'Standard AFC contract: same repo, same budget, same scoring rubric.'}
                   </p>
+                  <div className="border border-afc-steel-dark bg-afc-charcoal p-4">
+                    <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-2 font-bold">What winning means here</div>
+                    <p className="text-sm text-afc-steel-light leading-relaxed">
+                      The goal is not to write the most code. The goal is to solve the problem while creating the least new risk.
+                      That usually means a fix that is correct, smaller in scope, and strong enough to survive hidden checks.
+                    </p>
+                  </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                     <div className="border border-afc-steel-dark bg-afc-charcoal p-3">
                       <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-1">Rounds</div>
