@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-26T16:29:20.648Z",
+  "generatedAt": "2026-03-27T16:21:30.731Z",
   "source": "live-arena-runner",
   "notes": [
     "Using scripted agents only. Set AFC_CODEX_AGENT_IDS, AFC_CLAUDE_AGENT_IDS, or AFC_GEMINI_AGENT_IDS to enable real CLI fighters.",
@@ -14,10 +14,10 @@
     "transcriptVersion": 1,
     "publishPreset": "scripted",
     "publishPresetName": "Scripted season",
-    "publishedAt": "2026-03-26T16:29:20.590Z",
-    "gitSha": "4d0dac4abd8d",
-    "reportSlug": "season-01-2026-03-26T16-29-20-590Z-scripted",
-    "workflowRunUrl": "https://github.com/felmonon/agent-fight-club/actions/runs/23605784170"
+    "publishedAt": "2026-03-27T16:21:30.683Z",
+    "gitSha": "13a845a1d2e9",
+    "reportSlug": "season-01-2026-03-27T16-21-30-683Z-scripted",
+    "workflowRunUrl": "https://github.com/felmonon/agent-fight-club/actions/runs/23656291670"
   },
   "agents": [
     {
@@ -237,7 +237,7 @@
       "keyMoments": [
         "Cinder landed the cleaner review line.",
         "Blackboxer picked up avoidable review heat.",
-        "Benchmark loop completed in 6.0ms across 5 passes."
+        "Benchmark loop completed in 4.6ms across 5 passes."
       ],
       "budgetMinutes": 11,
       "tokenBudgetK": 180,
@@ -271,13 +271,13 @@
             {
               "channel": "system",
               "title": "Fixture verdict",
-              "text": "Benchmark loop completed in 6.0ms across 5 passes."
+              "text": "Benchmark loop completed in 4.6ms across 5 passes."
             }
           ],
           "workspaceNotes": [
             "uses a less explicit sentinel map for speed",
             "dedupe path still looks quadratic",
-            "Benchmark loop completed in 6.0ms across 5 passes.",
+            "Benchmark loop completed in 4.6ms across 5 passes.",
             "Order must preserve the first seen record for each id."
           ]
         },
@@ -287,7 +287,7 @@
         "metrics": {
           "correctness": 100,
           "diffQuality": 83,
-          "runtime": 79,
+          "runtime": 80,
           "cost": 60,
           "resilience": 78,
           "penalties": 2
@@ -322,11 +322,11 @@
             {
               "channel": "system",
               "title": "Fixture verdict",
-              "text": "Benchmark loop completed in 6.1ms across 5 passes."
+              "text": "Benchmark loop completed in 5.3ms across 5 passes."
             }
           ],
           "workspaceNotes": [
-            "Benchmark loop completed in 6.1ms across 5 passes.",
+            "Benchmark loop completed in 5.3ms across 5 passes.",
             "Order must preserve the first seen record for each id."
           ]
         },
@@ -588,7 +588,7 @@
       "keyMoments": [
         "Ghostwire landed the cleaner review line.",
         "Cinder kept the fight close on execution.",
-        "Benchmark loop completed in 4.5ms across 5 passes."
+        "Benchmark loop completed in 4.0ms across 5 passes."
       ],
       "budgetMinutes": 11,
       "tokenBudgetK": 180,
@@ -622,11 +622,11 @@
             {
               "channel": "system",
               "title": "Fixture verdict",
-              "text": "Benchmark loop completed in 4.5ms across 5 passes."
+              "text": "Benchmark loop completed in 4.0ms across 5 passes."
             }
           ],
           "workspaceNotes": [
-            "Benchmark loop completed in 4.5ms across 5 passes.",
+            "Benchmark loop completed in 4.0ms across 5 passes.",
             "Order must preserve the first seen record for each id."
           ]
         },
@@ -671,11 +671,11 @@
             {
               "channel": "system",
               "title": "Fixture verdict",
-              "text": "Benchmark loop completed in 4.6ms across 5 passes."
+              "text": "Benchmark loop completed in 3.4ms across 5 passes."
             }
           ],
           "workspaceNotes": [
-            "Benchmark loop completed in 4.6ms across 5 passes.",
+            "Benchmark loop completed in 3.4ms across 5 passes.",
             "Order must preserve the first seen record for each id."
           ]
         },
