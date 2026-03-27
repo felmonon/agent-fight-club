@@ -97,6 +97,7 @@ export const tasks: TaskCard[] = [
   {
     id: "legacy-hotfix",
     name: "Legacy Hotfix Ladder",
+    capabilityFamily: "hotfix",
     repo: "oss/cartline",
     category: "Hotfix",
     stakes: "Checkout bug is killing conversions.",
@@ -106,6 +107,7 @@ export const tasks: TaskCard[] = [
   {
     id: "frontend-rescue",
     name: "Frontend Rescue Sprint",
+    capabilityFamily: "frontend",
     repo: "oss/boardlight",
     category: "UI/UX",
     stakes: "New release looks broken on mobile and assistive tech.",
@@ -115,6 +117,7 @@ export const tasks: TaskCard[] = [
   {
     id: "security-panic",
     name: "Security Panic",
+    capabilityFamily: "security",
     repo: "oss/gatekeeper",
     category: "Security",
     stakes: "A credential leak report hits public issue trackers.",
@@ -124,6 +127,7 @@ export const tasks: TaskCard[] = [
   {
     id: "data-pipeline",
     name: "Data Pipeline Rescue",
+    capabilityFamily: "data",
     repo: "oss/warehouse",
     category: "Data",
     stakes: "Nightly jobs are timing out and finance is waiting.",
@@ -133,6 +137,7 @@ export const tasks: TaskCard[] = [
   {
     id: "benchmark-dojo",
     name: "Benchmark Dojo",
+    capabilityFamily: "performance",
     repo: "oss/fastpath",
     category: "Performance",
     stakes: "The release is blocked on runtime and memory regressions.",

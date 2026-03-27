@@ -1,8 +1,16 @@
 import liveArenaData from "../../data/liveArena.generated.json";
 import liveArenaArchiveData from "../../data/liveArenaArchive.generated.json";
+import {
+  buildCapabilityProfile,
+  capabilityFamilyForTask,
+  capabilityLabelForFamily,
+  type CapabilityProfileEntry
+} from "./capabilities.ts";
 import { buildSeasonSummaryFromData, computeFight } from "../../lib/tournament.ts";
 import type {
+  CapabilityFamily,
   ComputedFightReplay,
+  FightCheckSummary,
   FightTranscriptEntry,
   LiveArenaDataset,
   PublishedSeasonArchiveEntry,
@@ -57,6 +65,8 @@ export interface Fight {
 }
 
 export interface Task {
+  capabilityFamily: CapabilityFamily;
+  capabilityLabel: string;
   id: string;
   name: string;
   category: string;
@@ -111,6 +121,25 @@ export interface AgentHistoryPoint {
   losses: number;
 }
 
+export interface FightCornerInsight {
+  promptStyle: string;
+  diffSummary: string;
+  notableMove: string;
+  metrics: ScoreBreakdown;
+  changedFiles: string[];
+  changedLineCount: number;
+  checkSummary?: FightCheckSummary;
+  durationMs?: number;
+  model?: string;
+  provider: string;
+  robustnessScore?: number;
+  transcript: FightTranscriptEntry[];
+  stdoutTail?: string;
+  stderrTail?: string;
+  tokenEstimateK: number;
+  workspaceNotes: string[];
+}
+
 export interface FightInsight {
   fight: Fight;
   task?: Task;
@@ -118,38 +147,8 @@ export interface FightInsight {
   keyMoments: string[];
   finish?: string;
   margin?: number;
-  blue: {
-    promptStyle: string;
-    diffSummary: string;
-    notableMove: string;
-    metrics: ScoreBreakdown;
-    changedFiles: string[];
-    changedLineCount: number;
-    durationMs?: number;
-    model?: string;
-    provider: string;
-    transcript: FightTranscriptEntry[];
-    stdoutTail?: string;
-    stderrTail?: string;
-    tokenEstimateK: number;
-    workspaceNotes: string[];
-  };
-  red: {
-    promptStyle: string;
-    diffSummary: string;
-    notableMove: string;
-    metrics: ScoreBreakdown;
-    changedFiles: string[];
-    changedLineCount: number;
-    durationMs?: number;
-    model?: string;
-    provider: string;
-    transcript: FightTranscriptEntry[];
-    stdoutTail?: string;
-    stderrTail?: string;
-    tokenEstimateK: number;
-    workspaceNotes: string[];
-  };
+  blue: FightCornerInsight;
+  red: FightCornerInsight;
 }
 
 export interface LiveArenaMeta {
@@ -213,13 +212,17 @@ const metricLabels: Array<{ key: keyof Omit<ScoreBreakdown, "penalties">; label:
 
 const taskToolsByCategory: Record<string, string[]> = {
   Hotfix: ["test-runner", "diff-review", "static-check"],
+  "UI/UX": ["accessibility-audit", "layout-review", "interaction-smoke"],
   Security: ["scanner", "audit-log", "policy-check"],
+  Data: ["pipeline-replay", "fixture-compare", "state-audit"],
   Performance: ["profiler", "benchmark", "analyzer"]
 };
 
 const failureModesByCategory: Record<string, string[]> = {
   Hotfix: ["Regression spillover", "Coupon logic drift", "Broken helper contract"],
+  "UI/UX": ["Layout collapse", "Keyboard trap", "Component drift"],
   Security: ["Auth bypass", "Token leakage", "Session invalidation bugs"],
+  Data: ["State corruption", "Silent duplication", "Retry storm"],
   Performance: ["False speedups", "State corruption", "Benchmark overfitting"]
 };
 
@@ -339,8 +342,11 @@ function buildTask(task: ArenaTaskCard): Task {
   const difficulty: Task["difficulty"] =
     completionRate < 45 ? "BRUTAL" : completionRate < 65 ? "COMPLEX" : completionRate < 80 ? "STANDARD" : "TRIVIAL";
   const averageBudget = relatedFights.length > 0 ? average(relatedFights.map((fight) => fight.tokenBudgetK / 200)) : 1;
+  const capabilityFamily = capabilityFamilyForTask(task) ?? "hotfix";
 
   return {
+    capabilityFamily,
+    capabilityLabel: capabilityLabelForFamily(capabilityFamily),
     id: task.id,
     name: toTaskType(task.name),
     category: task.category.toUpperCase(),
@@ -470,7 +476,7 @@ export const fights: Fight[] = [
 const computedFightMap = new Map(computedFights.map((fight) => [fight.id, fight] as const));
 const taskByTypeMap = new Map(tasks.map((task) => [task.name, task] as const));
 
-function buildCornerInsight(fight: ComputedFightReplay, corner: "blue" | "red"): FightInsight["blue"] {
+function buildCornerInsight(fight: ComputedFightReplay, corner: "blue" | "red"): FightCornerInsight {
   const capture = fight[corner].capture;
 
   return {
@@ -480,9 +486,11 @@ function buildCornerInsight(fight: ComputedFightReplay, corner: "blue" | "red"):
     metrics: fight[corner].metrics,
     changedFiles: capture?.changedFiles ?? [],
     changedLineCount: capture?.changedLineCount ?? 0,
+    checkSummary: capture?.checkSummary,
     durationMs: capture?.durationMs,
     model: capture?.model,
     provider: capture?.provider ?? "scripted",
+    robustnessScore: capture?.robustnessScore,
     transcript: capture?.transcript ?? [],
     stdoutTail: capture?.stdoutTail,
     stderrTail: capture?.stderrTail,
@@ -635,6 +643,10 @@ const agentHistoryMap = buildAgentHistoryMap();
 
 export function getAgentHistory(agentId: string): AgentHistoryPoint[] {
   return agentHistoryMap.get(agentId) ?? [];
+}
+
+export function getAgentCapabilityProfile(agentId: string): CapabilityProfileEntry[] {
+  return buildCapabilityProfile(agentId, computedFights, seasonSummary.taskMap);
 }
 
 export const liveArenaMeta: LiveArenaMeta = {

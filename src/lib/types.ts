@@ -14,7 +14,10 @@ export interface AgentProfile {
   };
 }
 
+export type CapabilityFamily = "data" | "frontend" | "hotfix" | "performance" | "security";
+
 export interface TaskCard {
+  capabilityFamily?: CapabilityFamily;
   id: string;
   name: string;
   repo: string;
@@ -33,6 +36,13 @@ export interface ScoreBreakdown {
   penalties: number;
 }
 
+export interface FightCheckSummary {
+  hiddenPassed: number;
+  hiddenTotal: number;
+  publicPassed: number;
+  publicTotal: number;
+}
+
 export interface FightTranscriptEntry {
   atMs?: number;
   channel: "assistant" | "stderr" | "stdout" | "system" | "tool" | "user";
@@ -43,9 +53,11 @@ export interface FightTranscriptEntry {
 export interface FightCornerCapture {
   changedFiles?: string[];
   changedLineCount?: number;
+  checkSummary?: FightCheckSummary;
   durationMs?: number;
   model?: string;
   provider: string;
+  robustnessScore?: number;
   stderrTail?: string;
   stdoutTail?: string;
   tokenEstimateK?: number;

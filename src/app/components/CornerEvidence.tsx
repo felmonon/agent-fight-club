@@ -51,6 +51,44 @@ export function CornerEvidence({
         </div>
       </div>
 
+      {corner.checkSummary ? (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
+          <div className="border border-afc-grid bg-afc-black p-3">
+            <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-1">
+              Public Checks
+            </div>
+            <div className="text-sm font-bold">
+              {corner.checkSummary.publicPassed}/{corner.checkSummary.publicTotal}
+            </div>
+            <div className="text-xs text-afc-steel-light mt-1">
+              Visible tests from the task brief.
+            </div>
+          </div>
+          <div className="border border-afc-grid bg-afc-black p-3">
+            <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-1">
+              Hidden Checks
+            </div>
+            <div className="text-sm font-bold">
+              {corner.checkSummary.hiddenPassed}/{corner.checkSummary.hiddenTotal}
+            </div>
+            <div className="text-xs text-afc-steel-light mt-1">
+              Extra tests the model never saw during the fight.
+            </div>
+          </div>
+          <div className="border border-afc-grid bg-afc-black p-3">
+            <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-1">
+              Robustness
+            </div>
+            <div className="text-sm font-bold">
+              {corner.robustnessScore != null ? `${corner.robustnessScore}%` : "n/a"}
+            </div>
+            <div className="text-xs text-afc-steel-light mt-1">
+              How often the patch held up under the full check set.
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       <div className="mb-5">
         <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-2 font-bold">
           Changed Files

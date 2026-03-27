@@ -370,6 +370,7 @@ export const liveTasks: ArenaTaskDefinition[] = [
     card: {
       id: "checkout-guard",
       name: "Checkout Guard",
+      capabilityFamily: "hotfix",
       repo: "fixtures/cartline",
       category: "Hotfix",
       stakes: "A coupon bug is quietly eating margin and trust.",
@@ -392,6 +393,7 @@ export const liveTasks: ArenaTaskDefinition[] = [
     card: {
       id: "session-shield",
       name: "Session Shield",
+      capabilityFamily: "security",
       repo: "fixtures/gatekeeper",
       category: "Security",
       stakes: "Client payloads are exposing credentials and over-privileged scopes.",
@@ -414,6 +416,7 @@ export const liveTasks: ArenaTaskDefinition[] = [
     card: {
       id: "dedupe-dojo",
       name: "Dedupe Dojo",
+      capabilityFamily: "performance",
       repo: "fixtures/warehouse",
       category: "Performance",
       stakes: "A nightly dedupe stage is burning time and scrambling record order.",

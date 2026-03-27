@@ -1,5 +1,6 @@
 import type {
   AgentProfile,
+  FightCheckSummary,
   FightReplay,
   FightTranscriptEntry,
   LiveArenaDataset,
@@ -12,12 +13,7 @@ export interface ArenaFileFixture {
   path: string;
 }
 
-export interface ArenaCheckSummary {
-  hiddenPassed: number;
-  hiddenTotal: number;
-  publicPassed: number;
-  publicTotal: number;
-}
+export type ArenaCheckSummary = FightCheckSummary;
 
 export interface ArenaEvaluation {
   checkSummary?: ArenaCheckSummary;

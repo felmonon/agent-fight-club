@@ -2,7 +2,8 @@ import type { ReactElement } from "react";
 import { renderToString } from "react-dom/server";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { describe, expect, it } from "vitest";
-import { fights } from "../data/mock-data";
+import { agents, fights } from "../data/mock-data";
+import AgentProfile from "./AgentProfile";
 import FightMatchup from "./FightMatchup";
 import Landing from "./Landing";
 
@@ -19,11 +20,15 @@ function renderRoute(initialEntry: string, routePath: string, element: ReactElem
 describe("screen smoke renders", () => {
   it("renders landing and fight matchup routes", () => {
     const featuredFight = fights[0];
+    const featuredAgent = agents[0];
 
     expect(renderRoute("/", "/", <Landing />)).toContain("Public Arena");
     expect(renderRoute("/", "/", <Landing />)).toContain("Scoring contract");
     expect(renderRoute(`/fight/${featuredFight.id}`, "/fight/:id", <FightMatchup />)).toContain(
       featuredFight.taskType.replaceAll("_", " ")
+    );
+    expect(renderRoute(`/agent/${featuredAgent.id}`, "/agent/:id", <AgentProfile />)).toContain(
+      "Capability Profile"
     );
   });
 });

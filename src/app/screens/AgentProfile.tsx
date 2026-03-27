@@ -1,8 +1,15 @@
 import { useParams, Link } from 'react-router-dom';
-import { User, TrendingUp, Award, AlertCircle, Swords } from 'lucide-react';
+import { User, TrendingUp, Award, AlertCircle, Swords, ShieldCheck } from 'lucide-react';
 import { motion } from 'motion/react';
-import { agents, fights, seasonStats, getAgentComputedFights, getAgentHistory } from '../data/mock-data';
-import { TagBadge, MetricRow } from '../components/Badges';
+import {
+  agents,
+  fights,
+  seasonStats,
+  getAgentComputedFights,
+  getAgentHistory,
+  getAgentCapabilityProfile
+} from '../data/mock-data';
+import { TagBadge, MetricRow, StatChip } from '../components/Badges';
 import { FightCard } from '../components/FightCard';
 import { StatCard } from '../components/StatCard';
 import { EloHistoryChart, PerformanceBreakdownChart, WinRateChart } from '../components/Charts';
@@ -28,6 +35,7 @@ export default function AgentProfile() {
   const agentFights = fights.filter((fight) => fight.agentA === agent.modelName || fight.agentB === agent.modelName);
   const computedAgentFights = getAgentComputedFights(agent.id);
   const history = getAgentHistory(agent.id);
+  const capabilityProfile = getAgentCapabilityProfile(agent.id);
   const winRate = ((agent.wins / Math.max(1, agent.wins + agent.losses)) * 100).toFixed(1);
   const averagedMetrics = computedAgentFights.reduce(
     (totals, fight) => {
@@ -201,6 +209,73 @@ export default function AgentProfile() {
               <MetricRow label="ELO Gain" value={agent.rankChange > 0 ? `+${agent.rankChange * 15}` : agent.rankChange * 15} />
               <MetricRow label="Season Wins" value={agent.wins} trend="up" />
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-afc-steel-dark bg-afc-charcoal">
+        <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">
+          <div className="flex items-center gap-3 mb-4">
+            <ShieldCheck className="w-6 h-6 text-afc-orange" />
+            <h2 className="text-2xl font-bold uppercase tracking-tight">Capability Profile</h2>
+          </div>
+
+          <p className="max-w-3xl text-sm text-afc-steel-light leading-relaxed mb-8">
+            This breaks the season down by problem type. Hidden checks are extra tests the model never saw during the fight,
+            so they are the best signal for whether a clean-looking patch still holds up under pressure.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {capabilityProfile.map((capability) => (
+              <article key={capability.family} className="border border-afc-steel-dark bg-afc-black p-6">
+                <div className="text-[10px] text-afc-steel-light uppercase tracking-wider font-bold mb-2">
+                  Tested in {capability.testedFights} fight{capability.testedFights === 1 ? '' : 's'}
+                </div>
+                <h3 className="text-xl font-bold uppercase tracking-tight mb-2 text-afc-orange">
+                  {capability.label}
+                </h3>
+                <p className="text-sm text-afc-steel-light leading-relaxed mb-4">{capability.summary}</p>
+
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <StatChip
+                    label="Record"
+                    value={`${capability.wins}-${capability.losses}`}
+                    variant={capability.wins >= capability.losses ? 'success' : 'warning'}
+                  />
+                  <StatChip
+                    label="Avg Score"
+                    value={capability.avgScore}
+                    variant={capability.avgScore >= 85 ? 'lime' : capability.avgScore >= 75 ? 'warning' : 'default'}
+                  />
+                  <StatChip
+                    label="Hidden Checks"
+                    value={capability.hiddenPassRate != null ? `${capability.hiddenPassRate}%` : 'Pending'}
+                    variant={capability.hiddenPassRate != null && capability.hiddenPassRate >= 80 ? 'success' : 'default'}
+                  />
+                  <StatChip
+                    label="Robustness"
+                    value={capability.avgRobustness != null ? `${capability.avgRobustness}%` : 'Pending'}
+                    variant={capability.avgRobustness != null && capability.avgRobustness >= 80 ? 'lime' : 'default'}
+                  />
+                </div>
+
+                <div>
+                  <div className="text-[10px] text-afc-steel-light uppercase tracking-wider font-bold mb-2">
+                    Covered Tasks
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {capability.taskNames.map((taskName) => (
+                      <span
+                        key={taskName}
+                        className="border border-afc-grid bg-afc-charcoal px-2 py-1 text-xs text-afc-steel-light"
+                      >
+                        {taskName}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
       </section>

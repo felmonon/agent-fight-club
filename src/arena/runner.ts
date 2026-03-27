@@ -188,6 +188,8 @@ function buildCornerCapture(
     tokenEstimateK: execution.tokenEstimateK,
     changedFiles: diffStats.changedFiles,
     changedLineCount: diffStats.changedLineCount,
+    checkSummary: evaluation.checkSummary,
+    robustnessScore: evaluation.robustnessScore,
     stdoutTail: execution.capture?.stdoutTail ? tailText(execution.capture.stdoutTail) : undefined,
     stderrTail: execution.capture?.stderrTail ? tailText(execution.capture.stderrTail) : undefined,
     transcript: limitTranscript(baseTranscript),
