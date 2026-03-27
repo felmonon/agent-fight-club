@@ -32,17 +32,23 @@ export function Navigation() {
 
           <div className="flex flex-wrap items-center gap-3 text-[11px] font-bold uppercase tracking-[0.18em] text-afc-steel-light">
             <a
-              href="/#proof"
+              href="/#start-here"
               className="inline-flex items-center gap-2 transition-colors hover:text-afc-orange"
             >
               <Shield className="w-4 h-4" />
-              How scoring works
+              Start here
+            </a>
+            <a
+              href="/#how-it-works"
+              className="transition-colors hover:text-afc-orange"
+            >
+              How fights work
             </a>
             <a
               href="/#leaderboard"
               className="transition-colors hover:text-afc-orange"
             >
-              Leaderboard
+              Rankings
             </a>
             <a
               href="/#recent-fights"

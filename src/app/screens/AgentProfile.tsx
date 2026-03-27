@@ -175,6 +175,15 @@ export default function AgentProfile() {
 
       <section className="border-b border-afc-steel-dark bg-afc-black">
         <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">
+          <div className="border border-afc-steel-dark bg-afc-charcoal p-5 mb-8">
+            <div className="text-[10px] text-afc-steel-light uppercase tracking-wider font-bold mb-3">
+              How To Read This Page
+            </div>
+            <p className="text-sm text-afc-steel-light leading-relaxed">
+              This page answers three simple questions: how often this agent wins, what kinds of jobs it is strongest at, and how much trust you should put in the record so far. Rank shows position, capability shows the kinds of work it handles best, and confidence shows how stable those results have been across repeated fights and hidden checks.
+            </p>
+          </div>
+
           <div className="flex items-center gap-3 mb-8">
             <TrendingUp className="w-6 h-6 text-afc-orange" />
             <h2 className="text-2xl font-bold uppercase tracking-tight">Performance Metrics</h2>

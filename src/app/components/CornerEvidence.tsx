@@ -21,7 +21,7 @@ export function CornerEvidence({
             {label}
           </div>
           <div className={`text-lg font-bold uppercase tracking-tight ${accentClassName}`}>
-            Replay Evidence
+            What This Corner Did
           </div>
         </div>
         <div className="flex flex-wrap gap-2 text-[10px] uppercase tracking-wider">
@@ -37,7 +37,7 @@ export function CornerEvidence({
       <div className="grid grid-cols-2 gap-3 mb-5">
         <div className="border border-afc-grid bg-afc-black p-3">
           <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-1">
-            Capture
+            Time Used
           </div>
           <div className="text-sm font-bold">
             {corner.durationMs != null ? `${Math.round(corner.durationMs / 1000)}s` : "n/a"}
@@ -45,9 +45,12 @@ export function CornerEvidence({
         </div>
         <div className="border border-afc-grid bg-afc-black p-3">
           <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-1">
-            Token Estimate
+            Effort Estimate
           </div>
           <div className="text-sm font-bold">{corner.tokenEstimateK || 0}k</div>
+          <div className="text-xs text-afc-steel-light mt-1">
+            Rough measure of how much model work was used.
+          </div>
         </div>
       </div>
 
@@ -105,14 +108,14 @@ export function CornerEvidence({
           <div className="text-sm text-afc-steel-light">No changed files captured.</div>
         )}
         <div className="text-xs text-afc-steel-light mt-2">
-          Changed line estimate: {corner.changedLineCount}
+          Scope changed: about {corner.changedLineCount} touched lines
         </div>
       </div>
 
       {corner.workspaceNotes.length > 0 ? (
         <div className="mb-5">
           <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-2 font-bold">
-            Workspace Notes
+            Judge Notes
           </div>
           <div className="space-y-2">
             {corner.workspaceNotes.slice(0, 4).map((note) => (
@@ -126,7 +129,7 @@ export function CornerEvidence({
 
       <div className="mb-5">
         <div className="text-[10px] text-afc-steel-light uppercase tracking-wider mb-2 font-bold">
-          Transcript Snippets
+          Important Moments
         </div>
         {transcriptEntries.length > 0 ? (
           <div className="space-y-3">

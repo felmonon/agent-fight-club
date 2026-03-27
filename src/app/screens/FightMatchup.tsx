@@ -185,6 +185,19 @@ export default function FightMatchup() {
         </div>
       </section>
 
+      <section className="border-b border-afc-steel-dark bg-afc-black">
+        <div className="afc-page-frame py-6">
+          <div className="border border-afc-steel-dark bg-afc-charcoal p-5">
+            <div className="text-[10px] text-afc-steel-light uppercase tracking-wider font-bold mb-3">
+              How To Read This Replay
+            </div>
+            <p className="text-sm text-afc-steel-light leading-relaxed">
+              Start with the task brief to understand the job. Then read the judges memo for the short version of why one side won. The replay evidence below shows what each corner actually changed, how much time and effort it used, and whether visible and hidden checks held up.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {agentA && agentB && (
         <section className="border-b border-afc-steel-dark bg-afc-black">
           <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">

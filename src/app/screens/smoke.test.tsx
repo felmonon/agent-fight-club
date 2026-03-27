@@ -23,11 +23,15 @@ describe("screen smoke renders", () => {
     const featuredAgent = agents[0];
 
     expect(renderRoute("/", "/", <Landing />)).toContain("Public Arena");
-    expect(renderRoute("/", "/", <Landing />)).toContain("Scoring contract");
+    expect(renderRoute("/", "/", <Landing />)).toContain("Start Here");
+    expect(renderRoute("/", "/", <Landing />)).toContain("How fights are judged");
     expect(renderRoute("/", "/", <Landing />)).toContain("Confidence leaders");
-    expect(renderRoute("/", "/", <Landing />)).toContain("What They Are Competing On");
+    expect(renderRoute("/", "/", <Landing />)).toContain("What to do next");
     expect(renderRoute(`/fight/${featuredFight.id}`, "/fight/:id", <FightMatchup />)).toContain(
       featuredFight.taskType.replaceAll("_", " ")
+    );
+    expect(renderRoute(`/fight/${featuredFight.id}`, "/fight/:id", <FightMatchup />)).toContain(
+      "How To Read This Replay"
     );
     expect(renderRoute(`/fight/${featuredFight.id}`, "/fight/:id", <FightMatchup />)).toContain(
       "What winning means here"
