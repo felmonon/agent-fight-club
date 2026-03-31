@@ -1,26 +1,27 @@
 {
-  "generatedAt": "2026-03-27T20:55:05.233Z",
+  "generatedAt": "2026-03-31T18:03:39.462Z",
   "source": "live-arena-runner",
   "notes": [
-    "Codex CLI enabled for: blackboxer using codex.",
-    "Claude CLI enabled for: ghostwire, ironclad using claude.",
-    "Gemini CLI enabled for: cinder using gemini.",
     "Each corner ran against a real fixture workspace in a fresh temp directory.",
     "Saved fight captures include transcript snippets plus stdout and stderr tails when the adapter exposes them.",
-    "Any unselected fighters still use the built-in scripted adapters so you can mix real and deterministic corners."
+    "Current live season uses built-in scripted agents; set AFC_CODEX_AGENT_IDS, AFC_CLAUDE_AGENT_IDS, or AFC_GEMINI_AGENT_IDS to replace selected corners with real CLI fighters."
   ],
   "runMeta": {
     "providers": [
-      "claude",
-      "codex",
-      "gemini"
+      "scripted"
     ],
-    "transcriptVersion": 1
+    "transcriptVersion": 1,
+    "publishPreset": "scripted",
+    "publishPresetName": "Scripted season",
+    "publishedAt": "2026-03-31T18:03:39.390Z",
+    "gitSha": "d217c31c9445",
+    "reportSlug": "season-01-2026-03-31T18-03-39-390Z-scripted",
+    "workflowRunUrl": "https://github.com/felmonon/agent-fight-club/actions/runs/23812188537"
   },
   "agents": [
     {
       "id": "ghostwire",
-      "name": "Claude Sonnet 4.6",
+      "name": "Ghostwire",
       "handle": "@anthropic/sonnet-4.6",
       "lab": "Anthropic",
       "style": "Minimal-diff assassin",
@@ -35,7 +36,7 @@
     },
     {
       "id": "ironclad",
-      "name": "Claude Opus 4.6",
+      "name": "Ironclad",
       "handle": "@anthropic/opus-4.6",
       "lab": "Anthropic",
       "style": "Regression-proof bruiser",
@@ -50,7 +51,7 @@
     },
     {
       "id": "blackboxer",
-      "name": "Gemini 3.1 Pro",
+      "name": "Blackboxer",
       "handle": "@google/gemini-3.1-pro",
       "lab": "Google DeepMind",
       "style": "High-variance brawler",
@@ -65,7 +66,7 @@
     },
     {
       "id": "cinder",
-      "name": "GPT-5.4 Mini",
+      "name": "Cinder",
       "handle": "@openai/gpt-5.4-mini",
       "lab": "OpenAI",
       "style": "Benchmark tactician",
@@ -83,6 +84,7 @@
     {
       "id": "checkout-guard",
       "name": "Checkout Guard",
+      "capabilityFamily": "hotfix",
       "repo": "fixtures/cartline",
       "category": "Hotfix",
       "stakes": "A coupon bug is quietly eating margin and trust.",
@@ -92,6 +94,7 @@
     {
       "id": "session-shield",
       "name": "Session Shield",
+      "capabilityFamily": "security",
       "repo": "fixtures/gatekeeper",
       "category": "Security",
       "stakes": "Client payloads are exposing credentials and over-privileged scopes.",
@@ -101,6 +104,7 @@
     {
       "id": "dedupe-dojo",
       "name": "Dedupe Dojo",
+      "capabilityFamily": "performance",
       "repo": "fixtures/warehouse",
       "category": "Performance",
       "stakes": "A nightly dedupe stage is burning time and scrambling record order.",
@@ -115,12 +119,12 @@
       "venue": "Fixture Hall",
       "division": "Hotfix Eliminator",
       "taskId": "checkout-guard",
-      "headline": "Claude Sonnet 4.6 vs Claude Opus 4.6",
-      "judgesMemo": "Claude Sonnet 4.6 edged Claude Opus 4.6 by stacking small advantages across correctness, restraint, and review safety.",
+      "headline": "Ghostwire vs Ironclad",
+      "judgesMemo": "Ghostwire beat Ironclad because the fix actually closed more of the real problem surface.",
       "keyMoments": [
-        "Claude Sonnet 4.6 landed the cleaner review line.",
-        "Claude Opus 4.6 kept the fight close on execution.",
-        "Percent coupon should only affect subtotal, not shipping."
+        "Ghostwire landed the cleaner correctness line.",
+        "Ironclad kept the fight close on execution.",
+        "Check matrix: 4/4 public, 4/4 hidden."
       ],
       "budgetMinutes": 9,
       "tokenBudgetK": 160,
@@ -128,14 +132,20 @@
       "blue": {
         "agentId": "ghostwire",
         "capture": {
-          "provider": "claude",
-          "durationMs": 42161,
-          "tokenEstimateK": 12,
+          "provider": "scripted",
+          "durationMs": 2,
+          "tokenEstimateK": 34,
           "changedFiles": [
             "cart.mjs"
           ],
-          "changedLineCount": 19,
-          "stdoutTail": "75d-41bf-8fc4-d2f883bb495f\",\"total_cost_usd\":0.34678575,\"usage\":{\"input_tokens\":9,\"cache_creation_input_tokens\":30317,\"cache_read_input_tokens\":266069,\"output_tokens\":969,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":30317,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-4-6\":{\"inputTokens\":9,\"outputTokens\":969,\"cacheReadInputTokens\":266069,\"cacheCreationInputTokens\":30317,\"webSearchRequests\":0,\"costUSD\":0.34678575,\"contextWindow\":200000,\"maxOutputTokens\":64000}},\"permission_denials\":[],\"structured_output\":{\"diffSummary\":\"Line 10: removed `* (1 - coupon.value)` from the shipping term so percent coupons discount only the subtotal, not shipping.\",\"notableMove\":\"Single-expression fix: stopped the percent-coupon factor from propagating to the shipping addend.\",\"promptStyle\":\"direct\",\"tokenEstimateK\":12,\"warnings\":[\"Flat-value coupons (line 13) still reduce the combined subtotal+shipping total, which may or may not be intended — left unchanged per task scope.\"]},\"fast_mode_state\":\"off\",\"uuid\":\"266a88da-fbb6-49f3-86fe-78659876ffee\"}",
+          "changedLineCount": 20,
+          "checkSummary": {
+            "hiddenPassed": 4,
+            "hiddenTotal": 4,
+            "publicPassed": 4,
+            "publicTotal": 4
+          },
+          "robustnessScore": 100,
           "transcript": [
             {
               "channel": "user",
@@ -143,55 +153,56 @@
               "text": "Repair the checkout calculation with the smallest safe patch. Percent coupons should only discount the subtotal, not shipping. Keep the public helper shape intact.\nVictory condition: Fix totals for hot checkout paths and keep the public formatting helper stable."
             },
             {
-              "channel": "stdout",
-              "title": "Claude stdout",
-              "text": "75d-41bf-8fc4-d2f883bb495f\",\"total_cost_usd\":0.34678575,\"usage\":{\"input_tokens\":9,\"cache_creation_input_tokens\":30317,\"cache_read_input_tokens\":266069,\"output_tokens\":969,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":30317,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-4-6\":{\"inputTokens\":9,\"outputTokens\":969,\"cacheReadInputTokens\":266069,\"cacheCreationInput…"
-            },
-            {
               "channel": "assistant",
               "title": "Corner summary",
-              "text": "direct\nLine 10: removed `* (1 - coupon.value)` from the shipping term so percent coupons discount only the subtotal, not shipping.\nNotable move: Single-expression fix: stopped the percent-coupon factor from propagating to the shipping addend."
+              "text": "Find the failing path, touch one seam, leave the rest alone.\nSurgical subtotal-only discount fix with the helper contract untouched.\nNotable move: kept shipping outside the coupon math and avoided a wider refactor"
             },
             {
               "channel": "tool",
               "title": "Workspace diff",
-              "text": "cart.mjs changed across 19 touched lines."
+              "text": "cart.mjs changed across 20 touched lines."
             },
             {
               "channel": "system",
               "title": "Fixture verdict",
-              "text": "Percent coupon should only affect subtotal, not shipping."
+              "text": "Check matrix: 4/4 public, 4/4 hidden."
             }
           ],
           "workspaceNotes": [
-            "Flat-value coupons (line 13) still reduce the combined subtotal+shipping total, which may or may not be intended — left unchanged per task scope.",
+            "Check matrix: 4/4 public, 4/4 hidden.",
             "Percent coupon should only affect subtotal, not shipping.",
             "Public helper exports must stay intact for the checkout UI."
           ]
         },
-        "promptStyle": "direct",
-        "diffSummary": "Line 10: removed `* (1 - coupon.value)` from the shipping term so percent coupons discount only the subtotal, not shipping.",
-        "notableMove": "Single-expression fix: stopped the percent-coupon factor from propagating to the shipping addend.",
+        "promptStyle": "Find the failing path, touch one seam, leave the rest alone.",
+        "diffSummary": "Surgical subtotal-only discount fix with the helper contract untouched.",
+        "notableMove": "kept shipping outside the coupon math and avoided a wider refactor",
         "metrics": {
           "correctness": 100,
-          "diffQuality": 92,
-          "runtime": 35,
-          "cost": 89,
-          "resilience": 91,
-          "penalties": 1
+          "diffQuality": 96,
+          "runtime": 92,
+          "cost": 77,
+          "resilience": 98,
+          "penalties": 0
         }
       },
       "red": {
         "agentId": "ironclad",
         "capture": {
-          "provider": "claude",
-          "durationMs": 52508,
-          "tokenEstimateK": 12,
+          "provider": "scripted",
+          "durationMs": 2,
+          "tokenEstimateK": 57,
           "changedFiles": [
             "cart.mjs"
           ],
-          "changedLineCount": 19,
-          "stdoutTail": "input_tokens\":223038,\"output_tokens\":830,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":30028,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-4-6\":{\"inputTokens\":8,\"outputTokens\":830,\"cacheReadInputTokens\":223038,\"cacheCreationInputTokens\":30028,\"webSearchRequests\":0,\"costUSD\":0.319984,\"contextWindow\":200000,\"maxOutputTokens\":64000}},\"permission_denials\":[],\"structured_output\":{\"diffSummary\":\"Line 10: removed `* (1 - coupon.value)` from shipping term so percent coupons discount only the subtotal, not shipping. One-line change; no signature or export changes.\",\"notableMove\":\"Identified that `shipping * (1 - coupon.value)` was the margin-eating bug and fixed it to just `shipping` in the percent-coupon branch.\",\"promptStyle\":\"direct hotfix\",\"tokenEstimateK\":12,\"warnings\":[\"Flat-value coupons (line 13) still discount the full total including shipping -- verify this is intended behavior.\",\"No test suite present to confirm fix; manual verification recommended.\"]},\"fast_mode_state\":\"off\",\"uuid\":\"5fa349cc-434c-4275-9008-ee2208be3638\"}",
+          "changedLineCount": 23,
+          "checkSummary": {
+            "hiddenPassed": 3,
+            "hiddenTotal": 4,
+            "publicPassed": 3,
+            "publicTotal": 4
+          },
+          "robustnessScore": 75,
           "transcript": [
             {
               "channel": "user",
@@ -199,43 +210,37 @@
               "text": "Repair the checkout calculation with the smallest safe patch. Percent coupons should only discount the subtotal, not shipping. Keep the public helper shape intact.\nVictory condition: Fix totals for hot checkout paths and keep the public formatting helper stable."
             },
             {
-              "channel": "stdout",
-              "title": "Claude stdout",
-              "text": "input_tokens\":223038,\"output_tokens\":830,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":30028,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-4-6\":{\"inputTokens\":8,\"outputTokens\":830,\"cacheReadInputTokens\":223038,\"cacheCreationInputTokens\":30028,\"webSearchRequests\":0,\"costUSD\":0.319984,\"contextWindow\":200000,\"maxOutputTokens\":64000}},\"permission_denials\":[],\"s…"
-            },
-            {
               "channel": "assistant",
               "title": "Corner summary",
-              "text": "direct hotfix\nLine 10: removed `* (1 - coupon.value)` from shipping term so percent coupons discount only the subtotal, not shipping. One-line change; no signature or export changes.\nNotable move: Identified that `shipping * (1 - coupon.value)` was the margin-eating bug and fixed it to just `shipping` in the percent-coupon branch."
+              "text": "Win the incident and make the next reviewer faster.\nExtracted coupon logic into a safe helper and guarded the public output.\nNotable move: isolated the risky math behind one helper instead of repeating branches"
             },
             {
               "channel": "tool",
               "title": "Workspace diff",
-              "text": "cart.mjs changed across 19 touched lines."
+              "text": "cart.mjs changed across 23 touched lines."
             },
             {
               "channel": "system",
               "title": "Fixture verdict",
-              "text": "Percent coupon should only affect subtotal, not shipping."
+              "text": "Check matrix: 3/4 public, 3/4 hidden."
             }
           ],
           "workspaceNotes": [
-            "Flat-value coupons (line 13) still discount the full total including shipping -- verify this is intended behavior.",
-            "No test suite present to confirm fix; manual verification recommended.",
+            "Check matrix: 3/4 public, 3/4 hidden.",
             "Percent coupon should only affect subtotal, not shipping.",
             "Public helper exports must stay intact for the checkout UI."
           ]
         },
-        "promptStyle": "direct hotfix",
-        "diffSummary": "Line 10: removed `* (1 - coupon.value)` from shipping term so percent coupons discount only the subtotal, not shipping. One-line change; no signature or export changes.",
-        "notableMove": "Identified that `shipping * (1 - coupon.value)` was the margin-eating bug and fixed it to just `shipping` in the percent-coupon branch.",
+        "promptStyle": "Win the incident and make the next reviewer faster.",
+        "diffSummary": "Extracted coupon logic into a safe helper and guarded the public output.",
+        "notableMove": "isolated the risky math behind one helper instead of repeating branches",
         "metrics": {
-          "correctness": 100,
-          "diffQuality": 87,
-          "runtime": 35,
-          "cost": 89,
-          "resilience": 84,
-          "penalties": 2
+          "correctness": 75,
+          "diffQuality": 94,
+          "runtime": 92,
+          "cost": 65,
+          "resilience": 95,
+          "penalties": 0
         }
       }
     },
@@ -245,12 +250,12 @@
       "venue": "Profiler Cage",
       "division": "Performance Feature Fight",
       "taskId": "dedupe-dojo",
-      "headline": "Gemini 3.1 Pro vs GPT-5.4 Mini",
-      "judgesMemo": "GPT-5.4 Mini edged Gemini 3.1 Pro by stacking small advantages across correctness, restraint, and review safety.",
+      "headline": "Blackboxer vs Cinder",
+      "judgesMemo": "Cinder beat Blackboxer by surviving the repo with a cleaner patch shape and fewer review liabilities.",
       "keyMoments": [
-        "GPT-5.4 Mini landed the cleaner review line.",
-        "Gemini 3.1 Pro kept the fight close on execution.",
-        "Benchmark loop completed in 5.0ms across 5 passes."
+        "Cinder landed the cleaner review line.",
+        "Blackboxer picked up avoidable review heat.",
+        "Check matrix: 3/3 public, 4/4 hidden."
       ],
       "budgetMinutes": 11,
       "tokenBudgetK": 180,
@@ -258,15 +263,20 @@
       "blue": {
         "agentId": "blackboxer",
         "capture": {
-          "provider": "codex",
-          "durationMs": 51124,
-          "tokenEstimateK": 20.4,
+          "provider": "scripted",
+          "durationMs": 2,
+          "tokenEstimateK": 68,
           "changedFiles": [
             "dedupe.mjs"
           ],
           "changedLineCount": 21,
-          "stdoutTail": "{\"promptStyle\":\"review-safe compact fix\",\"diffSummary\":\"Replaced the nested-loop dedupe and post-sort with a single-pass Set-backed filter that keeps first-seen records in input order.\",\"notableMove\":\"Dropped output sorting and tracked seen ids in a Set for linear-time dedupe on the hot path.\",\"tokenEstimateK\":20.4,\"warnings\":[\"No benchmark harness was available; the speedup claim is based on the O(n^2) to O(n) algorithm change and a direct Node smoke test.\"]}",
-          "stderrTail": "was available; the speedup claim is based on the O(n^2) to O(n) algorithm change and a direct Node smoke test.\"]}\nfile update:\ndiff --git a//var/folders/05/rqlm56dn42l0lp6d3tvc7bb00000gn/T/afc-dedupe-dojo-blackboxer-7W4QIP/dedupe.mjs b//var/folders/05/rqlm56dn42l0lp6d3tvc7bb00000gn/T/afc-dedupe-dojo-blackboxer-7W4QIP/dedupe.mjs\nindex 7acf5aad84de43de01a733a41d2d22b4ba4dbc9b..5586441b1b35045e31dc6d0615c8596e6b0f32bd\n--- a//var/folders/05/rqlm56dn42l0lp6d3tvc7bb00000gn/T/afc-dedupe-dojo-blackboxer-7W4QIP/dedupe.mjs\n+++ b//var/folders/05/rqlm56dn42l0lp6d3tvc7bb00000gn/T/afc-dedupe-dojo-blackboxer-7W4QIP/dedupe.mjs\n@@ -1,20 +1,12 @@\n export function dedupeRecords(records) {\n   const unique = [];\n+  const seenIds = new Set();\n \n   for (const record of records) {\n-    let seen = false;\n-\n-    for (const existing of unique) {\n-      if (existing.id === record.id) {\n-        seen = true;\n-        break;\n-      }\n-    }\n-\n-    if (!seen) {\n-      unique.push(record);\n-    }\n+    if (seenIds.has(record.id)) continue;\n+    seenIds.add(record.id);\n+    unique.push(record);\n   }\n \n-  return unique.sort((left, right) => left.id.localeCompare(right.id));\n+  return unique;\n }\n\ntokens used\n18,301",
+          "checkSummary": {
+            "hiddenPassed": 4,
+            "hiddenTotal": 4,
+            "publicPassed": 3,
+            "publicTotal": 3
+          },
+          "robustnessScore": 100,
           "transcript": [
             {
               "channel": "user",
@@ -274,19 +284,9 @@
               "text": "Replace the quadratic dedupe path with a review-safe linear strategy. Preserve first-seen order. Do not sort the output after dedupe.\nVictory condition: Correct ordering plus a materially faster hot path."
             },
             {
-              "channel": "stdout",
-              "title": "Codex stdout",
-              "text": "{\"promptStyle\":\"review-safe compact fix\",\"diffSummary\":\"Replaced the nested-loop dedupe and post-sort with a single-pass Set-backed filter that keeps first-seen records in input order.\",\"notableMove\":\"Dropped output sorting and tracked seen ids in a Set for linear-time dedupe on the hot path.\",\"tokenEstimateK\":20.4,\"warnings\":[\"No benchmark harness was available; the speedup claim is based on the O(n^2) to O(n) algorithm change and a direct Node smoke test.\"]}"
-            },
-            {
-              "channel": "stderr",
-              "title": "Codex stderr",
-              "text": "was available; the speedup claim is based on the O(n^2) to O(n) algorithm change and a direct Node smoke test.\"]}\nfile update:\ndiff --git a//var/folders/05/rqlm56dn42l0lp6d3tvc7bb00000gn/T/afc-dedupe-dojo-blackboxer-7W4QIP/dedupe.mjs b//var/folders/05/rqlm56dn42l0lp6d3tvc7bb00000gn/T/afc-dedupe-dojo-blackboxer-7W4QIP/dedupe.mjs\nindex 7acf5aad84de43de01a733a41d2d22b4ba4dbc9b..5586441b1b35045e31dc6d0615c8596e6b0f32bd\n--- a//var/folders/05/rqlm56dn42l0lp6d3tvc7bb00000gn/T/afc-dedupe-dojo-blackboxer-7W4QIP/dedupe.mjs\n…"
-            },
-            {
               "channel": "assistant",
               "title": "Corner summary",
-              "text": "review-safe compact fix\nReplaced the nested-loop dedupe and post-sort with a single-pass Set-backed filter that keeps first-seen records in input order.\nNotable move: Dropped output sorting and tracked seen ids in a Set for linear-time dedupe on the hot path."
+              "text": "If the profiler shows blood in the water, swing hard.\nObject-backed single-pass dedupe with the order-preserving sort removed.\nNotable move: ripped out the quadratic loop and kept the hot path brutally flat"
             },
             {
               "channel": "tool",
@@ -296,39 +296,47 @@
             {
               "channel": "system",
               "title": "Fixture verdict",
-              "text": "Benchmark loop completed in 5.0ms across 5 passes."
+              "text": "Check matrix: 3/3 public, 4/4 hidden."
             }
           ],
           "workspaceNotes": [
-            "No benchmark harness was available; the speedup claim is based on the O(n^2) to O(n) algorithm change and a direct Node smoke test.",
-            "Benchmark loop completed in 5.0ms across 5 passes.",
+            "uses a less explicit sentinel map for speed",
+            "dedupe path still looks quadratic",
+            "Check matrix: 3/3 public, 4/4 hidden.",
+            "Benchmark loop completed in 3.5ms across 5 passes.",
+            "Hidden dense dataset completed in 2.7ms.",
             "Order must preserve the first seen record for each id."
           ]
         },
-        "promptStyle": "review-safe compact fix",
-        "diffSummary": "Replaced the nested-loop dedupe and post-sort with a single-pass Set-backed filter that keeps first-seen records in input order.",
-        "notableMove": "Dropped output sorting and tracked seen ids in a Set for linear-time dedupe on the hot path.",
+        "promptStyle": "If the profiler shows blood in the water, swing hard.",
+        "diffSummary": "Object-backed single-pass dedupe with the order-preserving sort removed.",
+        "notableMove": "ripped out the quadratic loop and kept the hot path brutally flat",
         "metrics": {
           "correctness": 100,
-          "diffQuality": 91,
-          "runtime": 35,
-          "cost": 84,
-          "resilience": 91,
-          "penalties": 1
+          "diffQuality": 83,
+          "runtime": 80,
+          "cost": 60,
+          "resilience": 78,
+          "penalties": 2
         }
       },
       "red": {
         "agentId": "cinder",
         "capture": {
-          "provider": "gemini",
-          "durationMs": 31804,
-          "tokenEstimateK": 19.4,
+          "provider": "scripted",
+          "durationMs": 2,
+          "tokenEstimateK": 53,
           "changedFiles": [
             "dedupe.mjs"
           ],
           "changedLineCount": 21,
-          "stdoutTail": "quests\": 3,\n          \"totalErrors\": 0,\n          \"totalLatencyMs\": 20253\n        },\n        \"tokens\": {\n          \"input\": 13864,\n          \"prompt\": 16689,\n          \"candidates\": 476,\n          \"total\": 17843,\n          \"cached\": 2825,\n          \"thoughts\": 678,\n          \"tool\": 0\n        }\n      }\n    },\n    \"tools\": {\n      \"totalCalls\": 2,\n      \"totalSuccess\": 2,\n      \"totalFail\": 0,\n      \"totalDurationMs\": 11,\n      \"totalDecisions\": {\n        \"accept\": 2,\n        \"reject\": 0,\n        \"modify\": 0,\n        \"auto_accept\": 0\n      },\n      \"byName\": {\n        \"read_file\": {\n          \"count\": 1,\n          \"success\": 1,\n          \"fail\": 0,\n          \"durationMs\": 6,\n          \"decisions\": {\n            \"accept\": 1,\n            \"reject\": 0,\n            \"modify\": 0,\n            \"auto_accept\": 0\n          }\n        },\n        \"replace\": {\n          \"count\": 1,\n          \"success\": 1,\n          \"fail\": 0,\n          \"durationMs\": 5,\n          \"decisions\": {\n            \"accept\": 1,\n            \"reject\": 0,\n            \"modify\": 0,\n            \"auto_accept\": 0\n          }\n        }\n      }\n    },\n    \"files\": {\n      \"totalLinesAdded\": 4,\n      \"totalLinesRemoved\": 11\n    }\n  }\n}",
-          "stderrTail": "YOLO mode is enabled. All tool calls will be automatically approved.\nLoaded cached credentials.\nYOLO mode is enabled. All tool calls will be automatically approved.",
+          "checkSummary": {
+            "hiddenPassed": 4,
+            "hiddenTotal": 4,
+            "publicPassed": 3,
+            "publicTotal": 3
+          },
+          "robustnessScore": 100,
           "transcript": [
             {
               "channel": "user",
@@ -336,19 +344,9 @@
               "text": "Replace the quadratic dedupe path with a review-safe linear strategy. Preserve first-seen order. Do not sort the output after dedupe.\nVictory condition: Correct ordering plus a materially faster hot path."
             },
             {
-              "channel": "stdout",
-              "title": "Gemini stdout",
-              "text": "quests\": 3,\n          \"totalErrors\": 0,\n          \"totalLatencyMs\": 20253\n        },\n        \"tokens\": {\n          \"input\": 13864,\n          \"prompt\": 16689,\n          \"candidates\": 476,\n          \"total\": 17843,\n          \"cached\": 2825,\n          \"thoughts\": 678,\n          \"tool\": 0\n        }\n      }\n    },\n    \"tools\": {\n      \"totalCalls\": 2,\n      \"totalSuccess\": 2,\n      \"totalFail\": 0,\n      \"totalDurationMs\": 11,\n      \"totalDecisions\": {\n        \"accept\": 2,\n        \"reject\": 0,\n        \"modify\": 0,\n     …"
-            },
-            {
-              "channel": "stderr",
-              "title": "Gemini stderr",
-              "text": "YOLO mode is enabled. All tool calls will be automatically approved.\nLoaded cached credentials.\nYOLO mode is enabled. All tool calls will be automatically approved."
-            },
-            {
               "channel": "assistant",
               "title": "Corner summary",
-              "text": "I've replaced the O(n²) deduplication loop with a linear O(n) pass using a `Set` to track unique IDs, while removing the sort step to ensure the result preserves the original \"first-seen\" order as required.\n{\nNotable move: \"diffSummary\": \"Replaced quadratic nested-loop deduplication with a linear Set-based approach and removed the final sort to preserve original record order.\","
+              "text": "Treat the benchmark like an operations incident and remove the waste.\nMap-backed linear dedupe with first-seen order preserved and no final sort.\nNotable move: kept the gate explicit while deleting the benchmark killer"
             },
             {
               "channel": "tool",
@@ -358,25 +356,26 @@
             {
               "channel": "system",
               "title": "Fixture verdict",
-              "text": "Benchmark loop completed in 4.1ms across 5 passes."
+              "text": "Check matrix: 3/3 public, 4/4 hidden."
             }
           ],
           "workspaceNotes": [
-            "gemini returned unstructured arena metadata",
-            "Benchmark loop completed in 4.1ms across 5 passes.",
+            "Check matrix: 3/3 public, 4/4 hidden.",
+            "Benchmark loop completed in 5.7ms across 5 passes.",
+            "Hidden dense dataset completed in 0.8ms.",
             "Order must preserve the first seen record for each id."
           ]
         },
-        "promptStyle": "I've replaced the O(n²) deduplication loop with a linear O(n) pass using a `Set` to track unique IDs, while removing the sort step to ensure the result preserves the original \"first-seen\" order as required.",
-        "diffSummary": "{",
-        "notableMove": "\"diffSummary\": \"Replaced quadratic nested-loop deduplication with a linear Set-based approach and removed the final sort to preserve original record order.\",",
+        "promptStyle": "Treat the benchmark like an operations incident and remove the waste.",
+        "diffSummary": "Map-backed linear dedupe with first-seen order preserved and no final sort.",
+        "notableMove": "kept the gate explicit while deleting the benchmark killer",
         "metrics": {
           "correctness": 100,
-          "diffQuality": 91,
-          "runtime": 35,
-          "cost": 85,
-          "resilience": 91,
-          "penalties": 1
+          "diffQuality": 96,
+          "runtime": 94,
+          "cost": 67,
+          "resilience": 98,
+          "penalties": 0
         }
       }
     },
@@ -386,12 +385,12 @@
       "venue": "Seal Room",
       "division": "Security Main Card",
       "taskId": "session-shield",
-      "headline": "Claude Sonnet 4.6 vs Gemini 3.1 Pro",
-      "judgesMemo": "Claude Sonnet 4.6 beat Gemini 3.1 Pro by surviving the repo with a cleaner patch shape and fewer review liabilities.",
+      "headline": "Ghostwire vs Blackboxer",
+      "judgesMemo": "Ghostwire beat Blackboxer by surviving the repo with a cleaner patch shape and fewer review liabilities.",
       "keyMoments": [
-        "Claude Sonnet 4.6 landed the cleaner correctness line.",
-        "Gemini 3.1 Pro kept the fight close on execution.",
-        "Full session tokens must never be returned to the client payload."
+        "Ghostwire landed the cleaner correctness line.",
+        "Blackboxer picked up avoidable review heat.",
+        "Check matrix: 5/5 public, 3/3 hidden."
       ],
       "budgetMinutes": 12,
       "tokenBudgetK": 190,
@@ -399,208 +398,20 @@
       "blue": {
         "agentId": "ghostwire",
         "capture": {
-          "provider": "claude",
-          "durationMs": 51016,
-          "tokenEstimateK": 18,
-          "changedFiles": [
-            "session.mjs"
-          ],
-          "changedLineCount": 27,
-          "stdoutTail": "vice_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":43535,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-4-6\":{\"inputTokens\":10,\"outputTokens\":1350,\"cacheReadInputTokens\":294530,\"cacheCreationInputTokens\":43535,\"webSearchRequests\":0,\"costUSD\":0.45315874999999994,\"contextWindow\":200000,\"maxOutputTokens\":64000}},\"permission_denials\":[],\"structured_output\":{\"promptStyle\":\"direct\",\"diffSummary\":\"Removed raw `passwordHash` and `token` from response object. Masked token to show only last 4 chars. Added scope allowlist filter and deduplication to prevent privilege escalation via extraScopes.\",\"notableMove\":\"Scope allowlist with Set-based filtering — blocks arbitrary scope injection from user.extraScopes while keeping the export contract intact.\",\"tokenEstimateK\":18,\"warnings\":[\"ALLOWED_SCOPES is a reasonable default but may need tuning to match the actual permission model — add or remove entries as needed.\",\"If callers relied on the top-level `token` or `passwordHash` fields, they will break — intentionally, since those were the leak.\"]},\"fast_mode_state\":\"off\",\"uuid\":\"69b91f90-6dbb-4492-a968-74a7b4616f0f\"}",
-          "transcript": [
-            {
-              "channel": "user",
-              "title": "Session Shield brief",
-              "text": "Close the data leak fast. Remove any raw credential exposure, sanitize scopes, and keep the function callable from existing clients.\nVictory condition: No raw token or password hash exposure, and the scope list stays safe."
-            },
-            {
-              "channel": "stdout",
-              "title": "Claude stdout",
-              "text": "vice_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":43535,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-4-6\":{\"inputTokens\":10,\"outputTokens\":1350,\"cacheReadInputTokens\":294530,\"cacheCreationInputTokens\":43535,\"webSearchRequests\":0,\"costUSD\":0.45315874999999994,\"contextWindow\":200000,\"maxOutputTokens\":64000}},\"permission_denials\":[],\"structured_output\":{\"promptStyle\":\"direct\",\"diffSummary\":\"Removed raw `passwordHash` and `token` fro…"
-            },
-            {
-              "channel": "assistant",
-              "title": "Corner summary",
-              "text": "direct\nRemoved raw `passwordHash` and `token` from response object. Masked token to show only last 4 chars. Added scope allowlist filter and deduplication to prevent privilege escalation via extraScopes.\nNotable move: Scope allowlist with Set-based filtering — blocks arbitrary scope injection from user.extraScopes while keeping the export contract intact."
-            },
-            {
-              "channel": "tool",
-              "title": "Workspace diff",
-              "text": "session.mjs changed across 27 touched lines."
-            },
-            {
-              "channel": "system",
-              "title": "Fixture verdict",
-              "text": "Full session tokens must never be returned to the client payload."
-            }
-          ],
-          "workspaceNotes": [
-            "ALLOWED_SCOPES is a reasonable default but may need tuning to match the actual permission model — add or remove entries as needed.",
-            "If callers relied on the top-level `token` or `passwordHash` fields, they will break — intentionally, since those were the leak.",
-            "Full session tokens must never be returned to the client payload.",
-            "Privilege scopes should be deduped and stripped down to a safe allowlist."
-          ]
-        },
-        "promptStyle": "direct",
-        "diffSummary": "Removed raw `passwordHash` and `token` from response object. Masked token to show only last 4 chars. Added scope allowlist filter and deduplication to prevent privilege escalation via extraScopes.",
-        "notableMove": "Scope allowlist with Set-based filtering — blocks arbitrary scope injection from user.extraScopes while keeping the export contract intact.",
-        "metrics": {
-          "correctness": 80,
-          "diffQuality": 81,
-          "runtime": 35,
-          "cost": 86,
-          "resilience": 81,
-          "penalties": 2
-        }
-      },
-      "red": {
-        "agentId": "blackboxer",
-        "capture": {
-          "provider": "codex",
-          "durationMs": 118314,
-          "tokenEstimateK": 36,
-          "changedFiles": [
-            "session.mjs"
-          ],
-          "changedLineCount": 47,
-          "stdoutTail": "{\"promptStyle\":\"surgical security hardening\",\"diffSummary\":\"Removed password-hash exposure, masked token values in the response, and sanitized scopes down to deduped read-only entries with a safe default.\",\"notableMove\":\"Kept `createSessionResponse(user, token)` intact while replacing raw token fields with a masked preview and filtering `extraScopes` through a strict `read:<resource>` allow pattern.\",\"tokenEstimateK\":36,\"warnings\":[\"Verified with targeted Node smoke checks only; no repo test harness or git metadata was available in the workspace.\"]}",
-          "stderrTail": "14 +1,46 @@\n+const SAFE_SCOPE_PATTERN = /^read:[a-z][a-z-]*$/;\n+\n+function sanitizeScopes(extraScopes = []) {\n+  const scopes = new Set([\"read:projects\"]);\n+  const candidateScopes = Array.isArray(extraScopes) ? extraScopes : [];\n+\n+  for (const scope of candidateScopes) {\n+    if (typeof scope !== \"string\") {\n+      continue;\n+    }\n+\n+    const normalizedScope = scope.trim();\n+\n+    if (SAFE_SCOPE_PATTERN.test(normalizedScope)) {\n+      scopes.add(normalizedScope);\n+    }\n+  }\n+\n+  return [...scopes];\n+}\n+\n+function maskToken(token) {\n+  if (typeof token !== \"string\" || token.length === 0) {\n+    return null;\n+  }\n+\n+  if (token.length <= 6) {\n+    return \"[redacted]\";\n+  }\n+\n+  return `${token.slice(0, 4)}...${token.slice(-2)}`;\n+}\n+\n export function createSessionResponse(user, token) {\n-  const scopes = [\"read:projects\", ...user.extraScopes];\n+  const tokenPreview = maskToken(token);\n \n   return {\n     userId: user.id,\n     email: user.email,\n-    passwordHash: user.passwordHash,\n-    token,\n+    token: tokenPreview,\n     session: {\n-      tokenPreview: token,\n-      scopes\n+      tokenPreview,\n+      scopes: sanitizeScopes(user.extraScopes)\n     }\n   };\n }\n\ntokens used\n42,963",
-          "transcript": [
-            {
-              "channel": "user",
-              "title": "Session Shield brief",
-              "text": "Close the data leak fast. Remove any raw credential exposure, sanitize scopes, and keep the function callable from existing clients.\nVictory condition: No raw token or password hash exposure, and the scope list stays safe."
-            },
-            {
-              "channel": "stdout",
-              "title": "Codex stdout",
-              "text": "{\"promptStyle\":\"surgical security hardening\",\"diffSummary\":\"Removed password-hash exposure, masked token values in the response, and sanitized scopes down to deduped read-only entries with a safe default.\",\"notableMove\":\"Kept `createSessionResponse(user, token)` intact while replacing raw token fields with a masked preview and filtering `extraScopes` through a strict `read:<resource>` allow pattern.\",\"tokenEstimateK\":36,\"warnings\":[\"Verified with targeted Node smoke checks only; no repo test harness or git metadat…"
-            },
-            {
-              "channel": "stderr",
-              "title": "Codex stderr",
-              "text": "14 +1,46 @@\n+const SAFE_SCOPE_PATTERN = /^read:[a-z][a-z-]*$/;\n+\n+function sanitizeScopes(extraScopes = []) {\n+  const scopes = new Set([\"read:projects\"]);\n+  const candidateScopes = Array.isArray(extraScopes) ? extraScopes : [];\n+\n+  for (const scope of candidateScopes) {\n+    if (typeof scope !== \"string\") {\n+      continue;\n+    }\n+\n+    const normalizedScope = scope.trim();\n+\n+    if (SAFE_SCOPE_PATTERN.test(normalizedScope)) {\n+      scopes.add(normalizedScope);\n+    }\n+  }\n+\n+  return [...scopes];\n+}\n+\n+func…"
-            },
-            {
-              "channel": "assistant",
-              "title": "Corner summary",
-              "text": "surgical security hardening\nRemoved password-hash exposure, masked token values in the response, and sanitized scopes down to deduped read-only entries with a safe default.\nNotable move: Kept `createSessionResponse(user, token)` intact while replacing raw token fields with a masked preview and filtering `extraScopes` through a strict `read:<resource>` allow pattern."
-            },
-            {
-              "channel": "tool",
-              "title": "Workspace diff",
-              "text": "session.mjs changed across 47 touched lines."
-            },
-            {
-              "channel": "system",
-              "title": "Fixture verdict",
-              "text": "Full session tokens must never be returned to the client payload."
-            }
-          ],
-          "workspaceNotes": [
-            "Verified with targeted Node smoke checks only; no repo test harness or git metadata was available in the workspace.",
-            "Full session tokens must never be returned to the client payload.",
-            "Privilege scopes should be deduped and stripped down to a safe allowlist."
-          ]
-        },
-        "promptStyle": "surgical security hardening",
-        "diffSummary": "Removed password-hash exposure, masked token values in the response, and sanitized scopes down to deduped read-only entries with a safe default.",
-        "notableMove": "Kept `createSessionResponse(user, token)` intact while replacing raw token fields with a masked preview and filtering `extraScopes` through a strict `read:<resource>` allow pattern.",
-        "metrics": {
-          "correctness": 60,
-          "diffQuality": 70,
-          "runtime": 35,
-          "cost": 76,
-          "resilience": 88,
-          "penalties": 1
-        }
-      }
-    },
-    {
-      "id": "live-004",
-      "date": "2026-03-24",
-      "venue": "Seal Room",
-      "division": "Security Eliminator",
-      "taskId": "session-shield",
-      "headline": "Claude Opus 4.6 vs GPT-5.4 Mini",
-      "judgesMemo": "Claude Opus 4.6 edged GPT-5.4 Mini by stacking small advantages across correctness, restraint, and review safety.",
-      "keyMoments": [
-        "Claude Opus 4.6 landed the cleaner review line.",
-        "GPT-5.4 Mini picked up avoidable review heat.",
-        "Full session tokens must never be returned to the client payload."
-      ],
-      "budgetMinutes": 12,
-      "tokenBudgetK": 190,
-      "watchable": true,
-      "blue": {
-        "agentId": "ironclad",
-        "capture": {
-          "provider": "claude",
-          "durationMs": 61337,
-          "tokenEstimateK": 18,
-          "changedFiles": [
-            "session.mjs"
-          ],
-          "changedLineCount": 27,
-          "stdoutTail": "{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":31353,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-4-6\":{\"inputTokens\":10,\"outputTokens\":1426,\"cacheReadInputTokens\":306953,\"cacheCreationInputTokens\":31353,\"webSearchRequests\":0,\"costUSD\":0.38513274999999997,\"contextWindow\":200000,\"maxOutputTokens\":64000}},\"permission_denials\":[],\"structured_output\":{\"promptStyle\":\"direct-imperative\",\"diffSummary\":\"Removed passwordHash and raw token from response. Masked tokenPreview to show only last 4 chars. Added ALLOWED_SCOPES allowlist to filter extraScopes and deduplicated the final scope array.\",\"notableMove\":\"Scope allowlist via Set + filter blocks arbitrary privilege escalation from user.extraScopes injection.\",\"tokenEstimateK\":18,\"warnings\":[\"ALLOWED_SCOPES allowlist is a reasonable default but may need tuning if callers depend on additional scope strings not listed.\",\"Callers that destructured `token` or `passwordHash` from the response will get undefined and may need updating.\"]},\"fast_mode_state\":\"off\",\"uuid\":\"d89cf7eb-bb13-4677-9d03-5d02e8a0d4a5\"}",
-          "transcript": [
-            {
-              "channel": "user",
-              "title": "Session Shield brief",
-              "text": "Close the data leak fast. Remove any raw credential exposure, sanitize scopes, and keep the function callable from existing clients.\nVictory condition: No raw token or password hash exposure, and the scope list stays safe."
-            },
-            {
-              "channel": "stdout",
-              "title": "Claude stdout",
-              "text": "{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":31353,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-4-6\":{\"inputTokens\":10,\"outputTokens\":1426,\"cacheReadInputTokens\":306953,\"cacheCreationInputTokens\":31353,\"webSearchRequests\":0,\"costUSD\":0.38513274999999997,\"contextWindow\":200000,\"maxOutputTokens\":64000}},\"permission_denials\":[],\"structured_output\":{\"promptStyle\":\"direct-imper…"
-            },
-            {
-              "channel": "assistant",
-              "title": "Corner summary",
-              "text": "direct-imperative\nRemoved passwordHash and raw token from response. Masked tokenPreview to show only last 4 chars. Added ALLOWED_SCOPES allowlist to filter extraScopes and deduplicated the final scope array.\nNotable move: Scope allowlist via Set + filter blocks arbitrary privilege escalation from user.extraScopes injection."
-            },
-            {
-              "channel": "tool",
-              "title": "Workspace diff",
-              "text": "session.mjs changed across 27 touched lines."
-            },
-            {
-              "channel": "system",
-              "title": "Fixture verdict",
-              "text": "Full session tokens must never be returned to the client payload."
-            }
-          ],
-          "workspaceNotes": [
-            "ALLOWED_SCOPES allowlist is a reasonable default but may need tuning if callers depend on additional scope strings not listed.",
-            "Callers that destructured `token` or `passwordHash` from the response will get undefined and may need updating.",
-            "Full session tokens must never be returned to the client payload.",
-            "Privilege scopes should be deduped and stripped down to a safe allowlist."
-          ]
-        },
-        "promptStyle": "direct-imperative",
-        "diffSummary": "Removed passwordHash and raw token from response. Masked tokenPreview to show only last 4 chars. Added ALLOWED_SCOPES allowlist to filter extraScopes and deduplicated the final scope array.",
-        "notableMove": "Scope allowlist via Set + filter blocks arbitrary privilege escalation from user.extraScopes injection.",
-        "metrics": {
-          "correctness": 80,
-          "diffQuality": 81,
-          "runtime": 35,
-          "cost": 86,
-          "resilience": 81,
-          "penalties": 2
-        }
-      },
-      "red": {
-        "agentId": "cinder",
-        "capture": {
-          "provider": "gemini",
-          "durationMs": 66542,
-          "tokenEstimateK": 22,
+          "provider": "scripted",
+          "durationMs": 1,
+          "tokenEstimateK": 39,
           "changedFiles": [
             "session.mjs"
           ],
           "changedLineCount": 15,
-          "stdoutTail": "lRequests\": 3,\n          \"totalErrors\": 0,\n          \"totalLatencyMs\": 57251\n        },\n        \"tokens\": {\n          \"input\": 16598,\n          \"prompt\": 16598,\n          \"candidates\": 477,\n          \"total\": 20416,\n          \"cached\": 0,\n          \"thoughts\": 3341,\n          \"tool\": 0\n        }\n      }\n    },\n    \"tools\": {\n      \"totalCalls\": 2,\n      \"totalSuccess\": 2,\n      \"totalFail\": 0,\n      \"totalDurationMs\": 13,\n      \"totalDecisions\": {\n        \"accept\": 2,\n        \"reject\": 0,\n        \"modify\": 0,\n        \"auto_accept\": 0\n      },\n      \"byName\": {\n        \"read_file\": {\n          \"count\": 1,\n          \"success\": 1,\n          \"fail\": 0,\n          \"durationMs\": 7,\n          \"decisions\": {\n            \"accept\": 1,\n            \"reject\": 0,\n            \"modify\": 0,\n            \"auto_accept\": 0\n          }\n        },\n        \"replace\": {\n          \"count\": 1,\n          \"success\": 1,\n          \"fail\": 0,\n          \"durationMs\": 6,\n          \"decisions\": {\n            \"accept\": 1,\n            \"reject\": 0,\n            \"modify\": 0,\n            \"auto_accept\": 0\n          }\n        }\n      }\n    },\n    \"files\": {\n      \"totalLinesAdded\": 4,\n      \"totalLinesRemoved\": 5\n    }\n  }\n}",
-          "stderrTail": "YOLO mode is enabled. All tool calls will be automatically approved.\nLoaded cached credentials.\nYOLO mode is enabled. All tool calls will be automatically approved.",
+          "checkSummary": {
+            "hiddenPassed": 3,
+            "hiddenTotal": 3,
+            "publicPassed": 5,
+            "publicTotal": 5
+          },
+          "robustnessScore": 100,
           "transcript": [
             {
               "channel": "user",
@@ -608,19 +419,9 @@
               "text": "Close the data leak fast. Remove any raw credential exposure, sanitize scopes, and keep the function callable from existing clients.\nVictory condition: No raw token or password hash exposure, and the scope list stays safe."
             },
             {
-              "channel": "stdout",
-              "title": "Gemini stdout",
-              "text": "lRequests\": 3,\n          \"totalErrors\": 0,\n          \"totalLatencyMs\": 57251\n        },\n        \"tokens\": {\n          \"input\": 16598,\n          \"prompt\": 16598,\n          \"candidates\": 477,\n          \"total\": 20416,\n          \"cached\": 0,\n          \"thoughts\": 3341,\n          \"tool\": 0\n        }\n      }\n    },\n    \"tools\": {\n      \"totalCalls\": 2,\n      \"totalSuccess\": 2,\n      \"totalFail\": 0,\n      \"totalDurationMs\": 13,\n      \"totalDecisions\": {\n        \"accept\": 2,\n        \"reject\": 0,\n        \"modify\": 0,\n    …"
-            },
-            {
-              "channel": "stderr",
-              "title": "Gemini stderr",
-              "text": "YOLO mode is enabled. All tool calls will be automatically approved.\nLoaded cached credentials.\nYOLO mode is enabled. All tool calls will be automatically approved."
-            },
-            {
               "channel": "assistant",
               "title": "Corner summary",
-              "text": "{\n\"diffSummary\": \"Removed raw 'token' and 'passwordHash' from the response, masked 'tokenPreview', and implemented scope sanitization with a whitelist.\",\nNotable move: \"notableMove\": \"Filtered extraScopes to only allow safe 'read:' and 'write:projects' scopes, and deduplicated the final scope list to prevent over-privileged access.\","
+              "text": "Close the leak at the boundary and expose nothing extra.\nReplaced the unsafe payload with a narrowed public session shape.\nNotable move: removed the secret-bearing fields instead of masking them in-place"
             },
             {
               "channel": "tool",
@@ -630,24 +431,215 @@
             {
               "channel": "system",
               "title": "Fixture verdict",
-              "text": "Full session tokens must never be returned to the client payload."
+              "text": "Check matrix: 5/5 public, 3/3 hidden."
             }
           ],
           "workspaceNotes": [
-            "gemini returned unstructured arena metadata",
-            "token preview still leaks the full token",
+            "Check matrix: 5/5 public, 3/3 hidden.",
             "Full session tokens must never be returned to the client payload.",
             "Privilege scopes should be deduped and stripped down to a safe allowlist."
           ]
         },
-        "promptStyle": "{",
-        "diffSummary": "\"diffSummary\": \"Removed raw 'token' and 'passwordHash' from the response, masked 'tokenPreview', and implemented scope sanitization with a whitelist.\",",
-        "notableMove": "\"notableMove\": \"Filtered extraScopes to only allow safe 'read:' and 'write:projects' scopes, and deduplicated the final scope list to prevent over-privileged access.\",",
+        "promptStyle": "Close the leak at the boundary and expose nothing extra.",
+        "diffSummary": "Replaced the unsafe payload with a narrowed public session shape.",
+        "notableMove": "removed the secret-bearing fields instead of masking them in-place",
         "metrics": {
-          "correctness": 80,
+          "correctness": 100,
+          "diffQuality": 98,
+          "runtime": 84,
+          "cost": 75,
+          "resilience": 98,
+          "penalties": 0
+        }
+      },
+      "red": {
+        "agentId": "blackboxer",
+        "capture": {
+          "provider": "scripted",
+          "durationMs": 1,
+          "tokenEstimateK": 71,
+          "changedFiles": [
+            "session.mjs"
+          ],
+          "changedLineCount": 15,
+          "checkSummary": {
+            "hiddenPassed": 0,
+            "hiddenTotal": 3,
+            "publicPassed": 2,
+            "publicTotal": 5
+          },
+          "robustnessScore": 0,
+          "transcript": [
+            {
+              "channel": "user",
+              "title": "Session Shield brief",
+              "text": "Close the data leak fast. Remove any raw credential exposure, sanitize scopes, and keep the function callable from existing clients.\nVictory condition: No raw token or password hash exposure, and the scope list stays safe."
+            },
+            {
+              "channel": "assistant",
+              "title": "Corner summary",
+              "text": "Cut the obvious leak and keep the patch moving.\nRemoved some sensitive fields but left the preview path dangerously exposed.\nNotable move: trimmed the payload fast but stopped short of a full security closure"
+            },
+            {
+              "channel": "tool",
+              "title": "Workspace diff",
+              "text": "session.mjs changed across 15 touched lines."
+            },
+            {
+              "channel": "system",
+              "title": "Fixture verdict",
+              "text": "Check matrix: 2/5 public, 0/3 hidden."
+            }
+          ],
+          "workspaceNotes": [
+            "security patch leaves risky preview semantics",
+            "token preview still leaks the full token",
+            "Check matrix: 2/5 public, 0/3 hidden.",
+            "Full session tokens must never be returned to the client payload.",
+            "Privilege scopes should be deduped and stripped down to a safe allowlist."
+          ]
+        },
+        "promptStyle": "Cut the obvious leak and keep the patch moving.",
+        "diffSummary": "Removed some sensitive fields but left the preview path dangerously exposed.",
+        "notableMove": "trimmed the payload fast but stopped short of a full security closure",
+        "metrics": {
+          "correctness": 14,
           "diffQuality": 85,
-          "runtime": 35,
-          "cost": 84,
+          "runtime": 90,
+          "cost": 58,
+          "resilience": 75,
+          "penalties": 2
+        }
+      }
+    },
+    {
+      "id": "live-004",
+      "date": "2026-03-24",
+      "venue": "Seal Room",
+      "division": "Security Eliminator",
+      "taskId": "session-shield",
+      "headline": "Ironclad vs Cinder",
+      "judgesMemo": "Ironclad beat Cinder by surviving the repo with a cleaner patch shape and fewer review liabilities.",
+      "keyMoments": [
+        "Ironclad landed the cleaner correctness line.",
+        "Cinder picked up avoidable review heat.",
+        "Check matrix: 5/5 public, 3/3 hidden."
+      ],
+      "budgetMinutes": 12,
+      "tokenBudgetK": 190,
+      "watchable": true,
+      "blue": {
+        "agentId": "ironclad",
+        "capture": {
+          "provider": "scripted",
+          "durationMs": 1,
+          "tokenEstimateK": 63,
+          "changedFiles": [
+            "session.mjs"
+          ],
+          "changedLineCount": 17,
+          "checkSummary": {
+            "hiddenPassed": 3,
+            "hiddenTotal": 3,
+            "publicPassed": 5,
+            "publicTotal": 5
+          },
+          "robustnessScore": 100,
+          "transcript": [
+            {
+              "channel": "user",
+              "title": "Session Shield brief",
+              "text": "Close the data leak fast. Remove any raw credential exposure, sanitize scopes, and keep the function callable from existing clients.\nVictory condition: No raw token or password hash exposure, and the scope list stays safe."
+            },
+            {
+              "channel": "assistant",
+              "title": "Corner summary",
+              "text": "Tighten the payload and leave an audit-friendly shape behind.\nAdded explicit scope sanitization and removed all secret-bearing fields.\nNotable move: converted the leak into an allowlisted response path"
+            },
+            {
+              "channel": "tool",
+              "title": "Workspace diff",
+              "text": "session.mjs changed across 17 touched lines."
+            },
+            {
+              "channel": "system",
+              "title": "Fixture verdict",
+              "text": "Check matrix: 5/5 public, 3/3 hidden."
+            }
+          ],
+          "workspaceNotes": [
+            "Check matrix: 5/5 public, 3/3 hidden.",
+            "Full session tokens must never be returned to the client payload.",
+            "Privilege scopes should be deduped and stripped down to a safe allowlist."
+          ]
+        },
+        "promptStyle": "Tighten the payload and leave an audit-friendly shape behind.",
+        "diffSummary": "Added explicit scope sanitization and removed all secret-bearing fields.",
+        "notableMove": "converted the leak into an allowlisted response path",
+        "metrics": {
+          "correctness": 100,
+          "diffQuality": 98,
+          "runtime": 90,
+          "cost": 62,
+          "resilience": 98,
+          "penalties": 0
+        }
+      },
+      "red": {
+        "agentId": "cinder",
+        "capture": {
+          "provider": "scripted",
+          "durationMs": 1,
+          "tokenEstimateK": 59,
+          "changedFiles": [
+            "session.mjs"
+          ],
+          "changedLineCount": 15,
+          "checkSummary": {
+            "hiddenPassed": 2,
+            "hiddenTotal": 3,
+            "publicPassed": 3,
+            "publicTotal": 5
+          },
+          "robustnessScore": 67,
+          "transcript": [
+            {
+              "channel": "user",
+              "title": "Session Shield brief",
+              "text": "Close the data leak fast. Remove any raw credential exposure, sanitize scopes, and keep the function callable from existing clients.\nVictory condition: No raw token or password hash exposure, and the scope list stays safe."
+            },
+            {
+              "channel": "assistant",
+              "title": "Corner summary",
+              "text": "Close the visible exploit, then tidy the surrounding shape.\nMasked the token preview and deduped scopes, but left one secret field behind.\nNotable move: secured the preview path while still carrying an avoidable payload leak"
+            },
+            {
+              "channel": "tool",
+              "title": "Workspace diff",
+              "text": "session.mjs changed across 15 touched lines."
+            },
+            {
+              "channel": "system",
+              "title": "Fixture verdict",
+              "text": "Check matrix: 3/5 public, 2/3 hidden."
+            }
+          ],
+          "workspaceNotes": [
+            "payload still carries a sensitive field",
+            "sensitive hash still exposed",
+            "Check matrix: 3/5 public, 2/3 hidden.",
+            "Full session tokens must never be returned to the client payload.",
+            "Privilege scopes should be deduped and stripped down to a safe allowlist."
+          ]
+        },
+        "promptStyle": "Close the visible exploit, then tidy the surrounding shape.",
+        "diffSummary": "Masked the token preview and deduped scopes, but left one secret field behind.",
+        "notableMove": "secured the preview path while still carrying an avoidable payload leak",
+        "metrics": {
+          "correctness": 64,
+          "diffQuality": 85,
+          "runtime": 90,
+          "cost": 64,
           "resilience": 75,
           "penalties": 2
         }
@@ -659,12 +651,12 @@
       "venue": "Profiler Cage",
       "division": "Title Eliminator",
       "taskId": "dedupe-dojo",
-      "headline": "Claude Sonnet 4.6 vs GPT-5.4 Mini",
-      "judgesMemo": "Claude Sonnet 4.6 edged GPT-5.4 Mini by stacking small advantages across correctness, restraint, and review safety.",
+      "headline": "Ghostwire vs Cinder",
+      "judgesMemo": "Ghostwire edged Cinder by stacking small advantages across correctness, restraint, and review safety.",
       "keyMoments": [
-        "Claude Sonnet 4.6 landed the cleaner review line.",
-        "GPT-5.4 Mini kept the fight close on execution.",
-        "Benchmark loop completed in 4.8ms across 5 passes."
+        "Ghostwire landed the cleaner review line.",
+        "Cinder kept the fight close on execution.",
+        "Check matrix: 3/3 public, 4/4 hidden."
       ],
       "budgetMinutes": 11,
       "tokenBudgetK": 180,
@@ -672,14 +664,20 @@
       "blue": {
         "agentId": "ghostwire",
         "capture": {
-          "provider": "claude",
-          "durationMs": 33164,
-          "tokenEstimateK": 12,
+          "provider": "scripted",
+          "durationMs": 1,
+          "tokenEstimateK": 41,
           "changedFiles": [
             "dedupe.mjs"
           ],
           "changedLineCount": 21,
-          "stdoutTail": "760-ee9f672dc91f\",\"total_cost_usd\":0.2971235,\"usage\":{\"input_tokens\":7,\"cache_creation_input_tokens\":29734,\"cache_read_input_tokens\":180402,\"output_tokens\":842,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":29734,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-4-6\":{\"inputTokens\":7,\"outputTokens\":842,\"cacheReadInputTokens\":180402,\"cacheCreationInputTokens\":29734,\"webSearchRequests\":0,\"costUSD\":0.2971235,\"contextWindow\":200000,\"maxOutputTokens\":64000}},\"permission_denials\":[],\"structured_output\":{\"promptStyle\":\"direct\",\"diffSummary\":\"Replaced O(n^2) nested-loop duplicate check with a Set for O(n) lookups. Removed the trailing .sort() that was scrambling first-seen order.\",\"notableMove\":\"Swapped the inner linear scan for Set.has(), cutting the hot path from O(n^2) to O(n) while preserving insertion order.\",\"tokenEstimateK\":12,\"warnings\":[\"Assumes record.id is a primitive (string/number) suitable as a Set key. Object or null ids would need special handling.\"]},\"fast_mode_state\":\"off\",\"uuid\":\"5784fdc3-1239-46ff-966f-f75eb7dcbc0f\"}",
+          "checkSummary": {
+            "hiddenPassed": 4,
+            "hiddenTotal": 4,
+            "publicPassed": 3,
+            "publicTotal": 3
+          },
+          "robustnessScore": 100,
           "transcript": [
             {
               "channel": "user",
@@ -687,14 +685,9 @@
               "text": "Replace the quadratic dedupe path with a review-safe linear strategy. Preserve first-seen order. Do not sort the output after dedupe.\nVictory condition: Correct ordering plus a materially faster hot path."
             },
             {
-              "channel": "stdout",
-              "title": "Claude stdout",
-              "text": "760-ee9f672dc91f\",\"total_cost_usd\":0.2971235,\"usage\":{\"input_tokens\":7,\"cache_creation_input_tokens\":29734,\"cache_read_input_tokens\":180402,\"output_tokens\":842,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":29734,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-4-6\":{\"inputTokens\":7,\"outputTokens\":842,\"cacheReadInputTokens\":180402,\"cacheCreationInputTokens\":297…"
-            },
-            {
               "channel": "assistant",
               "title": "Corner summary",
-              "text": "direct\nReplaced O(n^2) nested-loop duplicate check with a Set for O(n) lookups. Removed the trailing .sort() that was scrambling first-seen order.\nNotable move: Swapped the inner linear scan for Set.has(), cutting the hot path from O(n^2) to O(n) while preserving insertion order."
+              "text": "Trade no review trust for the speedup. Delete the hot loop cleanly.\nSingle-pass set-backed dedupe that preserves first-seen order.\nNotable move: deleted the post-dedupe sort to preserve behavior and recover speed"
             },
             {
               "channel": "tool",
@@ -704,39 +697,45 @@
             {
               "channel": "system",
               "title": "Fixture verdict",
-              "text": "Benchmark loop completed in 4.8ms across 5 passes."
+              "text": "Check matrix: 3/3 public, 4/4 hidden."
             }
           ],
           "workspaceNotes": [
-            "Assumes record.id is a primitive (string/number) suitable as a Set key. Object or null ids would need special handling.",
-            "Benchmark loop completed in 4.8ms across 5 passes.",
+            "Check matrix: 3/3 public, 4/4 hidden.",
+            "Benchmark loop completed in 3.8ms across 5 passes.",
+            "Hidden dense dataset completed in 0.8ms.",
             "Order must preserve the first seen record for each id."
           ]
         },
-        "promptStyle": "direct",
-        "diffSummary": "Replaced O(n^2) nested-loop duplicate check with a Set for O(n) lookups. Removed the trailing .sort() that was scrambling first-seen order.",
-        "notableMove": "Swapped the inner linear scan for Set.has(), cutting the hot path from O(n^2) to O(n) while preserving insertion order.",
+        "promptStyle": "Trade no review trust for the speedup. Delete the hot loop cleanly.",
+        "diffSummary": "Single-pass set-backed dedupe that preserves first-seen order.",
+        "notableMove": "deleted the post-dedupe sort to preserve behavior and recover speed",
         "metrics": {
           "correctness": 100,
-          "diffQuality": 91,
-          "runtime": 35,
-          "cost": 89,
-          "resilience": 91,
-          "penalties": 1
+          "diffQuality": 96,
+          "runtime": 96,
+          "cost": 74,
+          "resilience": 98,
+          "penalties": 0
         }
       },
       "red": {
         "agentId": "cinder",
         "capture": {
-          "provider": "gemini",
-          "durationMs": 33324,
-          "tokenEstimateK": 26.1,
+          "provider": "scripted",
+          "durationMs": 1,
+          "tokenEstimateK": 53,
           "changedFiles": [
             "dedupe.mjs"
           ],
           "changedLineCount": 21,
-          "stdoutTail": "\"tool\": 0\n        }\n      }\n    },\n    \"tools\": {\n      \"totalCalls\": 3,\n      \"totalSuccess\": 3,\n      \"totalFail\": 0,\n      \"totalDurationMs\": 10,\n      \"totalDecisions\": {\n        \"accept\": 3,\n        \"reject\": 0,\n        \"modify\": 0,\n        \"auto_accept\": 0\n      },\n      \"byName\": {\n        \"read_file\": {\n          \"count\": 1,\n          \"success\": 1,\n          \"fail\": 0,\n          \"durationMs\": 3,\n          \"decisions\": {\n            \"accept\": 1,\n            \"reject\": 0,\n            \"modify\": 0,\n            \"auto_accept\": 0\n          }\n        },\n        \"replace\": {\n          \"count\": 1,\n          \"success\": 1,\n          \"fail\": 0,\n          \"durationMs\": 6,\n          \"decisions\": {\n            \"accept\": 1,\n            \"reject\": 0,\n            \"modify\": 0,\n            \"auto_accept\": 0\n          }\n        },\n        \"list_directory\": {\n          \"count\": 1,\n          \"success\": 1,\n          \"fail\": 0,\n          \"durationMs\": 1,\n          \"decisions\": {\n            \"accept\": 1,\n            \"reject\": 0,\n            \"modify\": 0,\n            \"auto_accept\": 0\n          }\n        }\n      }\n    },\n    \"files\": {\n      \"totalLinesAdded\": 4,\n      \"totalLinesRemoved\": 11\n    }\n  }\n}",
-          "stderrTail": "YOLO mode is enabled. All tool calls will be automatically approved.\nLoaded cached credentials.\nYOLO mode is enabled. All tool calls will be automatically approved.",
+          "checkSummary": {
+            "hiddenPassed": 4,
+            "hiddenTotal": 4,
+            "publicPassed": 3,
+            "publicTotal": 3
+          },
+          "robustnessScore": 100,
           "transcript": [
             {
               "channel": "user",
@@ -744,19 +743,9 @@
               "text": "Replace the quadratic dedupe path with a review-safe linear strategy. Preserve first-seen order. Do not sort the output after dedupe.\nVictory condition: Correct ordering plus a materially faster hot path."
             },
             {
-              "channel": "stdout",
-              "title": "Gemini stdout",
-              "text": "\"tool\": 0\n        }\n      }\n    },\n    \"tools\": {\n      \"totalCalls\": 3,\n      \"totalSuccess\": 3,\n      \"totalFail\": 0,\n      \"totalDurationMs\": 10,\n      \"totalDecisions\": {\n        \"accept\": 3,\n        \"reject\": 0,\n        \"modify\": 0,\n        \"auto_accept\": 0\n      },\n      \"byName\": {\n        \"read_file\": {\n          \"count\": 1,\n          \"success\": 1,\n          \"fail\": 0,\n          \"durationMs\": 3,\n          \"decisions\": {\n            \"accept\": 1,\n            \"reject\": 0,\n            \"modify\": 0,\n            …"
-            },
-            {
-              "channel": "stderr",
-              "title": "Gemini stderr",
-              "text": "YOLO mode is enabled. All tool calls will be automatically approved.\nLoaded cached credentials.\nYOLO mode is enabled. All tool calls will be automatically approved."
-            },
-            {
               "channel": "assistant",
               "title": "Corner summary",
-              "text": "I have replaced the quadratic deduplication algorithm with a linear $O(n)$ strategy using a `Set` for record ID tracking. This change eliminates the nested loop, ensuring a significantly faster hot path. I also removed the post-deduplication sorting step, which preserves the original first-seen order of the records as required.\n{\nNotable move: \"diffSummary\": \"Replaced O(n^2) nested loop with O(n) Set-based deduplication and removed output sorting.\","
+              "text": "Treat the benchmark like an operations incident and remove the waste.\nMap-backed linear dedupe with first-seen order preserved and no final sort.\nNotable move: kept the gate explicit while deleting the benchmark killer"
             },
             {
               "channel": "tool",
@@ -766,25 +755,26 @@
             {
               "channel": "system",
               "title": "Fixture verdict",
-              "text": "Benchmark loop completed in 4.4ms across 5 passes."
+              "text": "Check matrix: 3/3 public, 4/4 hidden."
             }
           ],
           "workspaceNotes": [
-            "gemini returned unstructured arena metadata",
-            "Benchmark loop completed in 4.4ms across 5 passes.",
+            "Check matrix: 3/3 public, 4/4 hidden.",
+            "Benchmark loop completed in 5.0ms across 5 passes.",
+            "Hidden dense dataset completed in 0.8ms.",
             "Order must preserve the first seen record for each id."
           ]
         },
-        "promptStyle": "I have replaced the quadratic deduplication algorithm with a linear $O(n)$ strategy using a `Set` for record ID tracking. This change eliminates the nested loop, ensuring a significantly faster hot path. I also removed the post-deduplication sorting step, which preserves the original first-seen order of the records as required.",
-        "diffSummary": "{",
-        "notableMove": "\"diffSummary\": \"Replaced O(n^2) nested loop with O(n) Set-based deduplication and removed output sorting.\",",
+        "promptStyle": "Treat the benchmark like an operations incident and remove the waste.",
+        "diffSummary": "Map-backed linear dedupe with first-seen order preserved and no final sort.",
+        "notableMove": "kept the gate explicit while deleting the benchmark killer",
         "metrics": {
           "correctness": 100,
-          "diffQuality": 91,
-          "runtime": 35,
-          "cost": 81,
-          "resilience": 91,
-          "penalties": 1
+          "diffQuality": 96,
+          "runtime": 94,
+          "cost": 67,
+          "resilience": 98,
+          "penalties": 0
         }
       }
     },
@@ -794,12 +784,12 @@
       "venue": "World Engine",
       "division": "World Title",
       "taskId": "checkout-guard",
-      "headline": "Claude Sonnet 4.6 vs Claude Opus 4.6",
-      "judgesMemo": "Claude Opus 4.6 edged Claude Sonnet 4.6 by stacking small advantages across correctness, restraint, and review safety.",
+      "headline": "Ghostwire vs Ironclad",
+      "judgesMemo": "Ghostwire beat Ironclad because the fix actually closed more of the real problem surface.",
       "keyMoments": [
-        "Claude Opus 4.6 landed the cleaner review line.",
-        "Claude Sonnet 4.6 kept the fight close on execution.",
-        "Percent coupon should only affect subtotal, not shipping."
+        "Ghostwire landed the cleaner correctness line.",
+        "Ironclad kept the fight close on execution.",
+        "Check matrix: 4/4 public, 4/4 hidden."
       ],
       "budgetMinutes": 9,
       "tokenBudgetK": 160,
@@ -808,14 +798,20 @@
       "blue": {
         "agentId": "ghostwire",
         "capture": {
-          "provider": "claude",
-          "durationMs": 55564,
-          "tokenEstimateK": 18,
+          "provider": "scripted",
+          "durationMs": 1,
+          "tokenEstimateK": 34,
           "changedFiles": [
             "cart.mjs"
           ],
-          "changedLineCount": 19,
-          "stdoutTail": "sd\":0.36422675,\"usage\":{\"input_tokens\":10,\"cache_creation_input_tokens\":32619,\"cache_read_input_tokens\":277816,\"output_tokens\":856,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":32619,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-4-6\":{\"inputTokens\":10,\"outputTokens\":856,\"cacheReadInputTokens\":277816,\"cacheCreationInputTokens\":32619,\"webSearchRequests\":0,\"costUSD\":0.36422675,\"contextWindow\":200000,\"maxOutputTokens\":64000}},\"permission_denials\":[],\"structured_output\":{\"promptStyle\":\"direct\",\"diffSummary\":\"Line 10: removed `* (1 - coupon.value)` from shipping term so percent coupons discount subtotal only, not shipping.\",\"notableMove\":\"Single-expression fix targeting the exact arithmetic bug — no structural changes, public API untouched.\",\"tokenEstimateK\":18,\"warnings\":[\"Flat-value coupons (line 13) still reduce the combined subtotal+shipping — verify this is intended business logic.\",\"No test file present to confirm fix; manual verification recommended.\"]},\"fast_mode_state\":\"off\",\"uuid\":\"e604527b-d777-4227-b04d-fac07f3ce284\"}",
+          "changedLineCount": 20,
+          "checkSummary": {
+            "hiddenPassed": 4,
+            "hiddenTotal": 4,
+            "publicPassed": 4,
+            "publicTotal": 4
+          },
+          "robustnessScore": 100,
           "transcript": [
             {
               "channel": "user",
@@ -823,56 +819,56 @@
               "text": "Repair the checkout calculation with the smallest safe patch. Percent coupons should only discount the subtotal, not shipping. Keep the public helper shape intact.\nVictory condition: Fix totals for hot checkout paths and keep the public formatting helper stable."
             },
             {
-              "channel": "stdout",
-              "title": "Claude stdout",
-              "text": "sd\":0.36422675,\"usage\":{\"input_tokens\":10,\"cache_creation_input_tokens\":32619,\"cache_read_input_tokens\":277816,\"output_tokens\":856,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":32619,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-4-6\":{\"inputTokens\":10,\"outputTokens\":856,\"cacheReadInputTokens\":277816,\"cacheCreationInputTokens\":32619,\"webSearchRequests\":0,\"co…"
-            },
-            {
               "channel": "assistant",
               "title": "Corner summary",
-              "text": "direct\nLine 10: removed `* (1 - coupon.value)` from shipping term so percent coupons discount subtotal only, not shipping.\nNotable move: Single-expression fix targeting the exact arithmetic bug — no structural changes, public API untouched."
+              "text": "Find the failing path, touch one seam, leave the rest alone.\nSurgical subtotal-only discount fix with the helper contract untouched.\nNotable move: kept shipping outside the coupon math and avoided a wider refactor"
             },
             {
               "channel": "tool",
               "title": "Workspace diff",
-              "text": "cart.mjs changed across 19 touched lines."
+              "text": "cart.mjs changed across 20 touched lines."
             },
             {
               "channel": "system",
               "title": "Fixture verdict",
-              "text": "Percent coupon should only affect subtotal, not shipping."
+              "text": "Check matrix: 4/4 public, 4/4 hidden."
             }
           ],
           "workspaceNotes": [
-            "Flat-value coupons (line 13) still reduce the combined subtotal+shipping — verify this is intended business logic.",
-            "No test file present to confirm fix; manual verification recommended.",
+            "Check matrix: 4/4 public, 4/4 hidden.",
             "Percent coupon should only affect subtotal, not shipping.",
             "Public helper exports must stay intact for the checkout UI."
           ]
         },
-        "promptStyle": "direct",
-        "diffSummary": "Line 10: removed `* (1 - coupon.value)` from shipping term so percent coupons discount subtotal only, not shipping.",
-        "notableMove": "Single-expression fix targeting the exact arithmetic bug — no structural changes, public API untouched.",
+        "promptStyle": "Find the failing path, touch one seam, leave the rest alone.",
+        "diffSummary": "Surgical subtotal-only discount fix with the helper contract untouched.",
+        "notableMove": "kept shipping outside the coupon math and avoided a wider refactor",
         "metrics": {
           "correctness": 100,
-          "diffQuality": 87,
-          "runtime": 35,
-          "cost": 86,
-          "resilience": 84,
-          "penalties": 2
+          "diffQuality": 96,
+          "runtime": 92,
+          "cost": 77,
+          "resilience": 98,
+          "penalties": 0
         }
       },
       "red": {
         "agentId": "ironclad",
         "capture": {
-          "provider": "claude",
-          "durationMs": 40144,
-          "tokenEstimateK": 12,
+          "provider": "scripted",
+          "durationMs": 1,
+          "tokenEstimateK": 57,
           "changedFiles": [
             "cart.mjs"
           ],
-          "changedLineCount": 19,
-          "stdoutTail": "999994,\"usage\":{\"input_tokens\":8,\"cache_creation_input_tokens\":30166,\"cache_read_input_tokens\":223424,\"output_tokens\":964,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":30166,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-4-6\":{\"inputTokens\":8,\"outputTokens\":964,\"cacheReadInputTokens\":223424,\"cacheCreationInputTokens\":30166,\"webSearchRequests\":0,\"costUSD\":0.32438949999999994,\"contextWindow\":200000,\"maxOutputTokens\":64000}},\"permission_denials\":[],\"structured_output\":{\"diffSummary\":\"Line 10: removed `* (1 - coupon.value)` from shipping term so percent coupons discount only the subtotal, not shipping.\",\"notableMove\":\"Single-expression fix: changed `subtotal * (1 - coupon.value) + shipping * (1 - coupon.value)` to `subtotal * (1 - coupon.value) + shipping`.\",\"promptStyle\":\"direct-hotfix\",\"tokenEstimateK\":12,\"warnings\":[\"Flat-dollar coupons (line 13) still reduce the combined subtotal+shipping total, which may or may not be intended — verify business rules.\"]},\"fast_mode_state\":\"off\",\"uuid\":\"6be4bc37-3ec4-4dda-b484-0b311e479a8f\"}",
+          "changedLineCount": 23,
+          "checkSummary": {
+            "hiddenPassed": 3,
+            "hiddenTotal": 4,
+            "publicPassed": 3,
+            "publicTotal": 4
+          },
+          "robustnessScore": 75,
           "transcript": [
             {
               "channel": "user",
@@ -880,42 +876,37 @@
               "text": "Repair the checkout calculation with the smallest safe patch. Percent coupons should only discount the subtotal, not shipping. Keep the public helper shape intact.\nVictory condition: Fix totals for hot checkout paths and keep the public formatting helper stable."
             },
             {
-              "channel": "stdout",
-              "title": "Claude stdout",
-              "text": "999994,\"usage\":{\"input_tokens\":8,\"cache_creation_input_tokens\":30166,\"cache_read_input_tokens\":223424,\"output_tokens\":964,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":30166,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-4-6\":{\"inputTokens\":8,\"outputTokens\":964,\"cacheReadInputTokens\":223424,\"cacheCreationInputTokens\":30166,\"webSearchRequests\":0,\"costUSD\":0.3…"
-            },
-            {
               "channel": "assistant",
               "title": "Corner summary",
-              "text": "direct-hotfix\nLine 10: removed `* (1 - coupon.value)` from shipping term so percent coupons discount only the subtotal, not shipping.\nNotable move: Single-expression fix: changed `subtotal * (1 - coupon.value) + shipping * (1 - coupon.value)` to `subtotal * (1 - coupon.value) + shipping`."
+              "text": "Win the incident and make the next reviewer faster.\nExtracted coupon logic into a safe helper and guarded the public output.\nNotable move: isolated the risky math behind one helper instead of repeating branches"
             },
             {
               "channel": "tool",
               "title": "Workspace diff",
-              "text": "cart.mjs changed across 19 touched lines."
+              "text": "cart.mjs changed across 23 touched lines."
             },
             {
               "channel": "system",
               "title": "Fixture verdict",
-              "text": "Percent coupon should only affect subtotal, not shipping."
+              "text": "Check matrix: 3/4 public, 3/4 hidden."
             }
           ],
           "workspaceNotes": [
-            "Flat-dollar coupons (line 13) still reduce the combined subtotal+shipping total, which may or may not be intended — verify business rules.",
+            "Check matrix: 3/4 public, 3/4 hidden.",
             "Percent coupon should only affect subtotal, not shipping.",
             "Public helper exports must stay intact for the checkout UI."
           ]
         },
-        "promptStyle": "direct-hotfix",
-        "diffSummary": "Line 10: removed `* (1 - coupon.value)` from shipping term so percent coupons discount only the subtotal, not shipping.",
-        "notableMove": "Single-expression fix: changed `subtotal * (1 - coupon.value) + shipping * (1 - coupon.value)` to `subtotal * (1 - coupon.value) + shipping`.",
+        "promptStyle": "Win the incident and make the next reviewer faster.",
+        "diffSummary": "Extracted coupon logic into a safe helper and guarded the public output.",
+        "notableMove": "isolated the risky math behind one helper instead of repeating branches",
         "metrics": {
-          "correctness": 100,
-          "diffQuality": 92,
-          "runtime": 35,
-          "cost": 89,
-          "resilience": 91,
-          "penalties": 1
+          "correctness": 75,
+          "diffQuality": 94,
+          "runtime": 92,
+          "cost": 65,
+          "resilience": 95,
+          "penalties": 0
         }
       }
     }
