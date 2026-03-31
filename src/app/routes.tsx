@@ -6,6 +6,9 @@ import { Skeleton } from "./components/Skeleton";
 const Landing = lazy(() => import("./screens/Landing"));
 const FightMatchup = lazy(() => import("./screens/FightMatchup"));
 const AgentProfile = lazy(() => import("./screens/AgentProfile"));
+const Live = lazy(() => import("./screens/Live"));
+const Replay = lazy(() => import("./screens/Replay"));
+const Archive = lazy(() => import("./screens/Archive"));
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -37,6 +40,18 @@ export const router = createBrowserRouter([
   {
     path: "/agent/:id",
     element: <Layout><AgentProfile /></Layout>,
+  },
+  {
+    path: "/live",
+    element: <Layout><Live /></Layout>,
+  },
+  {
+    path: "/replay",
+    element: <Layout><Replay /></Layout>,
+  },
+  {
+    path: "/archive",
+    element: <Layout><Archive /></Layout>,
   },
   {
     path: "*",

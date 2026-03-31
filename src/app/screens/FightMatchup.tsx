@@ -396,7 +396,7 @@ export default function FightMatchup() {
           <div className="max-w-[1600px] mx-auto px-4 py-12 md:px-8">
             <div className="flex items-center gap-3 mb-8">
               <Shield className="w-6 h-6 text-afc-orange" />
-              <h3 className="text-2xl font-bold uppercase tracking-tight">What Each Side Actually Did</h3>
+              <h3 className="text-2xl font-bold uppercase tracking-tight">Corner Comparison</h3>
             </div>
 
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">

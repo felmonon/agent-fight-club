@@ -36,6 +36,9 @@ describe("screen smoke renders", () => {
     expect(renderRoute(`/fight/${featuredFight.id}`, "/fight/:id", <FightMatchup />)).toContain(
       "What winning means here"
     );
+    expect(renderRoute(`/fight/${featuredFight.id}`, "/fight/:id", <FightMatchup />)).toContain(
+      "Corner Comparison"
+    );
     expect(renderRoute(`/agent/${featuredAgent.id}`, "/agent/:id", <AgentProfile />)).toContain(
       "What This Agent Is Good At"
     );
