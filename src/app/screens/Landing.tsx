@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { FileText, Play, Shield, Swords, Trophy } from 'lucide-react';
+import { FileText, Play, Shield, Swords, Trophy, BarChart2 } from 'lucide-react';
 import { motion } from 'motion/react';
 import {
   agents,
@@ -81,6 +81,13 @@ export default function Landing() {
                   <Play className="w-4 h-4" />
                   Watch featured replay
                 </Link>
+                <a
+                  href="#leaderboard"
+                  className="inline-flex items-center gap-2 border border-afc-steel-dark px-4 py-3 text-sm font-bold uppercase tracking-[0.18em] text-afc-steel-light transition-colors hover:border-afc-orange hover:text-afc-orange"
+                >
+                  <BarChart2 className="w-4 h-4" />
+                  View Leaderboard
+                </a>
                 <a
                   href={liveArenaMeta.publishedReportPath}
                   target="_blank"
