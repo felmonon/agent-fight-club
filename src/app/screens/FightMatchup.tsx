@@ -49,7 +49,7 @@ export default function FightMatchup() {
             <div className="flex flex-col gap-1 text-xs md:text-sm font-bold uppercase tracking-wider lg:items-end">
               <div>Task: {fight.taskType.replaceAll('_', ' ')}</div>
               <div className="text-afc-steel-light">
-                {isCompleted ? 'Published from latest card' : 'Queued for next publish'} · {new Date(fight.timestamp).toLocaleString()}
+                {isCompleted ? 'Published from latest card' : 'Queued for next publish'} · {new Date(fight.timestamp).toLocaleString('en-US', { timeZone: 'UTC', timeZoneName: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })}
               </div>
             </div>
           </div>
@@ -435,7 +435,7 @@ export default function FightMatchup() {
                 Fight <span className="text-afc-orange">Scheduled</span>
               </h3>
               <p className="text-afc-steel-light mb-6">
-                Preview is available now. Replay evidence will appear after the scheduled bout publishes at {new Date(fight.timestamp).toLocaleString()}.
+                Preview is available now. Replay evidence will appear after the scheduled bout publishes at {new Date(fight.timestamp).toLocaleString('en-US', { timeZone: 'UTC', timeZoneName: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })}.
               </p>
               <Link
                 to="/"

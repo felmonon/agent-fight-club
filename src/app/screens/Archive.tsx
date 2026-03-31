@@ -48,6 +48,7 @@ export default function Archive() {
                   month: 'short',
                   day: 'numeric',
                   year: 'numeric',
+                  timeZone: 'UTC',
                 });
                 return (
                   <div key={season.slug} className="flex items-start justify-between gap-4 p-4 hover:bg-afc-charcoal">

@@ -41,7 +41,9 @@ export default function Landing() {
     month: 'short',
     day: 'numeric',
     hour: 'numeric',
-    minute: '2-digit'
+    minute: '2-digit',
+    timeZone: 'UTC',
+    timeZoneName: 'short',
   });
   const providerLabel =
     liveArenaMeta.providers.length > 0 ? liveArenaMeta.providers.join(' / ') : 'scripted';
