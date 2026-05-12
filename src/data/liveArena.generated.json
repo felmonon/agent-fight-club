@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-11T16:56:43.263Z",
+  "generatedAt": "2026-05-12T16:47:23.270Z",
   "source": "live-arena-runner",
   "notes": [
     "Each corner ran against a real fixture workspace in a fresh temp directory.",
@@ -13,10 +13,10 @@
     "transcriptVersion": 1,
     "publishPreset": "scripted",
     "publishPresetName": "Scripted season",
-    "publishedAt": "2026-05-11T16:56:43.163Z",
-    "gitSha": "e02d3298d04c",
-    "reportSlug": "season-01-2026-05-11T16-56-43-163Z-scripted",
-    "workflowRunUrl": "https://github.com/felmonon/agent-fight-club/actions/runs/25684540593"
+    "publishedAt": "2026-05-12T16:47:23.206Z",
+    "gitSha": "4e3bda0b615d",
+    "reportSlug": "season-01-2026-05-12T16-47-23-206Z-scripted",
+    "workflowRunUrl": "https://github.com/felmonon/agent-fight-club/actions/runs/25748846913"
   },
   "agents": [
     {
@@ -264,7 +264,7 @@
         "agentId": "blackboxer",
         "capture": {
           "provider": "scripted",
-          "durationMs": 3,
+          "durationMs": 2,
           "tokenEstimateK": 68,
           "changedFiles": [
             "dedupe.mjs"
@@ -303,8 +303,8 @@
             "uses a less explicit sentinel map for speed",
             "dedupe path still looks quadratic",
             "Check matrix: 3/3 public, 4/4 hidden.",
-            "Benchmark loop completed in 3.4ms across 5 passes.",
-            "Hidden dense dataset completed in 2.6ms.",
+            "Benchmark loop completed in 3.8ms across 5 passes.",
+            "Hidden dense dataset completed in 1.4ms.",
             "Order must preserve the first seen record for each id."
           ]
         },
@@ -361,7 +361,7 @@
           ],
           "workspaceNotes": [
             "Check matrix: 3/3 public, 4/4 hidden.",
-            "Benchmark loop completed in 5.1ms across 5 passes.",
+            "Benchmark loop completed in 4.8ms across 5 passes.",
             "Hidden dense dataset completed in 0.8ms.",
             "Order must preserve the first seen record for each id."
           ]
@@ -399,7 +399,7 @@
         "agentId": "ghostwire",
         "capture": {
           "provider": "scripted",
-          "durationMs": 7,
+          "durationMs": 1,
           "tokenEstimateK": 39,
           "changedFiles": [
             "session.mjs"
@@ -456,7 +456,7 @@
         "agentId": "blackboxer",
         "capture": {
           "provider": "scripted",
-          "durationMs": 8,
+          "durationMs": 1,
           "tokenEstimateK": 71,
           "changedFiles": [
             "session.mjs"
@@ -702,7 +702,7 @@
           ],
           "workspaceNotes": [
             "Check matrix: 3/3 public, 4/4 hidden.",
-            "Benchmark loop completed in 4.6ms across 5 passes.",
+            "Benchmark loop completed in 5.2ms across 5 passes.",
             "Hidden dense dataset completed in 0.8ms.",
             "Order must preserve the first seen record for each id."
           ]
@@ -760,8 +760,8 @@
           ],
           "workspaceNotes": [
             "Check matrix: 3/3 public, 4/4 hidden.",
-            "Benchmark loop completed in 4.2ms across 5 passes.",
-            "Hidden dense dataset completed in 0.9ms.",
+            "Benchmark loop completed in 3.4ms across 5 passes.",
+            "Hidden dense dataset completed in 0.8ms.",
             "Order must preserve the first seen record for each id."
           ]
         },
@@ -799,7 +799,7 @@
         "agentId": "ghostwire",
         "capture": {
           "provider": "scripted",
-          "durationMs": 19,
+          "durationMs": 1,
           "tokenEstimateK": 34,
           "changedFiles": [
             "cart.mjs"
@@ -846,7 +846,7 @@
         "metrics": {
           "correctness": 100,
           "diffQuality": 96,
-          "runtime": 91,
+          "runtime": 92,
           "cost": 77,
           "resilience": 98,
           "penalties": 0
@@ -856,7 +856,7 @@
         "agentId": "ironclad",
         "capture": {
           "provider": "scripted",
-          "durationMs": 19,
+          "durationMs": 1,
           "tokenEstimateK": 57,
           "changedFiles": [
             "cart.mjs"
@@ -903,7 +903,7 @@
         "metrics": {
           "correctness": 75,
           "diffQuality": 94,
-          "runtime": 91,
+          "runtime": 92,
           "cost": 65,
           "resilience": 95,
           "penalties": 0
