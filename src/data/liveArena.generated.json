@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-31T17:27:22.839Z",
+  "generatedAt": "2026-08-03T17:49:24.132Z",
   "source": "live-arena-runner",
   "notes": [
     "Each corner ran against a real fixture workspace in a fresh temp directory.",
@@ -13,10 +13,10 @@
     "transcriptVersion": 1,
     "publishPreset": "scripted",
     "publishPresetName": "Scripted season",
-    "publishedAt": "2026-07-31T17:27:22.436Z",
-    "gitSha": "df5b1ff528d8",
-    "reportSlug": "season-01-2026-07-31T17-27-22-436Z-scripted",
-    "workflowRunUrl": "https://github.com/felmonon/agent-fight-club/actions/runs/30651200235"
+    "publishedAt": "2026-08-03T17:49:24.040Z",
+    "gitSha": "1090cc606598",
+    "reportSlug": "season-01-2026-08-03T17-49-24-040Z-scripted",
+    "workflowRunUrl": "https://github.com/felmonon/agent-fight-club/actions/runs/30838438569"
   },
   "agents": [
     {
@@ -133,7 +133,7 @@
         "agentId": "ghostwire",
         "capture": {
           "provider": "scripted",
-          "durationMs": 49,
+          "durationMs": 2,
           "tokenEstimateK": 34,
           "changedFiles": [
             "cart.mjs"
@@ -180,7 +180,7 @@
         "metrics": {
           "correctness": 100,
           "diffQuality": 96,
-          "runtime": 89,
+          "runtime": 92,
           "cost": 77,
           "resilience": 98,
           "penalties": 0
@@ -190,7 +190,7 @@
         "agentId": "ironclad",
         "capture": {
           "provider": "scripted",
-          "durationMs": 48,
+          "durationMs": 2,
           "tokenEstimateK": 57,
           "changedFiles": [
             "cart.mjs"
@@ -237,7 +237,7 @@
         "metrics": {
           "correctness": 75,
           "diffQuality": 94,
-          "runtime": 89,
+          "runtime": 92,
           "cost": 65,
           "resilience": 95,
           "penalties": 0
@@ -264,7 +264,7 @@
         "agentId": "blackboxer",
         "capture": {
           "provider": "scripted",
-          "durationMs": 37,
+          "durationMs": 2,
           "tokenEstimateK": 68,
           "changedFiles": [
             "dedupe.mjs"
@@ -303,8 +303,8 @@
             "uses a less explicit sentinel map for speed",
             "dedupe path still looks quadratic",
             "Check matrix: 3/3 public, 4/4 hidden.",
-            "Benchmark loop completed in 6.9ms across 5 passes.",
-            "Hidden dense dataset completed in 1.6ms.",
+            "Benchmark loop completed in 5.4ms across 5 passes.",
+            "Hidden dense dataset completed in 2.8ms.",
             "Order must preserve the first seen record for each id."
           ]
         },
@@ -314,7 +314,7 @@
         "metrics": {
           "correctness": 100,
           "diffQuality": 83,
-          "runtime": 77,
+          "runtime": 79,
           "cost": 60,
           "resilience": 78,
           "penalties": 2
@@ -324,7 +324,7 @@
         "agentId": "cinder",
         "capture": {
           "provider": "scripted",
-          "durationMs": 35,
+          "durationMs": 2,
           "tokenEstimateK": 53,
           "changedFiles": [
             "dedupe.mjs"
@@ -361,8 +361,8 @@
           ],
           "workspaceNotes": [
             "Check matrix: 3/3 public, 4/4 hidden.",
-            "Benchmark loop completed in 3.6ms across 5 passes.",
-            "Hidden dense dataset completed in 0.8ms.",
+            "Benchmark loop completed in 5.1ms across 5 passes.",
+            "Hidden dense dataset completed in 1.4ms.",
             "Order must preserve the first seen record for each id."
           ]
         },
@@ -372,7 +372,7 @@
         "metrics": {
           "correctness": 100,
           "diffQuality": 96,
-          "runtime": 92,
+          "runtime": 94,
           "cost": 67,
           "resilience": 98,
           "penalties": 0
@@ -399,7 +399,7 @@
         "agentId": "ghostwire",
         "capture": {
           "provider": "scripted",
-          "durationMs": 68,
+          "durationMs": 1,
           "tokenEstimateK": 39,
           "changedFiles": [
             "session.mjs"
@@ -446,7 +446,7 @@
         "metrics": {
           "correctness": 100,
           "diffQuality": 98,
-          "runtime": 80,
+          "runtime": 84,
           "cost": 75,
           "resilience": 98,
           "penalties": 0
@@ -456,7 +456,7 @@
         "agentId": "blackboxer",
         "capture": {
           "provider": "scripted",
-          "durationMs": 67,
+          "durationMs": 1,
           "tokenEstimateK": 71,
           "changedFiles": [
             "session.mjs"
@@ -505,7 +505,7 @@
         "metrics": {
           "correctness": 14,
           "diffQuality": 85,
-          "runtime": 86,
+          "runtime": 90,
           "cost": 58,
           "resilience": 75,
           "penalties": 2
@@ -532,7 +532,7 @@
         "agentId": "ironclad",
         "capture": {
           "provider": "scripted",
-          "durationMs": 43,
+          "durationMs": 1,
           "tokenEstimateK": 63,
           "changedFiles": [
             "session.mjs"
@@ -579,7 +579,7 @@
         "metrics": {
           "correctness": 100,
           "diffQuality": 98,
-          "runtime": 88,
+          "runtime": 90,
           "cost": 62,
           "resilience": 98,
           "penalties": 0
@@ -589,7 +589,7 @@
         "agentId": "cinder",
         "capture": {
           "provider": "scripted",
-          "durationMs": 44,
+          "durationMs": 1,
           "tokenEstimateK": 59,
           "changedFiles": [
             "session.mjs"
@@ -638,7 +638,7 @@
         "metrics": {
           "correctness": 64,
           "diffQuality": 85,
-          "runtime": 88,
+          "runtime": 90,
           "cost": 64,
           "resilience": 75,
           "penalties": 2
@@ -665,7 +665,7 @@
         "agentId": "ghostwire",
         "capture": {
           "provider": "scripted",
-          "durationMs": 39,
+          "durationMs": 2,
           "tokenEstimateK": 41,
           "changedFiles": [
             "dedupe.mjs"
@@ -702,8 +702,8 @@
           ],
           "workspaceNotes": [
             "Check matrix: 3/3 public, 4/4 hidden.",
-            "Benchmark loop completed in 5.7ms across 5 passes.",
-            "Hidden dense dataset completed in 0.8ms.",
+            "Benchmark loop completed in 5.2ms across 5 passes.",
+            "Hidden dense dataset completed in 1.0ms.",
             "Order must preserve the first seen record for each id."
           ]
         },
@@ -713,7 +713,7 @@
         "metrics": {
           "correctness": 100,
           "diffQuality": 96,
-          "runtime": 94,
+          "runtime": 96,
           "cost": 74,
           "resilience": 98,
           "penalties": 0
@@ -723,7 +723,7 @@
         "agentId": "cinder",
         "capture": {
           "provider": "scripted",
-          "durationMs": 38,
+          "durationMs": 2,
           "tokenEstimateK": 53,
           "changedFiles": [
             "dedupe.mjs"
@@ -760,8 +760,8 @@
           ],
           "workspaceNotes": [
             "Check matrix: 3/3 public, 4/4 hidden.",
-            "Benchmark loop completed in 3.9ms across 5 passes.",
-            "Hidden dense dataset completed in 0.8ms.",
+            "Benchmark loop completed in 5.9ms across 5 passes.",
+            "Hidden dense dataset completed in 0.9ms.",
             "Order must preserve the first seen record for each id."
           ]
         },
@@ -771,7 +771,7 @@
         "metrics": {
           "correctness": 100,
           "diffQuality": 96,
-          "runtime": 92,
+          "runtime": 94,
           "cost": 67,
           "resilience": 98,
           "penalties": 0
@@ -799,7 +799,7 @@
         "agentId": "ghostwire",
         "capture": {
           "provider": "scripted",
-          "durationMs": 20,
+          "durationMs": 1,
           "tokenEstimateK": 34,
           "changedFiles": [
             "cart.mjs"
@@ -846,7 +846,7 @@
         "metrics": {
           "correctness": 100,
           "diffQuality": 96,
-          "runtime": 91,
+          "runtime": 92,
           "cost": 77,
           "resilience": 98,
           "penalties": 0
@@ -856,7 +856,7 @@
         "agentId": "ironclad",
         "capture": {
           "provider": "scripted",
-          "durationMs": 20,
+          "durationMs": 1,
           "tokenEstimateK": 57,
           "changedFiles": [
             "cart.mjs"
@@ -903,7 +903,7 @@
         "metrics": {
           "correctness": 75,
           "diffQuality": 94,
-          "runtime": 91,
+          "runtime": 92,
           "cost": 65,
           "resilience": 95,
           "penalties": 0
