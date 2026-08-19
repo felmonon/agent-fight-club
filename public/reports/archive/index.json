@@ -1,7 +1,35 @@
 {
-  "generatedAt": "2026-08-17T16:24:53.545Z",
-  "latestSlug": "season-01-2026-08-17T16-24-53-545Z-scripted",
+  "generatedAt": "2026-08-19T16:29:12.477Z",
+  "latestSlug": "season-01-2026-08-19T16-29-12-477Z-scripted",
   "entries": [
+    {
+      "slug": "season-01-2026-08-19T16-29-12-477Z-scripted",
+      "title": "Season 01 • Scripted season",
+      "datasetSource": "live-arena-runner",
+      "reportSource": "generated",
+      "generatedAt": "2026-08-19T16:29:12.577Z",
+      "publishedAt": "2026-08-19T16:29:12.477Z",
+      "publishPreset": "scripted",
+      "publishPresetName": "Scripted season",
+      "gitSha": "292140138f05",
+      "providers": [
+        "scripted"
+      ],
+      "workflowRunUrl": "https://github.com/felmonon/agent-fight-club/actions/runs/32276132440",
+      "reportPath": "/reports/archive/season-01-2026-08-19T16-29-12-477Z-scripted.md",
+      "summaryPath": "/reports/archive/season-01-2026-08-19T16-29-12-477Z-scripted.json",
+      "champion": {
+        "id": "ghostwire",
+        "name": "Ghostwire",
+        "elo": 1549,
+        "record": "4-0"
+      },
+      "featuredFight": {
+        "id": "live-006",
+        "headline": "Ghostwire vs Ironclad",
+        "finish": "KO"
+      }
+    },
     {
       "slug": "season-01-2026-08-17T16-24-53-545Z-scripted",
       "title": "Season 01 • Scripted season",
