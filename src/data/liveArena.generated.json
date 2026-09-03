@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T19:13:17.534Z",
+  "generatedAt": "2026-09-03T19:06:19.068Z",
   "source": "live-arena-runner",
   "notes": [
     "Each corner ran against a real fixture workspace in a fresh temp directory.",
@@ -13,10 +13,10 @@
     "transcriptVersion": 1,
     "publishPreset": "scripted",
     "publishPresetName": "Scripted season",
-    "publishedAt": "2026-09-02T19:13:17.437Z",
-    "gitSha": "889f3d52e3b6",
-    "reportSlug": "season-01-2026-09-02T19-13-17-437Z-scripted",
-    "workflowRunUrl": "https://github.com/felmonon/agent-fight-club/actions/runs/33671946896"
+    "publishedAt": "2026-09-03T19:06:18.992Z",
+    "gitSha": "2c79f6cbe062",
+    "reportSlug": "season-01-2026-09-03T19-06-18-992Z-scripted",
+    "workflowRunUrl": "https://github.com/felmonon/agent-fight-club/actions/runs/33794406617"
   },
   "agents": [
     {
@@ -133,7 +133,7 @@
         "agentId": "ghostwire",
         "capture": {
           "provider": "scripted",
-          "durationMs": 3,
+          "durationMs": 2,
           "tokenEstimateK": 34,
           "changedFiles": [
             "cart.mjs"
@@ -190,7 +190,7 @@
         "agentId": "ironclad",
         "capture": {
           "provider": "scripted",
-          "durationMs": 2,
+          "durationMs": 1,
           "tokenEstimateK": 57,
           "changedFiles": [
             "cart.mjs"
@@ -303,8 +303,8 @@
             "uses a less explicit sentinel map for speed",
             "dedupe path still looks quadratic",
             "Check matrix: 3/3 public, 4/4 hidden.",
-            "Benchmark loop completed in 4.2ms across 5 passes.",
-            "Hidden dense dataset completed in 1.9ms.",
+            "Benchmark loop completed in 4.5ms across 5 passes.",
+            "Hidden dense dataset completed in 2.9ms.",
             "Order must preserve the first seen record for each id."
           ]
         },
@@ -361,8 +361,8 @@
           ],
           "workspaceNotes": [
             "Check matrix: 3/3 public, 4/4 hidden.",
-            "Benchmark loop completed in 5.7ms across 5 passes.",
-            "Hidden dense dataset completed in 0.8ms.",
+            "Benchmark loop completed in 7.3ms across 5 passes.",
+            "Hidden dense dataset completed in 3.0ms.",
             "Order must preserve the first seen record for each id."
           ]
         },
@@ -702,8 +702,8 @@
           ],
           "workspaceNotes": [
             "Check matrix: 3/3 public, 4/4 hidden.",
-            "Benchmark loop completed in 5.8ms across 5 passes.",
-            "Hidden dense dataset completed in 1.3ms.",
+            "Benchmark loop completed in 3.7ms across 5 passes.",
+            "Hidden dense dataset completed in 0.7ms.",
             "Order must preserve the first seen record for each id."
           ]
         },
@@ -723,7 +723,7 @@
         "agentId": "cinder",
         "capture": {
           "provider": "scripted",
-          "durationMs": 1,
+          "durationMs": 7,
           "tokenEstimateK": 53,
           "changedFiles": [
             "dedupe.mjs"
@@ -760,8 +760,8 @@
           ],
           "workspaceNotes": [
             "Check matrix: 3/3 public, 4/4 hidden.",
-            "Benchmark loop completed in 8.1ms across 5 passes.",
-            "Hidden dense dataset completed in 1.0ms.",
+            "Benchmark loop completed in 5.1ms across 5 passes.",
+            "Hidden dense dataset completed in 0.7ms.",
             "Order must preserve the first seen record for each id."
           ]
         },
@@ -799,7 +799,7 @@
         "agentId": "ghostwire",
         "capture": {
           "provider": "scripted",
-          "durationMs": 1,
+          "durationMs": 0,
           "tokenEstimateK": 34,
           "changedFiles": [
             "cart.mjs"
