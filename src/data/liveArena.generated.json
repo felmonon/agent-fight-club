@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-09T19:04:59.546Z",
+  "generatedAt": "2026-09-10T18:57:07.523Z",
   "source": "live-arena-runner",
   "notes": [
     "Each corner ran against a real fixture workspace in a fresh temp directory.",
@@ -13,10 +13,10 @@
     "transcriptVersion": 1,
     "publishPreset": "scripted",
     "publishPresetName": "Scripted season",
-    "publishedAt": "2026-09-09T19:04:59.460Z",
-    "gitSha": "c05f1133ce29",
-    "reportSlug": "season-01-2026-09-09T19-04-59-460Z-scripted",
-    "workflowRunUrl": "https://github.com/felmonon/agent-fight-club/actions/runs/34392879383"
+    "publishedAt": "2026-09-10T18:57:07.441Z",
+    "gitSha": "15f8a36afda1",
+    "reportSlug": "season-01-2026-09-10T18-57-07-441Z-scripted",
+    "workflowRunUrl": "https://github.com/felmonon/agent-fight-club/actions/runs/34517419475"
   },
   "agents": [
     {
@@ -190,7 +190,7 @@
         "agentId": "ironclad",
         "capture": {
           "provider": "scripted",
-          "durationMs": 3,
+          "durationMs": 2,
           "tokenEstimateK": 57,
           "changedFiles": [
             "cart.mjs"
@@ -303,8 +303,8 @@
             "uses a less explicit sentinel map for speed",
             "dedupe path still looks quadratic",
             "Check matrix: 3/3 public, 4/4 hidden.",
-            "Benchmark loop completed in 4.7ms across 5 passes.",
-            "Hidden dense dataset completed in 1.7ms.",
+            "Benchmark loop completed in 4.1ms across 5 passes.",
+            "Hidden dense dataset completed in 3.6ms.",
             "Order must preserve the first seen record for each id."
           ]
         },
@@ -361,8 +361,8 @@
           ],
           "workspaceNotes": [
             "Check matrix: 3/3 public, 4/4 hidden.",
-            "Benchmark loop completed in 6.7ms across 5 passes.",
-            "Hidden dense dataset completed in 0.8ms.",
+            "Benchmark loop completed in 11.6ms across 5 passes.",
+            "Hidden dense dataset completed in 3.8ms.",
             "Order must preserve the first seen record for each id."
           ]
         },
@@ -702,8 +702,8 @@
           ],
           "workspaceNotes": [
             "Check matrix: 3/3 public, 4/4 hidden.",
-            "Benchmark loop completed in 5.0ms across 5 passes.",
-            "Hidden dense dataset completed in 1.2ms.",
+            "Benchmark loop completed in 4.6ms across 5 passes.",
+            "Hidden dense dataset completed in 0.8ms.",
             "Order must preserve the first seen record for each id."
           ]
         },
@@ -760,8 +760,8 @@
           ],
           "workspaceNotes": [
             "Check matrix: 3/3 public, 4/4 hidden.",
-            "Benchmark loop completed in 6.8ms across 5 passes.",
-            "Hidden dense dataset completed in 1.3ms.",
+            "Benchmark loop completed in 5.4ms across 5 passes.",
+            "Hidden dense dataset completed in 0.8ms.",
             "Order must preserve the first seen record for each id."
           ]
         },
@@ -856,7 +856,7 @@
         "agentId": "ironclad",
         "capture": {
           "provider": "scripted",
-          "durationMs": 1,
+          "durationMs": 0,
           "tokenEstimateK": 57,
           "changedFiles": [
             "cart.mjs"
