@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-16T19:19:20.002Z",
+  "generatedAt": "2026-10-19T20:52:46.682Z",
   "source": "live-arena-runner",
   "notes": [
     "Each corner ran against a real fixture workspace in a fresh temp directory.",
@@ -13,10 +13,10 @@
     "transcriptVersion": 1,
     "publishPreset": "scripted",
     "publishPresetName": "Scripted season",
-    "publishedAt": "2026-10-16T19:19:19.907Z",
-    "gitSha": "ae1a147c0e30",
-    "reportSlug": "season-01-2026-10-16T19-19-19-907Z-scripted",
-    "workflowRunUrl": "https://github.com/felmonon/agent-fight-club/actions/runs/38953986447"
+    "publishedAt": "2026-10-19T20:52:46.585Z",
+    "gitSha": "98c36f68b538",
+    "reportSlug": "season-01-2026-10-19T20-52-46-585Z-scripted",
+    "workflowRunUrl": "https://github.com/felmonon/agent-fight-club/actions/runs/39322916116"
   },
   "agents": [
     {
@@ -361,8 +361,8 @@
           ],
           "workspaceNotes": [
             "Check matrix: 3/3 public, 4/4 hidden.",
-            "Benchmark loop completed in 10.3ms across 5 passes.",
-            "Hidden dense dataset completed in 1.3ms.",
+            "Benchmark loop completed in 7.7ms across 5 passes.",
+            "Hidden dense dataset completed in 1.4ms.",
             "Order must preserve the first seen record for each id."
           ]
         },
@@ -456,7 +456,7 @@
         "agentId": "blackboxer",
         "capture": {
           "provider": "scripted",
-          "durationMs": 2,
+          "durationMs": 3,
           "tokenEstimateK": 71,
           "changedFiles": [
             "session.mjs"
@@ -702,8 +702,8 @@
           ],
           "workspaceNotes": [
             "Check matrix: 3/3 public, 4/4 hidden.",
-            "Benchmark loop completed in 5.0ms across 5 passes.",
-            "Hidden dense dataset completed in 0.8ms.",
+            "Benchmark loop completed in 5.5ms across 5 passes.",
+            "Hidden dense dataset completed in 1.0ms.",
             "Order must preserve the first seen record for each id."
           ]
         },
@@ -760,7 +760,7 @@
           ],
           "workspaceNotes": [
             "Check matrix: 3/3 public, 4/4 hidden.",
-            "Benchmark loop completed in 4.8ms across 5 passes.",
+            "Benchmark loop completed in 5.7ms across 5 passes.",
             "Hidden dense dataset completed in 0.8ms.",
             "Order must preserve the first seen record for each id."
           ]
